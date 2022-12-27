@@ -1,0 +1,6 @@
+syntax = "proto3";
+
+message Stock {
+  string code = 1; // 00700.HK
+  string market = 2; // "HK","US","CN"
+}

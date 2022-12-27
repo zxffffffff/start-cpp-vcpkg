@@ -30,3 +30,10 @@
 *.exe
 *.out
 *.app
+
+# cpp-deps-vcpkg
+vcpkg_installed
+build
+install
+.vs
+out
