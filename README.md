@@ -11,6 +11,7 @@
 - 已验证：
   - Windows 10 x64
   - Ubuntu 20.04 x64
+  - macOS 13.1 Apple M1
 
 
 
@@ -29,6 +30,7 @@
 - g++ >= 6
 - macOS:
   - xcode-select --install
+  - brew install pkg-config
 - Debian，Ubuntu，popOS 或其他基于 Debian 的发行版:
   - sudo apt-get update
   - sudo apt-get install build-essential tar curl zip unzip
