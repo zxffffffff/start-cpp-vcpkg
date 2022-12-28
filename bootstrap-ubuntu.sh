@@ -1,6 +1,6 @@
 #!/bin/sh
 
-root_path=$(dirname $(readlink -f  "$0"))
+root_path=$(dirname $(readlink -f "$0"))
 cd ${root_path}
 
 # vcpkg (vcpkg.json)
@@ -9,8 +9,11 @@ vcpkg_exe=${vcpkg_path}/vcpkg
 echo vcpkg_path: ${vcpkg_path}
 echo vcpkg_exe: ${vcpkg_exe}
 if [ ! -x ${vcpkg_exe} ]; then
-  echo "run vcpkg/bootstrap-vcpkg.sh !!!"
-  exit
+  vcpkg_sh=${vcpkg_path}/bootstrap-vcpkg.sh
+  echo vcpkg_sh: ${vcpkg_sh}
+  sudo apt-get update
+  sudo apt-get install build-essential tar curl zip unzip
+  sudo sh ${vcpkg_sh}
 fi
 VCPKG_DEFAULT_TRIPLET=x64-linux
 # echo "${vcpkg_exe} install --triplet x64-linux"

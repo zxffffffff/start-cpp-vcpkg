@@ -7,11 +7,11 @@
 - 应用层：boost
 
 ### 快速开始：
+- 运行 bootstrap-[sys].[xx] 在线安装第三方库，需要能够访问外网（github）
 - 已验证：
   - Windows 10 x64
   - Ubuntu 20.04 x64
-- 在线安装第三方库，需要能够访问外网（github）
-- 运行 bootstrap-xxx 脚本一键生成
+
 
 
 # vcpkg
