@@ -16,8 +16,9 @@ add_library(${PROJECT_NAME} SHARED
 )
 
 target_link_libraries(${PROJECT_NAME}
+    PUBLIC sample-tools
     PRIVATE sample-pb
-    PRIVATE sample-tools
+    PRIVATE sample-net
 )
 
 target_include_directories(${PROJECT_NAME}

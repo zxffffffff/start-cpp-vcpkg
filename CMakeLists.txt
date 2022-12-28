@@ -20,14 +20,16 @@ message("[cpp-deps-vcpkg] -------- start")
 message(STATUS "[cpp-deps-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # include搜索目录
-include_directories(${PROJECT_SOURCE_DIR}/src/sample-pb)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-tools)
+include_directories(${PROJECT_SOURCE_DIR}/src/sample-pb)
+include_directories(${PROJECT_SOURCE_DIR}/src/sample-net)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-datacenter)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-main)
 
 # 将子目录添加到生成
-add_subdirectory(src/sample-pb)
 add_subdirectory(src/sample-tools)
+add_subdirectory(src/sample-pb)
+add_subdirectory(src/sample-net)
 add_subdirectory(src/sample-datacenter)
 add_subdirectory(src/sample-main)
 
