@@ -2,6 +2,14 @@
 # 3.16 is the absolute minimum though.
 cmake_minimum_required (VERSION 3.16)
 
+if (WIN32)
+    # ...
+else()
+    # linux 需要设置-fPIC
+    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+endif()
+
 # 使用 vcpkg 工具链，需要在 project 之前设置
 set(CMAKE_TOOLCHAIN_FILE "./vcpkg/scripts/buildsystems/vcpkg.cmake")
 message(STATUS "[cpp-deps-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
