@@ -16,6 +16,9 @@ message(STATUS "[sample-tools] ZLIB_VERSION_STRING : ${ZLIB_VERSION_STRING}")
 message(STATUS "[sample-tools] ZLIB_INCLUDE_DIRS : ${ZLIB_INCLUDE_DIRS}")
 message(STATUS "[sample-tools] ZLIB_LIBRARIES : ${ZLIB_LIBRARIES}")
 
+# 引入 gflags
+find_package(gflags CONFIG REQUIRED)
+
 # 引入 glog
 find_package(glog CONFIG REQUIRED)
 
@@ -26,6 +29,7 @@ add_library(${PROJECT_NAME} SHARED
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC ZLIB::ZLIB
+    PUBLIC gflags::gflags
     PUBLIC glog::glog
 )
 

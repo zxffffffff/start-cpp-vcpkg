@@ -1,7 +1,7 @@
 # cpp-deps-vcpkg
 
 ### 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- 基础组件：glog、gtest、zlib
+- 基础组件：gflags、glog、gtest、zlib
 - 网络层：libuv、curl
 - 数据层：protobuf、xml、json、sqlite3
 - 应用层：boost

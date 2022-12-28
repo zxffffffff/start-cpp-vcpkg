@@ -1,11 +1,13 @@
 #include "SampleDataCenter.h"
-#include "SamplePB.h"
 #include "SampleTools.h"
+#include "SamplePB.h"
+#include "SampleNet.h"
 
 SampleDataCenter::SampleDataCenter()
 {
     std::cout << "Hello SampleDataCenter." << std::endl;
 
-    SamplePB sample_pb;
     SampleTools sample_tools;
+    SamplePB sample_pb;
+    SampleNet sample_net;
 }
