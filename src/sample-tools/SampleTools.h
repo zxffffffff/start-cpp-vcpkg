@@ -11,6 +11,9 @@
 #endif
 
 #include <iostream>
+#include <string.h>
+#include <cassert>
+#include <thread>
 
 class SAMPLE_TOOLS_API SampleTools
 {
