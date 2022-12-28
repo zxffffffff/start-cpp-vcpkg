@@ -1,6 +1,7 @@
 #include "SampleTools.h"
 #include "zlib.h"
 #include "glog/logging.h"
+#include "gflags/gflags.h"
 
 SampleTools::SampleTools()
 {
@@ -18,6 +19,11 @@ SampleTools::SampleTools()
         uncompress(raw2, &raw2_len, dst, dst_len);
 
         assert(strncmp((const char*)raw, (const char*)raw2, raw2_len) == 0);
+    }
+
+    std::cout << "gflags" << std::endl;
+    {
+        std::cout << "GetArgv: " << google::GetArgv() << std::endl;
     }
 
     std::cout << "glog" << std::endl;
