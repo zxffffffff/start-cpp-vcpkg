@@ -11,9 +11,8 @@ echo vcpkg_exe: ${vcpkg_exe}
 if [ ! -x ${vcpkg_exe} ]; then
   vcpkg_sh=${vcpkg_path}/bootstrap-vcpkg.sh
   echo vcpkg_sh: ${vcpkg_sh}
-  sudo apt-get update
-  sudo apt-get install build-essential tar curl zip unzip
-  sudo sh ${vcpkg_sh}
+  xcode-select --install
+  sh ${vcpkg_sh}
 fi
 VCPKG_DEFAULT_TRIPLET=x64-linux
 # echo "${vcpkg_exe} install --triplet x64-linux"
@@ -32,6 +31,6 @@ echo "cmake --build build --target install --config ${config}"
 cmake --build build --target install --config ${config}
 
 # run
-export LD_LIBRARY_PATH=${install_path}/lib
+export DYLD_LIBRARY_PATH=${install_path}/bin
 echo "${install_path}/bin/sample-main"
 ${install_path}/bin/sample-main

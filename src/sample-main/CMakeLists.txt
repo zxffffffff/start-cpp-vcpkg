@@ -1,9 +1,5 @@
-# The real minimum version will be checked by the qtbase project.
-# 3.16 is the absolute minimum though.
-cmake_minimum_required (VERSION 3.16)
-
-project ("sample-main")
 message("[sample-main] -------- start")
+project ("sample-main")
 
 message(STATUS "[sample-main] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
@@ -22,8 +18,9 @@ target_include_directories(${PROJECT_NAME}
 )
 
 install(TARGETS ${PROJECT_NAME}
+    PUBLIC_HEADER DESTINATION include
     RUNTIME DESTINATION bin
-    LIBRARY DESTINATION lib
+    LIBRARY DESTINATION bin
     ARCHIVE DESTINATION lib
 )
 

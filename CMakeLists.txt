@@ -1,6 +1,6 @@
-# The real minimum version will be checked by the qtbase project.
-# 3.16 is the absolute minimum though.
-cmake_minimum_required (VERSION 3.16)
+message("[cpp-deps-vcpkg] -------- start")
+cmake_minimum_required (VERSION 3.20)
+set(CMAKE_CXX_STANDARD 20)
 
 if (WIN32)
     # ...
@@ -15,7 +15,6 @@ set(CMAKE_TOOLCHAIN_FILE "./vcpkg/scripts/buildsystems/vcpkg.cmake")
 message(STATUS "[cpp-deps-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
 
 project ("cpp-deps-vcpkg")
-message("[cpp-deps-vcpkg] -------- start")
 
 message(STATUS "[cpp-deps-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
