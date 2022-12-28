@@ -1,4 +1,5 @@
 @echo off
+setlocal EnableDelayedExpansion
 
 set root_path=%~dp0
 cd %root_path%
@@ -10,8 +11,8 @@ echo vcpkg_path: %vcpkg_path%
 echo vcpkg_exe: %vcpkg_exe%
 if not exist %vcpkg_exe% (
   set vcpkg_bat=%vcpkg_path%\bootstrap-vcpkg.bat
-  echo vcpkg_bat: %vcpkg_bat%
-  call %vcpkg_bat%
+  echo vcpkg_bat: !vcpkg_bat!
+  call !vcpkg_bat!
 )
 set VCPKG_DEFAULT_TRIPLET=x64-windows
 :: echo "%vcpkg_exe% install --triplet x64-windows"
