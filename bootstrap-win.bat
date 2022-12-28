@@ -9,9 +9,8 @@ set vcpkg_exe=%vcpkg_path%\vcpkg.exe
 echo vcpkg_path: %vcpkg_path%
 echo vcpkg_exe: %vcpkg_exe%
 if not exist %vcpkg_exe% (
-  set vcpkg_script=%vcpkg_path%\bootstrap-vcpkg.bat
-  echo vcpkg_script: %vcpkg_script%
-  call %vcpkg_script%
+  echo "run vcpkg/bootstrap-vcpkg.bat !!!"
+  exit
 )
 set VCPKG_DEFAULT_TRIPLET=x64-windows
 :: echo "%vcpkg_exe% install --triplet x64-windows"

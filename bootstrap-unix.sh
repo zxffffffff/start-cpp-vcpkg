@@ -8,14 +8,13 @@ vcpkg_path=${root_path}/vcpkg
 vcpkg_exe=${vcpkg_path}/vcpkg
 echo vcpkg_path: ${vcpkg_path}
 echo vcpkg_exe: ${vcpkg_exe}
-if [ ! -d ${vcpkg_exe} ]; then
-  vcpkg_script=${vcpkg_path}/bootstrap-vcpkg.sh
-  echo vcpkg_script: ${vcpkg_script}
-  ${vcpkg_script}
+if [ ! -x ${vcpkg_exe} ]; then
+  echo "run vcpkg/bootstrap-vcpkg.sh !!!"
+  exit
 fi
-VCPKG_DEFAULT_TRIPLET=x64-windows
-# echo "${vcpkg_exe} install --triplet x64-windows"
-# ${vcpkg_exe} install --triplet x64-windows
+VCPKG_DEFAULT_TRIPLET=x64-linux
+# echo "${vcpkg_exe} install --triplet x64-linux"
+# ${vcpkg_exe} install --triplet x64-linux
 
 # cmake (Debug/Release)
 config=Debug
@@ -30,12 +29,6 @@ echo "cmake --build build --target install --config ${config}"
 cmake --build build --target install --config ${config}
 
 # run
-vcpkg_installed=build/vcpkg_installed/x64-windows
-if "${config}"=="Debug" then
-  vcpkg_installed=${vcpkg_installed}/debug
-fi
-echo vcpkg_installed: ${vcpkg_installed}
-echo "cp ${vcpkg_installed}/bin/*.so ${install_path}/bin"
-cp ${vcpkg_installed}/bin/*.so ${install_path}/bin
+export LD_LIBRARY_PATH=${install_path}/lib
 echo "${install_path}/bin/sample-main"
 ${install_path}/bin/sample-main
