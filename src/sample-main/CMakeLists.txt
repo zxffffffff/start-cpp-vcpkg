@@ -17,6 +17,10 @@ target_link_libraries(${PROJECT_NAME}
     sample-datacenter
 )
 
+target_include_directories(${PROJECT_NAME}
+    PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
 install(TARGETS ${PROJECT_NAME}
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
