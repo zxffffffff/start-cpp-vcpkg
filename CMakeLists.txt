@@ -5,7 +5,7 @@ set(CMAKE_CXX_STANDARD 20)
 if (WIN32)
     # ...
 else()
-    # linux 需要设置-fPIC
+    # APPLE 和 UNIX 需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
@@ -18,6 +18,7 @@ project ("cpp-deps-vcpkg")
 
 message(STATUS "[cpp-deps-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
+# src
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-tools)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-pb)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-net)
@@ -29,6 +30,7 @@ add_subdirectory(src/sample-net)
 add_subdirectory(src/sample-datacenter)
 add_subdirectory(src/sample-main)
 
+# test
 include_directories(${PROJECT_SOURCE_DIR}/test/sample-tools-test)
 include_directories(${PROJECT_SOURCE_DIR}/test/sample-net-test)
 include_directories(${PROJECT_SOURCE_DIR}/test/sample-datacenter-test)

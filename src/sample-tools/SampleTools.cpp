@@ -2,6 +2,7 @@
 #include "zlib.h"
 #include "glog/logging.h"
 #include "gflags/gflags.h"
+#include "sqlite3.h"
 
 SampleTools::SampleTools()
 {
@@ -34,6 +35,8 @@ SampleTools::SampleTools()
         LOG(ERROR) << "This is ERROR";
         //LOG(FATAL) << "This is FATAL";
     }
+
+    std::cout << "sqlite3 version: " << sqlite3_libversion() << std::endl;
 }
 
 int SampleTools::Test(int ret)
