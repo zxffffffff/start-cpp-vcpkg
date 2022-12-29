@@ -3,9 +3,6 @@ project(sample-net)
 
 message(STATUS "[sample-net] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# dll导出宏
-add_compile_definitions(SAMPLE_NET_EXPORTS)
-
 # 引入libuv库
 find_package(libuv CONFIG REQUIRED)
 
@@ -15,7 +12,7 @@ message(STATUS "[sample-net] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
 message(STATUS "[sample-net] CURL_INCLUDE_DIR : ${CURL_INCLUDE_DIR}")
 message(STATUS "[sample-net] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
     SampleNet.h
 )

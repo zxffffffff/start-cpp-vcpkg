@@ -3,10 +3,7 @@ project(sample-datacenter)
 
 message(STATUS "[sample-datacenter] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# dllµ¼³öºê
-add_compile_definitions(SAMPLE_DATACENTER_EXPORTS)
-
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
     SampleDataCenter.cpp
     SampleDataCenter.h
 )
