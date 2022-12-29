@@ -1,13 +1,19 @@
 # start-cpp-vcpkg
 
 ### 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- 基础组件：gflags、glog、gtest、zlib
-- 网络层：libuv、curl
-- 数据层：protobuf、xml、json、sqlite3
-- 应用层：boost
+- ZLib: 非常紧凑的数据流压缩库。
+- libcurl: 多协议文件传输库。（HTTP）
+- gflags: C++的命令行标志模块。
+- glog: Google日志模块的C++实现。
+- Google Test: Google的C++测试框架。
+- Google Mock: 编写和使用C++模拟类的库。
+- libuv: 跨平台异步I/O。（TCP/UDP）
+- protobuf: 协议缓冲，谷歌的数据交换格式。
+- SQLite: 一个完全嵌入式的，功能齐全的关系数据库，只有几百KB，可以正确包含到你的项目中。
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
+- 优先使用静态库，可以减少很多编译烦恼，延长寿命
 - 已验证：
   - Windows 10 x64
   - Ubuntu 20.04 x64
@@ -39,12 +45,3 @@
   - sudo yum install devtoolset-7
   - scl enable devtoolset-7 bash
 - 运行 bootstrap-vcpkg.sh 脚本
-
-### Commands
-- vcpkg install [name]:x64-windows //区分 Manifest Mode
-- vcpkg integrate
-- vcpkg list
-- vcpkg remove
-- vcpkg search [name]
-- vcpkg update-baseline
-- vcpkg version

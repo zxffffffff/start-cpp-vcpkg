@@ -15,6 +15,9 @@ find_package(gflags CONFIG REQUIRED)
 # 引入 glog
 find_package(glog CONFIG REQUIRED)
 
+# 引入 sqlite3
+find_package(unofficial-sqlite3 CONFIG REQUIRED)
+
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
@@ -24,6 +27,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC ZLIB::ZLIB
     PUBLIC gflags::gflags
     PUBLIC glog::glog
+    PUBLIC unofficial::sqlite3::sqlite3
 )
 
 target_include_directories(${PROJECT_NAME}

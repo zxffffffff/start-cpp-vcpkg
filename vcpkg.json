@@ -9,6 +9,7 @@
     "curl",
     "gflags",
     "glog",
-    "gtest"
+    "gtest",
+    "sqlite3"
   ]
 }
