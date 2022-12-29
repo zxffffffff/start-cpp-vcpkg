@@ -9,4 +9,6 @@ class SampleTools
 {
 public:
     SampleTools();
+    
+    static int Test(int ret);
 };

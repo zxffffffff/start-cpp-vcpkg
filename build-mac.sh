@@ -29,7 +29,13 @@ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${vcpkg_cmake} -DCMAKE_INSTALL_PREFIX
 echo "cmake --build build --target install --config ${config}"
 cmake --build build --target install --config ${config}
 
-# run
+# run (main & test)
 export DYLD_LIBRARY_PATH=${install_path}/bin
 echo "${install_path}/bin/sample-main"
 ${install_path}/bin/sample-main
+echo "${install_path}/bin/sample-datacenter-test"
+${install_path}/bin/sample-datacenter-test
+echo "${install_path}/bin/sample-net-test"
+${install_path}/bin/sample-net-test
+echo "${install_path}/bin/sample-tools-test"
+${install_path}/bin/sample-tools-test

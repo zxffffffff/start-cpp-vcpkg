@@ -35,3 +35,8 @@ SampleTools::SampleTools()
         //LOG(FATAL) << "This is FATAL";
     }
 }
+
+int SampleTools::Test(int ret)
+{
+    return ret;
+}

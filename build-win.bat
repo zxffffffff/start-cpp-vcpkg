@@ -29,7 +29,7 @@ cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=%vcpkg_cmake% -DCMAKE_INSTALL_PREFIX=
 echo "cmake --build build --target install --config %config%"
 cmake --build build --target install --config %config%
 
-:: run
+:: run (main & test)
 set vcpkg_installed=build\vcpkg_installed\x64-windows
 if "%config%"=="Debug" (
   set vcpkg_installed=%vcpkg_installed%\debug
@@ -39,3 +39,9 @@ echo "copy %vcpkg_installed%\bin\*.dll %install_path%\bin"
 copy %vcpkg_installed%\bin\*.dll %install_path%\bin
 echo "%install_path%\bin\sample-main.exe"
 %install_path%\bin\sample-main.exe
+echo "%install_path%\bin\sample-datacenter-test.exe"
+%install_path%\bin\sample-datacenter-test.exe
+echo "%install_path%\bin\sample-net-test.exe"
+%install_path%\bin\sample-net-test.exe
+echo "%install_path%\bin\sample-tools-test.exe"
+%install_path%\bin\sample-tools-test.exe
