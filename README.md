@@ -1,15 +1,15 @@
 # start-cpp-vcpkg
 
 ### 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- ZLib: 非常紧凑的数据流压缩库。
-- libcurl: 多协议文件传输库。（HTTP）
-- gflags: C++的命令行标志模块。
-- glog: Google日志模块的C++实现。
-- Google Test: Google的C++测试框架。
-- Google Mock: 编写和使用C++模拟类的库。
-- libuv: 跨平台异步I/O。（TCP/UDP）
-- protobuf: 协议缓冲，谷歌的数据交换格式。
-- SQLite: 一个完全嵌入式的，功能齐全的关系数据库，只有几百KB，可以正确包含到你的项目中。
+- cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
+- zlib: 最流行的数据压缩库。
+- libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
+- gflags: Google 命令行标志库。
+- glog: Google 日志库。
+- googletest: Google 测试框架。
+- libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
+- protobuf: Google 数据序列化库。
+- sqlite3: 最流行的嵌入式关系数据库。
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）

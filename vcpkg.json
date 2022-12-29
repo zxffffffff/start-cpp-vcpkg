@@ -10,6 +10,7 @@
     "gflags",
     "glog",
     "gtest",
-    "sqlite3"
+    "sqlite3",
+    "cryptopp"
   ]
 }

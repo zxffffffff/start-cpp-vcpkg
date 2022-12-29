@@ -18,6 +18,9 @@ find_package(glog CONFIG REQUIRED)
 # 引入 sqlite3
 find_package(unofficial-sqlite3 CONFIG REQUIRED)
 
+# 引入 cryptopp
+find_package(cryptopp CONFIG REQUIRED)
+
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
@@ -28,6 +31,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC gflags::gflags
     PUBLIC glog::glog
     PUBLIC unofficial::sqlite3::sqlite3
+    PUBLIC cryptopp::cryptopp
 )
 
 target_include_directories(${PROJECT_NAME}
