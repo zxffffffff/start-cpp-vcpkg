@@ -14,9 +14,8 @@ if not exist %vcpkg_exe% (
   echo vcpkg_bat: !vcpkg_bat!
   call !vcpkg_bat!
 )
-set VCPKG_DEFAULT_TRIPLET=x64-windows
-:: echo "%vcpkg_exe% install --triplet x64-windows"
-:: %vcpkg_exe% install --triplet x64-windows
+set VCPKG_DEFAULT_TRIPLET=x64-windows-static
+:: %vcpkg_exe% install --triplet x64-windows-static
 
 :: cmake (Debug/Release)
 set config=Debug

@@ -3,9 +3,6 @@ project(sample-tools)
 
 message(STATUS "[sample-tools] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# dll导出宏
-add_compile_definitions(SAMPLE_TOOLS_EXPORTS)
-
 # 引入zlib库
 find_package(ZLIB REQUIRED)
 message(STATUS "[sample-tools] ZLIB_VERSION_STRING : ${ZLIB_VERSION_STRING}")
@@ -18,7 +15,7 @@ find_package(gflags CONFIG REQUIRED)
 # 引入 glog
 find_package(glog CONFIG REQUIRED)
 
-add_library(${PROJECT_NAME} SHARED
+add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
 )

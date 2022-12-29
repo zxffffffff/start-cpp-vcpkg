@@ -14,9 +14,8 @@ if [ ! -x ${vcpkg_exe} ]; then
   xcode-select --install
   sh ${vcpkg_sh}
 fi
-VCPKG_DEFAULT_TRIPLET=x64-linux
-# echo "${vcpkg_exe} install --triplet x64-linux"
-# ${vcpkg_exe} install --triplet x64-linux
+VCPKG_DEFAULT_TRIPLET=x64-osx-static
+# ${vcpkg_exe} install --triplet x64-osx-static
 
 # cmake (Debug/Release)
 config=Debug

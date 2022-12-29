@@ -15,9 +15,8 @@ if [ ! -x ${vcpkg_exe} ]; then
   sudo apt-get install build-essential tar curl zip unzip
   sudo sh ${vcpkg_sh}
 fi
-VCPKG_DEFAULT_TRIPLET=x64-linux
-# echo "${vcpkg_exe} install --triplet x64-linux"
-# ${vcpkg_exe} install --triplet x64-linux
+VCPKG_DEFAULT_TRIPLET=x64-linux-static
+# ${vcpkg_exe} install --triplet x64-linux-static
 
 # cmake (Debug/Release)
 config=Debug
