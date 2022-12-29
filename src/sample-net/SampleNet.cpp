@@ -40,3 +40,8 @@ SampleNet::SampleNet()
         curl_global_cleanup();
     }
 }
+
+int SampleNet::Test(int ret)
+{
+    return ret;
+}

@@ -6,4 +6,6 @@ class SampleDataCenter
 {
 public:
     SampleDataCenter();
+    
+    static int Test(int ret);
 };

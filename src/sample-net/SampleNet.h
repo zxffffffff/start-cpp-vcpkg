@@ -9,4 +9,6 @@ class SampleNet
 {
 public:
     SampleNet();
+    
+    static int Test(int ret);
 };

@@ -11,3 +11,8 @@ SampleDataCenter::SampleDataCenter()
     SamplePB sample_pb;
     SampleNet sample_net;
 }
+
+int SampleDataCenter::Test(int ret)
+{
+    return ret;
+}
