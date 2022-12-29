@@ -3,6 +3,7 @@
 #include "glog/logging.h"
 #include "gflags/gflags.h"
 #include "sqlite3.h"
+#include "cryptopp/cryptlib.h"
 
 SampleTools::SampleTools()
 {
@@ -37,6 +38,11 @@ SampleTools::SampleTools()
     }
 
     std::cout << "sqlite3 version: " << sqlite3_libversion() << std::endl;
+
+    std::cout << "cryptopp version: " << CryptoPP::HeaderVersion() << std::endl;
+    {
+        assert(CryptoPP::LibraryVersion() == CryptoPP::HeaderVersion());
+    }
 }
 
 int SampleTools::Test(int ret)
