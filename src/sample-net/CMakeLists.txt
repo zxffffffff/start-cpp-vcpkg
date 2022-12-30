@@ -15,6 +15,10 @@ message(STATUS "[sample-net] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
     SampleNet.h
+    TcpServer.cpp
+    TcpServer.h
+    TcpClient.cpp
+    TcpClient.h
 )
 
 target_link_libraries(${PROJECT_NAME}
