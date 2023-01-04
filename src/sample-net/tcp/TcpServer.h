@@ -1,16 +1,5 @@
 #pragma once
-#include <memory>
-#include <list>
-#include <iostream>
-
-class ITcpServerHandler
-{
-public:
-    void OnRead(const char* buf, size_t len) 
-    {
-        std::cout << "Server OnRead: " << std::string(buf, len) << std::endl;
-    }
-};
+#include "TcpCommon.h"
 
 class TcpServerPrivate;
 class TcpServer
@@ -19,9 +8,16 @@ public:
     TcpServer(const char* ip, int port);
     ~TcpServer();
 
-    void AddHandler(std::shared_ptr<ITcpServerHandler> handler);
+    void SetHandleRun(HandleRun f);
+    void SetHandleClose(HandleClose f);
+    void SetHandleNewConn(HandleNewConn f);
+    void SetHandleCloseConn(HandleCloseConn f);
+    void SetHandleConnOnRead(HandleConnOnRead f);
+
     void Run();
     void Close();
+
+    void Write(SocketPtr socket_ptr, const char* buf, int len);
 
 private:
     std::unique_ptr<TcpServerPrivate> priv;

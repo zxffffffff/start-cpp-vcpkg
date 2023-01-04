@@ -15,11 +15,12 @@ message(STATUS "[sample-net] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
     SampleNet.h
+    "tcp/TcpCommon.h"
     "tcp/TcpServer.cpp"
     "tcp/TcpServer.h"
     "tcp/TcpClient.cpp"
     "tcp/TcpClient.h"
-)
+ "tcp/TcpCommon (2).h")
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>
