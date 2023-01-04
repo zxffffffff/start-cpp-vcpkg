@@ -7,6 +7,10 @@ TEST(TcpConnTest, Test1) {
   server.Run();
   TcpClient client("0.0.0.0", 9123);
   client.Run();
+
+  using namespace std::chrono_literals;
+  std::this_thread::sleep_for(2s);
+
   EXPECT_EQ(123, 123);
 }
 
