@@ -51,7 +51,9 @@ public:
             priv->connect.data = priv;
             priv->running = true;
 
+            LOG(INFO) << std::format("client run %s:%d", ip, port);
             uv_run(priv->loop.get(), UV_RUN_DEFAULT);
+            LOG(INFO) << std::format("client stop %s:%d", ip, port);
 
             uv_close((uv_handle_t*)priv->socket.get(), TcpClientPrivate::onClose);
         } while (0);

@@ -53,7 +53,9 @@ public:
             }
             priv->running = true;
 
+            LOG(INFO) << std::format("server run %s:%d", ip, port);
             uv_run(priv->loop.get(), UV_RUN_DEFAULT);
+            LOG(INFO) << std::format("server stop %s:%d", ip, port);
 
             uv_close((uv_handle_t*)priv->server.get(), TcpServerPrivate::onClose);
         } while (0);

@@ -23,6 +23,7 @@ add_library(${PROJECT_NAME} STATIC
  "tcp/TcpCommon (2).h")
 
 target_link_libraries(${PROJECT_NAME}
+    PUBLIC sample-tools
     PRIVATE $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>
     PRIVATE CURL::libcurl
 )
