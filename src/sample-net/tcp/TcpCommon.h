@@ -15,9 +15,9 @@ using HandleCloseConn = std::function<void(SocketPtr id)>;
 using HandleConnOnRead = std::function<void(SocketPtr id, const char* buf, size_t len)>;
 using HandleConnOnWrite = std::function<void(SocketPtr id, const char* buf, size_t len)>;
 
-struct WriteReq
-{
-    uv_write_t req;
-    uv_buf_t buf;
-    HandleConnOnWrite handleConnOnWrite;
-};
+//struct WriteReq
+//{
+//    uv_write_t req;
+//    uv_buf_t buf;
+//    HandleConnOnWrite handleConnOnWrite;
+//};

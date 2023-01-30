@@ -16,6 +16,7 @@ public:
 
     void Run();
     void Close();
+    bool IsRunning() const;
 
     void Write(const char* buf, int len);
 
