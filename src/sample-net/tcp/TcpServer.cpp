@@ -57,6 +57,8 @@ public:
             uv_async_init(priv->loop.get(), priv->async_close.get(), TcpServerPrivate::onAsyncClose);
 
             LOG(INFO) << "server run " << priv->ip << " : " << priv->port;
+            if (priv->handleRun)
+                priv->handleRun();
             uv_run(priv->loop.get(), UV_RUN_DEFAULT);
             LOG(INFO) << "server stop " << priv->ip << " : " << priv->port;
         } while (0);
@@ -77,6 +79,9 @@ public:
         auto priv = (TcpServerPrivate*)server->data;
         priv->running = false;
         priv->clients.clear();
+
+        if (priv->handleClose)
+            priv->handleClose();
     }
 
     static void onConnection(uv_stream_t* server, int status)
@@ -95,9 +100,9 @@ public:
         client->data = priv;
 
         if (uv_accept(server, (uv_stream_t*)client.get()) == 0) {
-            if (priv->handleNewConn) {
-                priv->handleNewConn((size_t)client.get());
-            }
+            if (priv->handleNewConn)
+                priv->handleNewConn(client.get());
+            
             uv_read_start((uv_stream_t*)client.get(), onReadAllocCbk, onReadCbk);
         }
         else {
@@ -111,6 +116,9 @@ public:
         auto priv = (TcpServerPrivate*)client->data;
         for (auto ite = priv->clients.begin(); ite != priv->clients.end(); ++ite) {
             if (ite->get() == (uv_tcp_t*)client) {
+                if (priv->handleCloseConn)
+                    priv->handleCloseConn(client);
+
                 priv->clients.erase(ite);
                 break;
             }
@@ -127,9 +135,9 @@ public:
         auto priv = (TcpServerPrivate*)client->data;
         if (nread > 0) {
             LOG(INFO) << "onReadCbk " << std::string(buf->base, nread);
-            if (priv->handleConnOnRead) {
-                priv->handleConnOnRead((size_t)client, buf->base, nread);
-            }
+
+            if (priv->handleConnOnRead)
+                priv->handleConnOnRead(client, buf->base, nread);
         }
         if (nread < 0 || nread == UV_EOF) {
             LOG(INFO) << "onReadCbk close " << nread;
