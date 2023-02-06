@@ -58,6 +58,8 @@ public:
                 break;
             }
             priv->running = true;
+            priv->clients.clear();
+            priv->read_buf.reserve(4 * 1024);
 
             priv->async_close->data = priv;
             priv->async_write->data = priv;
@@ -86,7 +88,6 @@ public:
         LOG(INFO) << "onClose";
         auto priv = (TcpServerPrivate*)server->data;
         priv->running = false;
-        priv->clients.clear();
 
         if (priv->handleClose)
             priv->handleClose();
