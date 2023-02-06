@@ -55,6 +55,8 @@ public:
             uv_async_init(priv->loop.get(), priv->async_close.get(), TcpClientPrivate::onAsyncClose);
 
             LOG(INFO) << "client run " << priv->ip << " : " << priv->port;
+            if (priv->handleRun)
+                priv->handleRun();
             uv_run(priv->loop.get(), UV_RUN_DEFAULT);
             LOG(INFO) << "client stop " << priv->ip << " : " << priv->port;
         } while (0);
@@ -74,6 +76,9 @@ public:
         LOG(INFO) << "onClose";
         auto priv = (TcpClientPrivate*)socket->data;
         priv->running = false;
+
+        if (priv->handleClose)
+            priv->handleClose();
     }
 
     static void onConnection(uv_connect_t* connect, int status)
@@ -85,6 +90,10 @@ public:
 
         LOG(INFO) << "onConnection";
         auto priv = (TcpClientPrivate*)connect->data;
+
+        if (priv->handleNewConn)
+            priv->handleNewConn(priv->socket.get());
+
         uv_read_start((uv_stream_t*)priv->socket.get(), onReadAllocCbk, onReadCbk);
     }
 
@@ -92,6 +101,9 @@ public:
     {
         LOG(INFO) << "onCloseConnection";
         auto priv = (TcpClientPrivate*)connect->data;
+
+        if (priv->handleCloseConn)
+            priv->handleCloseConn(priv->socket.get());
     }
 
     static void onReadAllocCbk(uv_handle_t* socket, size_t suggested_size, uv_buf_t* buf)
@@ -104,9 +116,9 @@ public:
         auto priv = (TcpClientPrivate*)socket->data;
         if (nread > 0) {
             LOG(INFO) << "onReadCbk " << std::string(buf->base, nread);
-            if (priv->handleConnOnRead) {
-                priv->handleConnOnRead((size_t)socket, buf->base, nread);
-            }
+
+            if (priv->handleConnOnRead)
+                priv->handleConnOnRead(socket, buf->base, nread);
         }
         if (nread < 0 || nread == UV_EOF) {
             LOG(INFO) << "onReadCbk close " << nread;
