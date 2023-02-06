@@ -1,4 +1,4 @@
-#include "SampleDataCenter.h"
+#include "SampleDynamicLib.h"
 #include "gflags/gflags.h"
 #include "glog/logging.h"
 
@@ -11,6 +11,6 @@ int main(int argc, char *argv[])
 
     cout << "Hello SampleMain." << endl;
 
-    SampleDataCenter sample_datacenter;
+    SampleDynamicLib sample_dynamic_lib;
     return 0;
 }
