@@ -45,7 +45,7 @@ public:
 
             int r = uv_tcp_connect(priv->connect.get(), priv->socket.get(), (const struct sockaddr*)&priv->dest, onConnection);
             if (r) {
-                LOG(ERROR) << std::format("Connect error {}", uv_strerror(r));
+                LOG(ERROR) << "Connect error " << uv_strerror(r);
                 break;
             }
             priv->connect->data = priv;
@@ -54,9 +54,9 @@ public:
             priv->async_close->data = priv;
             uv_async_init(priv->loop.get(), priv->async_close.get(), TcpClientPrivate::onAsyncClose);
 
-            LOG(INFO) << std::format("client run {}:{}", priv->ip, priv->port);
+            LOG(INFO) << "client run " << priv->ip << " : " << priv->port;
             uv_run(priv->loop.get(), UV_RUN_DEFAULT);
-            LOG(INFO) << std::format("client stop {}:{}", priv->ip, priv->port);
+            LOG(INFO) << "client stop " << priv->ip << " : " << priv->port;
         } while (0);
 
         uv_loop_close(priv->loop.get());
@@ -64,14 +64,14 @@ public:
 
     static void onAsyncClose(uv_async_t* handle)
     {
-        LOG(INFO) << std::format("onAsyncClose");
+        LOG(INFO) << "onAsyncClose";
         auto priv = (TcpClientPrivate*)handle->data;
         uv_close((uv_handle_t*)priv->socket.get(), TcpClientPrivate::onClose);
     }
 
     static void onClose(uv_handle_t* socket)
     {
-        LOG(INFO) << std::format("onClose");
+        LOG(INFO) << "onClose";
         auto priv = (TcpClientPrivate*)socket->data;
         priv->running = false;
     }
@@ -79,18 +79,18 @@ public:
     static void onConnection(uv_connect_t* connect, int status)
     {
         if (status < 0) {
-            LOG(ERROR) << std::format("onConnection error {}", uv_strerror(status));
+            LOG(ERROR) << "onConnection error " << uv_strerror(status);
             return;
         }
 
-        LOG(INFO) << std::format("onConnection");
+        LOG(INFO) << "onConnection";
         auto priv = (TcpClientPrivate*)connect->data;
         uv_read_start((uv_stream_t*)priv->socket.get(), onReadAllocCbk, onReadCbk);
     }
 
     static void onCloseConnection(uv_handle_t* connect)
     {
-        LOG(INFO) << std::format("onCloseConnection");
+        LOG(INFO) << "onCloseConnection";
         auto priv = (TcpClientPrivate*)connect->data;
     }
 
@@ -103,13 +103,13 @@ public:
     {
         auto priv = (TcpClientPrivate*)socket->data;
         if (nread > 0) {
-            LOG(INFO) << std::format("onReadCbk {}", std::string(buf->base, nread));
+            LOG(INFO) << "onReadCbk " << std::string(buf->base, nread);
             if (priv->handleConnOnRead) {
                 priv->handleConnOnRead((size_t)socket, buf->base, nread);
             }
         }
         if (nread < 0 || nread == UV_EOF) {
-            LOG(INFO) << std::format("onReadCbk close {}", nread);
+            LOG(INFO) << "onReadCbk close " << nread;
             uv_close((uv_handle_t*)socket, onCloseConnection);
         }
     }
@@ -170,16 +170,16 @@ bool TcpClient::IsRunning() const
 void TcpClient::Write(const char* buf, int len)
 {
     if (!IsRunning()) {
-        LOG(INFO) << std::format("Write !IsRunning");
+        LOG(INFO) << "Write !IsRunning";
         return;
     }
 
-    LOG(INFO) << std::format("Write {}", std::string(buf, len));
+    LOG(INFO) << "Write " << std::string(buf, len);
     auto req = new uv_write_t;
     auto bufs = uv_buf_init(const_cast<char*>(buf), len);
     int r = ::uv_write(req, (uv_stream_t*)priv->socket.get(), &bufs, 1, [](uv_write_t* req, int status) { delete req; });
     if (r) {
-        LOG(INFO) << std::format("Write error {}", r);
+        LOG(INFO) << "Write error " << r;
         delete req;
     }
 }
