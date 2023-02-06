@@ -56,6 +56,7 @@ public:
             }
             priv->connect->data = priv;
             priv->running = true;
+            priv->read_buf.reserve(4 * 1024);
 
             priv->async_close->data = priv;
             priv->async_write->data = priv;

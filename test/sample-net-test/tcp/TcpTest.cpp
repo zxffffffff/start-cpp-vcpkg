@@ -30,11 +30,11 @@ TEST(TcpConnTest, ClientWrite) {
 
     // close
     client.Close();
-    std::this_thread::sleep_for(500ms);
-    ASSERT_EQ(client.IsRunning(), false);
-
     server.Close();
-    std::this_thread::sleep_for(500ms);
+
+    std::this_thread::sleep_for(100ms);
+
+    ASSERT_EQ(client.IsRunning(), false);
     ASSERT_EQ(server.IsRunning(), false);
 }
 
@@ -67,11 +67,11 @@ TEST(TcpConnTest, ServerWrite) {
 
     // close
     client.Close();
-    std::this_thread::sleep_for(500ms);
-    ASSERT_EQ(client.IsRunning(), false);
-
     server.Close();
-    std::this_thread::sleep_for(500ms);
+
+    std::this_thread::sleep_for(100ms);
+
+    ASSERT_EQ(client.IsRunning(), false);
     ASSERT_EQ(server.IsRunning(), false);
 }
 
@@ -127,18 +127,18 @@ TEST(TcpConnTest, MultiPingPong) {
     client1.Write(buff_c1.c_str(), buff_c1.length());
     client2.Write(buff_c2.c_str(), buff_c2.length());
     client3.Write(buff_c3.c_str(), buff_c3.length());
-    std::this_thread::sleep_for(1s);
+    std::this_thread::sleep_for(333ms);
 
     // close
     client1.Close();
     client2.Close();
     client3.Close();
-    std::this_thread::sleep_for(500ms);
+    server.Close();
+
+    std::this_thread::sleep_for(100ms);
+
     ASSERT_EQ(client1.IsRunning(), false);
     ASSERT_EQ(client2.IsRunning(), false);
     ASSERT_EQ(client3.IsRunning(), false);
-
-    server.Close();
-    std::this_thread::sleep_for(500ms);
     ASSERT_EQ(server.IsRunning(), false);
 }
