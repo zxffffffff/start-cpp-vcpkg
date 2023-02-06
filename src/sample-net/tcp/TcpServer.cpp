@@ -48,7 +48,7 @@ public:
 
             int r = uv_listen((uv_stream_t*)priv->server.get(), priv->listen_backlog, onConnection);
             if (r) {
-                LOG(ERROR) << std::format("Listen error {}", uv_strerror(r));
+                LOG(ERROR) << "Listen error " << uv_strerror(r);
                 break;
             }
             priv->running = true;
@@ -56,9 +56,9 @@ public:
             priv->async_close->data = priv;
             uv_async_init(priv->loop.get(), priv->async_close.get(), TcpServerPrivate::onAsyncClose);
 
-            LOG(INFO) << std::format("server run {}:{}", priv->ip, priv->port);
+            LOG(INFO) << "server run " << priv->ip << " : " << priv->port;
             uv_run(priv->loop.get(), UV_RUN_DEFAULT);
-            LOG(INFO) << std::format("server stop {}:{}", priv->ip, priv->port);
+            LOG(INFO) << "server stop " << priv->ip << " : " << priv->port;
         } while (0);
 
         uv_loop_close(priv->loop.get());
@@ -66,14 +66,14 @@ public:
 
     static void onAsyncClose(uv_async_t* handle)
     {
-        LOG(INFO) << std::format("onAsyncClose");
+        LOG(INFO) << "onAsyncClose";
         auto priv = (TcpServerPrivate*)handle->data;
         uv_close((uv_handle_t*)priv->server.get(), TcpServerPrivate::onClose);
     }
 
     static void onClose(uv_handle_t* server)
     {
-        LOG(INFO) << std::format("onClose");
+        LOG(INFO) << "onClose";
         auto priv = (TcpServerPrivate*)server->data;
         priv->running = false;
         priv->clients.clear();
@@ -82,11 +82,11 @@ public:
     static void onConnection(uv_stream_t* server, int status)
     {
         if (status < 0) {
-            LOG(ERROR) << std::format("onConnection error {}", uv_strerror(status));
+            LOG(ERROR) << "onConnection error " << uv_strerror(status);
             return;
         }
 
-        LOG(INFO) << std::format("onConnection");
+        LOG(INFO) << "onConnection";
         auto priv = (TcpServerPrivate*)server->data;
 
         priv->clients.push_back(std::make_shared<uv_tcp_t>());
@@ -107,7 +107,7 @@ public:
 
     static void onCloseConnection(uv_handle_t* client)
     {
-        LOG(INFO) << std::format("onCloseConnection");
+        LOG(INFO) << "onCloseConnection";
         auto priv = (TcpServerPrivate*)client->data;
         for (auto ite = priv->clients.begin(); ite != priv->clients.end(); ++ite) {
             if (ite->get() == (uv_tcp_t*)client) {
@@ -126,13 +126,13 @@ public:
     {
         auto priv = (TcpServerPrivate*)client->data;
         if (nread > 0) {
-            LOG(INFO) << std::format("onReadCbk {}", std::string(buf->base, nread));
+            LOG(INFO) << "onReadCbk " << std::string(buf->base, nread);
             if (priv->handleConnOnRead) {
                 priv->handleConnOnRead((size_t)client, buf->base, nread);
             }
         }
         if (nread < 0 || nread == UV_EOF) {
-            LOG(INFO) << std::format("onReadCbk close {}", nread);
+            LOG(INFO) << "onReadCbk close " << nread;
             uv_close((uv_handle_t*)client, onCloseConnection);
         }
     }

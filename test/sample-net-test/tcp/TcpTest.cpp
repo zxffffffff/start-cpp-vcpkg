@@ -16,7 +16,7 @@ TEST(TcpConnTest, WriteAndRead) {
     ASSERT_EQ(client.IsRunning(), true);
 
     // write & read
-    std::string buff = "abc123!@#";
+    std::string buff = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
     static std::string buff2;
     server.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
         buff2 = std::string(buf, len);
