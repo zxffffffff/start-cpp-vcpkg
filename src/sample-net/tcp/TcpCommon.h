@@ -4,7 +4,6 @@
 #include <list>
 #include <iostream>
 #include <functional>
-#include <format>
 
 using SocketPtr = void*;
 
