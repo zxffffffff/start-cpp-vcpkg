@@ -2,6 +2,7 @@
 #include "glog/logging.h"
 #include <memory>
 #include <list>
+#include <unordered_map>
 #include <iostream>
 #include <functional>
 #include <mutex>
