@@ -9,7 +9,7 @@ add_executable (${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    sample-datacenter
+    PUBLIC sample-dynamic-lib
 )
 
 target_include_directories(${PROJECT_NAME}

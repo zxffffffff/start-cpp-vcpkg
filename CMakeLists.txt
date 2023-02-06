@@ -23,11 +23,13 @@ include_directories(${PROJECT_SOURCE_DIR}/src/sample-tools)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-pb)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-net)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-datacenter)
+include_directories(${PROJECT_SOURCE_DIR}/src/sample-dynamic-lib)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-main)
 add_subdirectory(src/sample-tools)
 add_subdirectory(src/sample-pb)
 add_subdirectory(src/sample-net)
 add_subdirectory(src/sample-datacenter)
+add_subdirectory(src/sample-dynamic-lib)
 add_subdirectory(src/sample-main)
 
 # test
