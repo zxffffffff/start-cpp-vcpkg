@@ -1,6 +1,7 @@
 #include "tcp/TcpServer.h"
 #include "tcp/TcpClient.h"
 #include "gtest/gtest.h"
+#include <thread>
 
 TEST(TcpConnTest, WriteAndRead) {
     using namespace std::chrono_literals;
