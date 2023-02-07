@@ -11,7 +11,7 @@ SampleTools::SampleTools()
 
     std::cout << "zlib version: " << zlibVersion() << std::endl;
     {
-        unsigned char raw[64] = "abc123!@#$%^&*()_-+=*/\\'\"?ÄãºÃ";
+        unsigned char raw[64] = "abc123!@#$%^&*()_-+=*/\\'\"?ä½ å¥½";
         unsigned char dst[1024] = "";
         unsigned long dst_len = 0;
         compress(dst, &dst_len, raw, 64);
