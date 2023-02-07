@@ -13,31 +13,25 @@ HttpClient::~HttpClient()
     HttpClientPrivate::global_cleanup();
 }
 
-HttpClient& HttpClient::Singleton()
-{
-    static HttpClient ins;
-    return ins;
-}
-
 std::string HttpClient::Get(
     const std::string& url,
     const std::map<std::string, std::string>& params,
     int timeout /*= 10*/
 )
 {
-    std::string complete_url = url + ParseParam(params);
+    std::string complete_url = url + "?" + ParseParam(params);
     return HttpClientPrivate::Get(complete_url.c_str(), timeout);
 }
 
 std::string HttpClient::Post(
     const std::string& url,
     const std::map<std::string, std::string>& params,
-    const std::string& json,
+    const std::string& body,
     int timeout /*= 10*/
 )
 {
-    std::string complete_url = url + ParseParam(params);
-    return HttpClientPrivate::Post(complete_url.c_str(), json.c_str(), timeout);
+    std::string complete_url = url + "?" + ParseParam(params);
+    return HttpClientPrivate::Post(complete_url.c_str(), body.c_str(), timeout);
 }
 
 std::string HttpClient::ParseParam(const std::map<std::string, std::string>& params)
@@ -46,9 +40,7 @@ std::string HttpClient::ParseParam(const std::map<std::string, std::string>& par
         return "";
     std::stringstream ss;
     for (auto ite = params.begin(); ite != params.end(); ++ite) {
-        if (ite == params.begin())
-            ss << "?";
-        else
+        if (ite != params.begin())
             ss << "&";
         ss << ite->first << "=" << ite->second;
     }

@@ -1,7 +1,6 @@
 # start-cpp-vcpkg
 
 ### 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
 - zlib: 最流行的数据压缩库。
 - libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
 - gflags: Google 命令行标志库。
@@ -10,6 +9,8 @@
 - libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
 - protobuf: Google 数据序列化库。
 - sqlite3: 最流行的嵌入式关系数据库。
+- cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
+- jsoncpp: 优秀的 json 序列化库。
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
