@@ -5,6 +5,7 @@
 #include "sqlite3.h"
 #include "cryptopp/cryptlib.h"
 #include "json/version.h"
+#include "json/json.h"
 
 SampleTools::SampleTools()
 {
@@ -21,7 +22,7 @@ SampleTools::SampleTools()
         unsigned long raw2_len = 0;
         uncompress(raw2, &raw2_len, dst, dst_len);
 
-        assert(strncmp((const char*)raw, (const char*)raw2, raw2_len) == 0);
+        assert(strncmp((const char *)raw, (const char *)raw2, raw2_len) == 0);
     }
 
     std::cout << "gflags" << std::endl;
@@ -35,7 +36,7 @@ SampleTools::SampleTools()
         LOG(INFO) << "This is INFO";
         LOG(WARNING) << "This is WARNING";
         LOG(ERROR) << "This is ERROR";
-        //LOG(FATAL) << "This is FATAL";
+        // LOG(FATAL) << "This is FATAL";
     }
 
     std::cout << "sqlite3 version: " << sqlite3_libversion() << std::endl;
@@ -46,6 +47,27 @@ SampleTools::SampleTools()
     }
 
     std::cout << "jsoncpp version: " << JSONCPP_VERSION_STRING;
+    {
+        const std::string rawJson = R"({"Age": 28, "Name": "zxffffffff"})";
+        const auto rawJsonLength = static_cast<int>(rawJson.length());
+        constexpr bool shouldUseOldWay = false;
+        JSONCPP_STRING err;
+        Json::Value root;
+
+        Json::CharReaderBuilder builder;
+        const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
+        if (reader->parse(rawJson.c_str(), rawJson.c_str() + rawJsonLength, &root, &err))
+        {
+            const std::string name = root["Name"].asString();
+            const int age = root["Age"].asInt();
+            assert(name == "zxffffffff");
+            assert(age == 28);
+        }
+        else
+        {
+            assert(false);
+        }
+    }
 }
 
 int SampleTools::Test(int ret)
