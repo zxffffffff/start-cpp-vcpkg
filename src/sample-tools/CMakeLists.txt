@@ -21,6 +21,9 @@ find_package(unofficial-sqlite3 CONFIG REQUIRED)
 # 引入 cryptopp
 find_package(cryptopp CONFIG REQUIRED)
 
+# 引入 jsoncpp
+find_package(jsoncpp CONFIG REQUIRED)
+
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
@@ -34,6 +37,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC glog::glog
     PUBLIC unofficial::sqlite3::sqlite3
     PUBLIC cryptopp::cryptopp
+    PUBLIC jsoncpp_lib jsoncpp_object JsonCpp::JsonCpp
 )
 
 target_include_directories(${PROJECT_NAME}

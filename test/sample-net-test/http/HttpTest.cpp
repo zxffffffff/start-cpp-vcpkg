@@ -3,6 +3,9 @@
 
 TEST(HttpClientTest, TestBaidu)
 {
+    if (!google::IsGoogleLoggingInitialized())
+        google::InitGoogleLogging("test");
+
     auto &http = HttpClient::Singleton();
 
     auto s = http.Get("https://www.baidu.com", {});

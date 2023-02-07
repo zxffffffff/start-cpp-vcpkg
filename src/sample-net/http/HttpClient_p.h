@@ -4,8 +4,6 @@
 
 class HttpClientPrivate
 {
-private:
-
 public:
     static void global_init()
     {
@@ -24,6 +22,7 @@ public:
         return size * nmemb;
     }
 
+    // 同步请求
     static std::string Get(const char* url, int timeout)
     {
         std::stringstream res;
@@ -37,22 +36,25 @@ public:
         curl_easy_cleanup(curl);
 
         if (r != CURLE_OK) {
-            LOG(ERROR) << "curl_easy_perform error " << curl_easy_strerror(r);
+            LOG(ERROR) << curl_easy_strerror(r);
             return "";
         }
         return res.str();
     }
 
-    static std::string Post(const char* url, const char* json, int timeout)
+    // 同步请求
+    static std::string Post(const char* url, const char* body, int timeout)
     {
         std::stringstream res;
 
         CURL* curl = curl_easy_init();
         curl_easy_setopt(curl, CURLOPT_URL, url);
         curl_easy_setopt(curl, CURLOPT_POST, 1);
-        auto headers = curl_slist_append(NULL, "content-type:application/json");
+        struct curl_slist* headers = NULL;
+        headers = curl_slist_append(headers, "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
+        headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, json);
+        curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body);
         curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &res);
@@ -61,7 +63,7 @@ public:
         curl_easy_cleanup(curl);
 
         if (r != CURLE_OK) {
-            LOG(ERROR) << "curl_easy_perform error " << curl_easy_strerror(r);
+            LOG(ERROR) << curl_easy_strerror(r);
             return "";
         }
         return res.str();

@@ -8,27 +8,26 @@ private:
     ~HttpClient();
 
 public:
-    static HttpClient& Singleton();
+    static HttpClient& Singleton()
+    {
+        static HttpClient ins;
+        return ins;
+    }
 
-    /* ×èÈûÇëÇó
-     * url : "https://www.baidu.com"
-     * json : {}
-     * timeout : sec
-     */
-
+    // åŒæ­¥è¯·æ±‚
     std::string Get(
         const std::string& url,
         const std::map<std::string, std::string>& params,
         int timeout = 10
     );
 
+    // åŒæ­¥è¯·æ±‚
     std::string Post(
         const std::string& url,
         const std::map<std::string, std::string>& params,
-        const std::string& json,
+        const std::string& body,
         int timeout = 10
     );
 
-private:
-    std::string ParseParam(const std::map<std::string, std::string>& params);
+    static std::string ParseParam(const std::map<std::string, std::string>& params);
 };

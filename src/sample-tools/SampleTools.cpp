@@ -4,6 +4,7 @@
 #include "gflags/gflags.h"
 #include "sqlite3.h"
 #include "cryptopp/cryptlib.h"
+#include "json/version.h"
 
 SampleTools::SampleTools()
 {
@@ -43,6 +44,8 @@ SampleTools::SampleTools()
     {
         assert(CryptoPP::LibraryVersion() == CryptoPP::HeaderVersion());
     }
+
+    std::cout << "jsoncpp version: " << JSONCPP_VERSION_STRING;
 }
 
 int SampleTools::Test(int ret)
