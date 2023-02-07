@@ -37,7 +37,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC glog::glog
     PUBLIC unofficial::sqlite3::sqlite3
     PUBLIC cryptopp::cryptopp
-    PUBLIC jsoncpp_lib jsoncpp_object JsonCpp::JsonCpp
+    PUBLIC JsonCpp::JsonCpp
 )
 
 target_include_directories(${PROJECT_NAME}
