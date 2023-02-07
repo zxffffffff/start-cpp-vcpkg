@@ -20,6 +20,9 @@ add_library(${PROJECT_NAME} STATIC
     "tcp/TcpServer.h"
     "tcp/TcpClient.cpp"
     "tcp/TcpClient.h"
+    "http/HttpCommon.h"
+    "http/HttpClient.cpp"
+    "http/HttpClient.h"
 )
 
 target_link_libraries(${PROJECT_NAME}

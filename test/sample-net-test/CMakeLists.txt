@@ -11,6 +11,7 @@ find_package(GTest CONFIG REQUIRED)
 add_executable (${PROJECT_NAME}
     SampleNetTest.cpp
     "tcp/TcpTest.cpp"
+    "http/HttpTest.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}
