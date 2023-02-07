@@ -24,6 +24,8 @@ find_package(cryptopp CONFIG REQUIRED)
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
+    "crypto/Crypto.h"
+    "crypto/Crypto.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}
