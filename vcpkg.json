@@ -12,6 +12,9 @@
     "gtest",
     "sqlite3",
     "cryptopp",
-    "jsoncpp"
+    "jsoncpp",
+    "mysql-connector-cpp",
+    "mongo-cxx-driver",
+    "hiredis"
   ]
 }

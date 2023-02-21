@@ -6,21 +6,24 @@
 ## 
 #############################################################################
 
-message("[sample-datacenter] -------- start")
-project(sample-datacenter)
+message("[sample-db-test] -------- start")
+project ("sample-db-test")
 
-message(STATUS "[sample-datacenter] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[sample-db-test] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-add_library(${PROJECT_NAME} STATIC
-    SampleDataCenter.cpp
-    SampleDataCenter.h
+# 引入 GTest
+enable_testing()
+find_package(GTest CONFIG REQUIRED)
+
+# 将源代码添加到此项目的可执行文件。
+add_executable (${PROJECT_NAME}
+    SampleDBTest.cpp
+    "mysql/MySQLClientTest.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC sample-tools
     PRIVATE sample-db
-    PRIVATE sample-pb
-    PRIVATE sample-net
+    PRIVATE GTest::gtest_main
 )
 
 target_include_directories(${PROJECT_NAME}
@@ -34,4 +37,8 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-datacenter] -------- done")
+# 运行 GTest
+include(GoogleTest)
+gtest_discover_tests(${PROJECT_NAME})
+
+message("[sample-db-test] -------- done")

@@ -6,15 +6,13 @@
 **
 ****************************************************************************/
 
-#pragma once
-#include "glog/logging.h"
-#include <memory>
-#include <list>
-#include <map>
-#include <unordered_map>
-#include <iostream>
-#include <functional>
-#include <thread>
-#include <mutex>
-#include <iostream>
-#include <sstream>
+#include "SampleDB.h"
+#include "gtest/gtest.h"
+
+TEST(SampleDB, Test1) {
+  EXPECT_EQ(SampleDB::Test(123), 123);
+}
+
+TEST(SampleDB, Test2) {
+  ASSERT_EQ(123, 123);
+}
