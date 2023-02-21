@@ -37,6 +37,8 @@ add_library(${PROJECT_NAME} STATIC
     SampleTools.h
     "crypto/Crypto.h"
     "crypto/Crypto.cpp"
+    "example/Example.h"
+    "example/Example.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}

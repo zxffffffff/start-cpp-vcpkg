@@ -6,15 +6,14 @@
 **
 ****************************************************************************/
 
-#pragma once
-#include "glog/logging.h"
-#include <memory>
-#include <list>
-#include <map>
-#include <unordered_map>
-#include <iostream>
-#include <functional>
-#include <thread>
-#include <mutex>
-#include <iostream>
-#include <sstream>
+#include "SampleDB.h"
+
+SampleDB::SampleDB()
+{
+    std::cout << "Hello SampleDB." << std::endl;
+}
+
+int SampleDB::Test(int ret)
+{
+    return ret;
+}

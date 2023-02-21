@@ -35,6 +35,8 @@ echo "${install_path}/bin/sample-main"
 ${install_path}/bin/sample-main
 echo "${install_path}/bin/sample-datacenter-test"
 ${install_path}/bin/sample-datacenter-test
+echo "${install_path}/bin/sample-db-test"
+${install_path}/bin/sample-db-test
 echo "${install_path}/bin/sample-net-test"
 ${install_path}/bin/sample-net-test
 echo "${install_path}/bin/sample-tools-test"

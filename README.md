@@ -11,9 +11,9 @@
 - sqlite3: 最流行的嵌入式关系数据库。
 - cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
 - jsoncpp: json 序列化库。
-- mysql-connector-cpp：MySQL 数据库连接器，有 C 和 C++ 版本。
-- mongo-cxx-driver：MongoDB 数据库链接器，有 C 和 C++ 版本。
-- hiredis：Redis 数据库链接器，C 版本。
+- mysql-connector-cpp：连接 MySQL 数据库。
+- mongo-cxx-driver：连接 MongoDB 数据库。
+- hiredis：连接 Redis 数据库。
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
