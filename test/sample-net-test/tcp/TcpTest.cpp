@@ -1,3 +1,11 @@
+/****************************************************************************
+** MIT License
+**
+** Author	: xiaofeng.zhu
+** Support	: zxffffffff@outlook.com, 1337328542@qq.com
+**
+****************************************************************************/
+
 #include "tcp/TcpServer.h"
 #include "tcp/TcpClient.h"
 #include "gtest/gtest.h"

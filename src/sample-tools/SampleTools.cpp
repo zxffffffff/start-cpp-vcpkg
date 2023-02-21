@@ -1,3 +1,11 @@
+/****************************************************************************
+** MIT License
+**
+** Author	: xiaofeng.zhu
+** Support	: zxffffffff@outlook.com, 1337328542@qq.com
+**
+****************************************************************************/
+
 #include "SampleTools.h"
 #include "zlib.h"
 #include "glog/logging.h"

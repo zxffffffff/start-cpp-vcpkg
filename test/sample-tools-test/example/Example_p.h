@@ -7,11 +7,11 @@
 ****************************************************************************/
 
 #pragma once
+#include "Common.h"
 
-#include <iostream>
-
-class SamplePB
+class ExamplePrivate
 {
 public:
-    SamplePB();
+    ExamplePrivate() = default;
+    ~ExamplePrivate() = default;
 };
