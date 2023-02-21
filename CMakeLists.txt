@@ -1,3 +1,11 @@
+#############################################################################
+## MIT License
+## 
+## Author	: xiaofeng.zhu
+## Support	: zxffffffff@outlook.com, 1337328542@qq.com
+## 
+#############################################################################
+
 message("[cpp-deps-vcpkg] -------- start")
 cmake_minimum_required (VERSION 3.16)
 set(CMAKE_CXX_STANDARD 20)
@@ -22,12 +30,14 @@ message(STATUS "[cpp-deps-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-tools)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-pb)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-net)
+include_directories(${PROJECT_SOURCE_DIR}/src/sample-db)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-datacenter)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-dynamic-lib)
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-main)
 add_subdirectory(src/sample-tools)
 add_subdirectory(src/sample-pb)
 add_subdirectory(src/sample-net)
+add_subdirectory(src/sample-db)
 add_subdirectory(src/sample-datacenter)
 add_subdirectory(src/sample-dynamic-lib)
 add_subdirectory(src/sample-main)
@@ -35,9 +45,11 @@ add_subdirectory(src/sample-main)
 # test
 include_directories(${PROJECT_SOURCE_DIR}/test/sample-tools-test)
 include_directories(${PROJECT_SOURCE_DIR}/test/sample-net-test)
+include_directories(${PROJECT_SOURCE_DIR}/test/sample-db-test)
 include_directories(${PROJECT_SOURCE_DIR}/test/sample-datacenter-test)
 add_subdirectory(test/sample-tools-test)
 add_subdirectory(test/sample-net-test)
+add_subdirectory(test/sample-db-test)
 add_subdirectory(test/sample-datacenter-test)
 
 message("[cpp-deps-vcpkg] -------- done")

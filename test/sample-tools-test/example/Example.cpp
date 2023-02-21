@@ -6,12 +6,10 @@
 **
 ****************************************************************************/
 
-#pragma once
+#include "Example.h"
+#include "Example_p.h"
 
-#include <iostream>
-
-class SamplePB
+Example::Example()
+    : pri(std::make_unique<ExamplePrivate>())
 {
-public:
-    SamplePB();
-};
+}

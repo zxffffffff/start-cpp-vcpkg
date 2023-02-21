@@ -1,5 +1,13 @@
+/****************************************************************************
+** MIT License
+**
+** Author	: xiaofeng.zhu
+** Support	: zxffffffff@outlook.com, 1337328542@qq.com
+**
+****************************************************************************/
+
 #pragma once
-#include "HttpCommon.h"
+#include "Common.h"
 #include "curl/curl.h"
 
 class HttpClientPrivate

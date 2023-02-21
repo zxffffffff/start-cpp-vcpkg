@@ -1,3 +1,11 @@
+/****************************************************************************
+** MIT License
+**
+** Author	: xiaofeng.zhu
+** Support	: zxffffffff@outlook.com, 1337328542@qq.com
+**
+****************************************************************************/
+
 #include "http/HttpClient.h"
 #include "gtest/gtest.h"
 

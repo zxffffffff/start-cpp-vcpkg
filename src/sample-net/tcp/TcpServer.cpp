@@ -1,3 +1,11 @@
+/****************************************************************************
+** MIT License
+**
+** Author	: xiaofeng.zhu
+** Support	: zxffffffff@outlook.com, 1337328542@qq.com
+**
+****************************************************************************/
+
 #include "TcpServer.h"
 #include "TcpServer_p.h"
 #include <uv.h>

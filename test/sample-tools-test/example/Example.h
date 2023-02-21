@@ -7,11 +7,15 @@
 ****************************************************************************/
 
 #pragma once
+#include "Common.h"
 
-#include <iostream>
-
-class SamplePB
+class ExamplePrivate;
+class Example
 {
 public:
-    SamplePB();
+    Example();
+    ~Example() = default;
+
+private:
+    std::unique_ptr<ExamplePrivate> pri;
 };

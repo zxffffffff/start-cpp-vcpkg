@@ -1,3 +1,11 @@
+/****************************************************************************
+** MIT License
+**
+** Author	: xiaofeng.zhu
+** Support	: zxffffffff@outlook.com, 1337328542@qq.com
+**
+****************************************************************************/
+
 #ifdef _WIN32
 # ifndef SAMPLE_DYNAMIC_LIB_EXPORTS
 #  define SAMPLE_DYNAMIC_LIB_API __declspec(dllexport)

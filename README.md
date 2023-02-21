@@ -11,10 +11,13 @@
 - sqlite3: 最流行的嵌入式关系数据库。
 - cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
 - jsoncpp: json 序列化库。
+- mysql-connector-cpp：MySQL 数据库连接器，有 C 和 C++ 版本。
+- mongo-cxx-driver：MongoDB 数据库链接器，有 C 和 C++ 版本。
+- hiredis：Redis 数据库链接器，C 版本。
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
-- 网络延迟导致的错误，可以尝试重新运行脚本
+- 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
 - 优先使用静态库，可以减少很多编译烦恼，延长寿命
 - 已验证：
   - Windows 10 x64
