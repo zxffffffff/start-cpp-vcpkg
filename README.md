@@ -29,21 +29,21 @@
 
 # vcpkg
 
-### 参考：
+### 参考
 - https://github.com/microsoft/vcpkg
 - https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md
 
-### 查询 & 添加 & 查看：
+### 查询 & 添加 & 查看
 - `.\vcpkg\vcpkg.exe search xxx`
 - `.\vcpkg\vcpkg.exe install xxx` or `vcpkg.json`
 - `.\vcpkg\packages\xxx\CONTROL`
 
-### Windows
+### Windows（已加入 build 脚本）
 - Windows 7 或更新的版本
 - Visual Studio 2015 Update 3 或更新的版本（包含英文语言包）
 - 运行 `bootstrap-vcpkg.bat` 脚本
 
-### Unix
+### Unix（已加入 build 脚本）
 - g++ >= 6
 - macOS:
   - `xcode-select --install`
