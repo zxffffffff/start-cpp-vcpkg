@@ -11,24 +11,27 @@
 
 using namespace std::chrono_literals;
 
-const char* host = "localhost";
-int port = 33060;
-const char* user = "root";
-const char* pwd = "123456";
-// database = 'test_db'
-// table = 'test_table'
+namespace MySQLClientTest
+{
+    const char* host = "localhost";
+    int port = 33060;
+    const char* user = "root";
+    const char* pwd = "123456";
+    // database = 'test_db'
+    // table = 'test_table'
+}
+using namespace MySQLClientTest;
 
 // DDL（Data Definition Language）数据库定义语言
 TEST(MySQLClient, DDL) {
     MySQLClient client(host, port, user, pwd);
 
     // 创建数据库 schema - database
-    ASSERT_TRUE(client.RunSQL("drop database test_db"));
     ASSERT_TRUE(client.RunSQL("create database test_db"));
 
     ASSERT_TRUE(client.RunSQL("use test_db"));
 
-    // 创建数据表 collection - table
+    // 创建表 collection - table
     std::string sql = R"(create table if not exists `test_table`(
             `id` int unsigned auto_increment,
             `title` varchar(100) not null,
@@ -38,14 +41,28 @@ TEST(MySQLClient, DDL) {
         )engine=innodb default charset=utf8;)";
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // 删除数据表
-    // DROP TABLE table_name ;
+    // 删除表
+    ASSERT_TRUE(client.RunSQL("drop table test_table"));
+
+    // 删除数据库
+    ASSERT_TRUE(client.RunSQL("drop database test_db"));
 }
 
 // DML（Data Manipulation Language）数据操纵语言
 TEST(MySQLClient, DML) {
     MySQLClient client(host, port, user, pwd);
+
+    // 初始化
+    ASSERT_TRUE(client.RunSQL("create database test_db"));
     ASSERT_TRUE(client.RunSQL("use test_db"));
+    std::string sql = R"(create table if not exists `test_table`(
+            `id` int unsigned auto_increment,
+            `title` varchar(100) not null,
+            `author` varchar(40) not null,
+            `submission_date` date,
+            primary key ( `id` )
+        )engine=innodb default charset=utf8;)";
+    ASSERT_TRUE(client.RunSQL(sql));
 
     // 增 insert
     std::stringstream ss;
@@ -59,7 +76,7 @@ TEST(MySQLClient, DML) {
         ss << " (" << title << "," << author << "," << submission_date << ")";
     }
     ss << ";";
-    std::string sql = ss.str();
+    sql = ss.str();
     ASSERT_TRUE(client.RunSQL(sql));
 
     // 删 delete
@@ -89,6 +106,9 @@ TEST(MySQLClient, DML) {
     //ASSERT_EQ(ret[1][2], "2023-02-21");
     //ASSERT_EQ(ret[2][2], "2023-02-21");
     //ASSERT_EQ(ret[3][2], "2023-02-21");
+
+    // 删除数据库
+    ASSERT_TRUE(client.RunSQL("drop database test_db"));
 }
 
 // DCL（Data Control Language）数据库控制语言  授权，角色控制等

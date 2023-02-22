@@ -13,7 +13,7 @@ class MySQLClientPrivate;
 class MySQLClient
 {
 public:
-    /* [阻塞] 创建一个 MySQL 连接，可以做连接池优化
+    /* [阻塞] 创建一个 MySQL 连接
      * host = "localhost"
      * port = 33060
      * user = "root"

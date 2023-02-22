@@ -18,7 +18,7 @@ using namespace ::mysqlx;
  */
 class MySQLClientPrivate
 {
-public:
+private:
     /* Client from_uri("mysqlx://user:pwd\@host:port/db?ssl-mode=disabled");
      * ---- or ----
      * SessionOption::USER, "user",
@@ -32,8 +32,11 @@ public:
      * ClientOption::POOL_QUEUE_TIMEOUT, 1000,
      * ClientOption::POOL_MAX_IDLE_TIME, 500,
      */
+    Client client;
+
+public:
     MySQLClientPrivate(const char* host, int port, const char* user, const char* pwd)
-        :client(SessionOption::HOST, host, SessionOption::PORT, port, 
+        :client(SessionOption::HOST, host, SessionOption::PORT, port,
             SessionOption::USER, user, SessionOption::PWD, pwd,
             ClientOption::POOLING, true, ClientOption::POOL_MAX_SIZE, 10)
     {
@@ -66,7 +69,6 @@ public:
     bool RunSQL(const std::string& sql, std::vector<std::vector<std::string>>& ret)
     {
         LOG(INFO) << "[RunSQL sql] " << sql;
-
         try
         {
             Session sess = client.getSession();
@@ -120,7 +122,4 @@ public:
             return false;
         }
     }
-
-private:
-    Client client;
 };
