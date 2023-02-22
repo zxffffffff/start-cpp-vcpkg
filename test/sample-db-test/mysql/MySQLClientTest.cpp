@@ -13,6 +13,9 @@ using namespace std::chrono_literals;
 
 namespace MySQLClientTest
 {
+    // 跳过测试
+    constexpr bool skip_test = false;
+
     const char* host = "localhost";
     int port = 33060;
     const char* user = "root";
@@ -24,6 +27,8 @@ using namespace MySQLClientTest;
 
 // DDL（Data Definition Language）数据库定义语言
 TEST(MySQLClient, DDL) {
+    if (skip_test) return;
+
     MySQLClient client(host, port, user, pwd);
 
     // 创建数据库 schema - database
@@ -50,6 +55,8 @@ TEST(MySQLClient, DDL) {
 
 // DML（Data Manipulation Language）数据操纵语言
 TEST(MySQLClient, DML) {
+    if (skip_test) return;
+
     MySQLClient client(host, port, user, pwd);
 
     // 初始化

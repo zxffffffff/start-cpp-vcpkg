@@ -11,12 +11,17 @@
 
 namespace RedisClientTest
 {
+    // 跳过测试
+    constexpr bool skip_test = false;
+
     const char* host = "127.0.0.1";
     int port = 6379;
 }
 using namespace RedisClientTest;
 
 TEST(RedisClient, ping_pong) {
+    if (skip_test) return;
+
     RedisClient client(host, port);
     ReplyPtr p;
 
@@ -25,6 +30,8 @@ TEST(RedisClient, ping_pong) {
 }
 
 TEST(RedisClient, cmd) {
+    if (skip_test) return;
+
     RedisClient client(host, port);
     ReplyPtr p;
 
@@ -60,6 +67,7 @@ TEST(RedisClient, cmd) {
     EXPECT_EQ(p->str, "OK");
 
     // 查 GET、EXISTS、KEYS、SCAN
+    // 注意：KEYS 可能导致 Redis 阻塞，建议使用 SCAN 命令渐进式的遍历所有键
     ASSERT_TRUE(p = client.RunCmd("EXISTS test-key-0"));
     EXPECT_EQ(p->str, "0");
     ASSERT_TRUE(p = client.RunCmd("EXISTS test-key-1"));
@@ -85,6 +93,8 @@ TEST(RedisClient, cmd) {
 }
 
 TEST(RedisClient, TTL) {
+    if (skip_test) return;
+
     RedisClient client(host, port);
     ReplyPtr p;
 
@@ -124,5 +134,7 @@ TEST(RedisClient, TTL) {
 }
 
 TEST(RedisClient, dump_restore) {
+    if (skip_test) return;
+
     // 序列化 - 反序列化
 }

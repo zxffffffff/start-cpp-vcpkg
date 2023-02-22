@@ -9,6 +9,7 @@
 #pragma once
 #include "RedisCommon.h"
 #include "hiredis/hiredis.h"
+#include "Chrono.h"
 
 using namespace SampleRedis;
 
@@ -56,14 +57,16 @@ public:
             return nullptr;
         }
 
+        Chrono chrono;
         redisReply* reply = (redisReply*)redisCommand(ctx, cmd.c_str());
+        auto use_time = chrono.stop();
         if (reply == NULL || ctx->err) {
             LOG(ERROR) << "[RunCmd] " << ctx->errstr;
             return nullptr;
         }
 
         auto p = ParseReply(reply);
-        LOG(INFO) << "[RunCmd ret] type=" << reply->type << (p->str.empty() ? "" : " str=" + p->str);
+        LOG(INFO) << "[RunCmd ret] use_time=" << use_time << "ms type=" << reply->type << (p->str.empty() ? "" : " str=" + p->str);
         freeReplyObject(reply);
         return p;
     }

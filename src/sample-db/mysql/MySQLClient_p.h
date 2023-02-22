@@ -9,6 +9,7 @@
 #pragma once
 #include "Common.h"
 #include <mysqlx/xdevapi.h>
+#include "Chrono.h"
 
 using namespace ::mysqlx;
 
@@ -72,7 +73,9 @@ public:
         try
         {
             Session sess = client.getSession();
+            Chrono chrono;
             RowResult res = sess.sql(sql.c_str()).execute();
+            auto use_time = chrono.stop();
             auto rows = res.fetchAll();
 
             ret.clear();
@@ -113,7 +116,7 @@ public:
                 }
                 ret.push_back(std::move(fields));
             }
-            LOG(INFO) << "[RunSQL res] " << ret.size();
+            LOG(INFO) << "[RunSQL res] use_time=" << use_time << "ms size=" << ret.size();
             return true;
         }
         catch (const std::exception& e)
