@@ -35,6 +35,7 @@ find_package(jsoncpp CONFIG REQUIRED)
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
+    "Chrono.h"
     "crypto/Crypto.h"
     "crypto/Crypto.cpp"
     "example/Example.h"
