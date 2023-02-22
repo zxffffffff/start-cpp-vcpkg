@@ -1,6 +1,7 @@
 # start-cpp-vcpkg
 
 ### 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
+- boost: 标准库，可以按需单独安装某个库。
 - zlib: 最流行的数据压缩库。
 - libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
 - gflags: Google 命令行标志库。
@@ -11,9 +12,9 @@
 - sqlite3: 最流行的嵌入式关系数据库。
 - cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
 - jsoncpp: json 序列化库。
-- mysql-connector-cpp：连接 MySQL 数据库。
-- mongo-cxx-driver：连接 MongoDB 数据库。
-- hiredis：连接 Redis 数据库。
+- mysql-connector-cpp: 连接 MySQL 数据库。
+- mongo-cxx-driver: 连接 MongoDB 数据库。
+- hiredis: 连接 Redis 数据库。
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
@@ -32,9 +33,10 @@
 - https://github.com/microsoft/vcpkg
 - https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md
 
-### 查询 & 添加：
+### 查询 & 添加 & 查看：
 - `.\vcpkg\vcpkg.exe search xxx`
 - `.\vcpkg\vcpkg.exe install xxx` or `vcpkg.json`
+- `.\vcpkg\packages\xxx\CONTROL`
 
 ### Windows
 - Windows 7 或更新的版本
