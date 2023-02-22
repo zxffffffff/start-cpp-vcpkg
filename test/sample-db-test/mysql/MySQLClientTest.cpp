@@ -31,12 +31,12 @@ TEST(MySQLClient, DDL) {
 
     MySQLClient client(host, port, user, pwd);
 
-    // 创建数据库 schema - database
+    // 创建数据库（schema）create database
     ASSERT_TRUE(client.RunSQL("create database test_db"));
 
     ASSERT_TRUE(client.RunSQL("use test_db"));
 
-    // 创建表 collection - table
+    // 创建表（collection）create table
     std::string sql = R"(create table if not exists `test_table`(
             `id` int unsigned auto_increment,
             `title` varchar(100) not null,
@@ -46,10 +46,10 @@ TEST(MySQLClient, DDL) {
         )engine=innodb default charset=utf8;)";
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // 删除表
+    // 删除表 drop table
     ASSERT_TRUE(client.RunSQL("drop table test_table"));
 
-    // 删除数据库
+    // 删除数据库 drop database
     ASSERT_TRUE(client.RunSQL("drop database test_db"));
 }
 
@@ -71,7 +71,7 @@ TEST(MySQLClient, DML) {
         )engine=innodb default charset=utf8;)";
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // 增 insert
+    // 增 insert into table
     std::stringstream ss;
     ss << "insert into test_table (title,author,submission_date) values";
     for (int i = 0; i < 10; ++i) {
@@ -86,13 +86,13 @@ TEST(MySQLClient, DML) {
     sql = ss.str();
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // 删 delete
+    // 删 delete from table
     ASSERT_TRUE(client.RunSQL("delete from test_table where (id<=3);"));
 
-    // 改 update
+    // 改 update table set
     ASSERT_TRUE(client.RunSQL("update test_table set title='updated' where (id>=6);"));
 
-    // 查 select
+    // 查 select from table
     std::vector<std::vector<std::string>> ret;
     ASSERT_TRUE(client.RunSQL("select id,title,submission_date from test_table where (id>2 && id<8);", ret));
     ASSERT_EQ(ret.size(), 4);
@@ -119,5 +119,17 @@ TEST(MySQLClient, DML) {
 }
 
 // DCL（Data Control Language）数据库控制语言  授权，角色控制等
+TEST(MySQLClient, DCL) {
+    if (skip_test) return;
+
+    MySQLClient client(host, port, user, pwd);
+
+    // 创建用户 create
+}
 
 // TCL（Transaction Control Language）事务控制语言
+TEST(MySQLClient, TCL) {
+    if (skip_test) return;
+
+    MySQLClient client(host, port, user, pwd);
+}

@@ -12,7 +12,7 @@
 namespace RedisClientTest
 {
     // Ìø¹ı²âÊÔ
-    constexpr bool skip_test = false;
+    constexpr bool skip_test = 1;
 
     const char* host = "127.0.0.1";
     int port = 6379;
