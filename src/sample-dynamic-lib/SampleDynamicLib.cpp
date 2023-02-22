@@ -15,8 +15,3 @@ SampleDynamicLib::SampleDynamicLib()
 
     SampleDataCenter sample_datacenter;
 }
-
-int SampleDynamicLib::Test(int ret)
-{
-    return ret;
-}

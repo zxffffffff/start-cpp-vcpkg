@@ -13,3 +13,7 @@ Example::Example()
     : pri(std::make_unique<ExamplePrivate>())
 {
 }
+
+Example::~Example()
+{
+}

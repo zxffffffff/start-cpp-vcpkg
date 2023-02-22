@@ -18,5 +18,5 @@ class SampleTools
 public:
     SampleTools();
     
-    static int Test(int ret);
+    static std::string to_lower(const std::string& str);
 };

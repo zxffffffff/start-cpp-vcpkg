@@ -9,6 +9,8 @@
 #pragma once
 #include "TcpCommon.h"
 
+using namespace SampleTcp;
+
 class TcpClientPrivate;
 class TcpClient
 {
