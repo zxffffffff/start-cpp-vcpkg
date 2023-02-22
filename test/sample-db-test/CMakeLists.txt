@@ -19,6 +19,7 @@ find_package(GTest CONFIG REQUIRED)
 add_executable (${PROJECT_NAME}
     SampleDBTest.cpp
     "mysql/MySQLClientTest.cpp"
+    "redis/RedisClientTest.cpp"
 )
 
 target_link_libraries(${PROJECT_NAME}

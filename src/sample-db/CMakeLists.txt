@@ -26,7 +26,10 @@ add_library(${PROJECT_NAME} STATIC
     SampleDB.h
     "mysql/MySQLClient.h"
     "mysql/MySQLClient.cpp"
-)
+    "redis/RedisCommon.h"
+    "redis/RedisClient.h"
+    "redis/RedisClient.cpp"
+ "redis/RedisCommon.h")
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-tools
