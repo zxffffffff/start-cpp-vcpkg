@@ -14,6 +14,7 @@
 #include "cryptopp/cryptlib.h"
 #include "json/version.h"
 #include "json/json.h"
+#include <boost/algorithm/string.hpp>
 
 SampleTools::SampleTools()
 {
@@ -78,7 +79,9 @@ SampleTools::SampleTools()
     }
 }
 
-int SampleTools::Test(int ret)
+std::string SampleTools::to_lower(const std::string& str)
 {
-    return ret;
+    std::string s = str;
+    boost::algorithm::to_lower(s);
+    return s;
 }

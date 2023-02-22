@@ -14,7 +14,7 @@ class Example
 {
 public:
     Example();
-    ~Example() = default;
+    ~Example();
 
 private:
     std::unique_ptr<ExamplePrivate> pri;

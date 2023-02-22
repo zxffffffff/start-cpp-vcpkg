@@ -10,7 +10,7 @@
 #include "gtest/gtest.h"
 
 TEST(SampleTools, Test1) {
-  EXPECT_EQ(SampleTools::Test(123), 123);
+  EXPECT_EQ(SampleTools::to_lower("ABC_123_abc"), "abc_123_abc");
 }
 
 TEST(SampleTools, Test2) {

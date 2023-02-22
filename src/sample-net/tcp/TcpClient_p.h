@@ -10,6 +10,8 @@
 #include "TcpCommon.h"
 #include <uv.h>
 
+using namespace SampleTcp;
+
 class TcpClientPrivate
 {
     // param

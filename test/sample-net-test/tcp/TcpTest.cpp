@@ -10,6 +10,7 @@
 #include "tcp/TcpClient.h"
 #include "gtest/gtest.h"
 
+using namespace SampleTcp;
 using namespace std::chrono_literals;
 
 TEST(TcpConnTest, ClientWrite)
