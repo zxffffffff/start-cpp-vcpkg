@@ -24,10 +24,12 @@
   - Windows 10 x64
   - Ubuntu 20.04 x64
   - macOS 13.1 Apple M1
+- 建议开发环境：
+  - Visual Studio 2022 - Windows
+  - VS Code - 全平台
 
 
-
-# vcpkg
+## vcpkg
 
 ### 参考
 - https://github.com/microsoft/vcpkg
