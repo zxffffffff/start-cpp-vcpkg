@@ -18,8 +18,8 @@ find_package(unofficial-mysql-connector-cpp CONFIG REQUIRED)
 find_package(hiredis CONFIG REQUIRED)
 
 # MongoDB
-find_package(bsoncxx CONFIG REQUIRED)
-find_package(mongocxx CONFIG REQUIRED)
+# find_package(bsoncxx CONFIG REQUIRED)
+# find_package(mongocxx CONFIG REQUIRED)
 
 add_library(${PROJECT_NAME} STATIC
     SampleDB.cpp
@@ -29,14 +29,14 @@ add_library(${PROJECT_NAME} STATIC
     "redis/RedisCommon.h"
     "redis/RedisClient.h"
     "redis/RedisClient.cpp"
- "redis/RedisCommon.h")
+)
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-tools
     PRIVATE unofficial::mysql-connector-cpp::connector
     PRIVATE hiredis::hiredis
-    PRIVATE mongo::bsoncxx_shared
-    PRIVATE mongo::mongocxx_shared
+    # PRIVATE mongo::bsoncxx_shared
+    # PRIVATE mongo::mongocxx_shared
 )
 
 target_include_directories(${PROJECT_NAME}
