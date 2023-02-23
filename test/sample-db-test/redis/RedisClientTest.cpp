@@ -16,6 +16,8 @@ namespace RedisClientTest
 
     const char* host = "127.0.0.1";
     int port = 6379;
+    // key = test-key-*
+    // value = test-val-*
 }
 using namespace RedisClientTest;
 
