@@ -1,6 +1,6 @@
 # start-cpp-vcpkg
 
-### 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
+## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - boost: 标准库，可以按需单独安装某个库。
 - zlib: 最流行的数据压缩库。
 - libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
@@ -16,7 +16,7 @@
 - mongo-cxx-driver: 连接 MongoDB 数据库。
 - hiredis: 连接 Redis 数据库。
 
-### 快速开始：
+## 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
 - 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
 - 优先使用静态库，可以减少很多编译烦恼，延长寿命
@@ -30,6 +30,8 @@
 
 
 ## vcpkg
+- 安装 vcpkg 工具（已添加 subtree）
+- `git subtree add --prefix=vcpkg https://github.com/microsoft/vcpkg --squash`
 
 ### 参考
 - https://github.com/microsoft/vcpkg
