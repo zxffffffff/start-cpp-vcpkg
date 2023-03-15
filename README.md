@@ -31,16 +31,18 @@
 
 ## vcpkg
 - 安装 vcpkg 工具（已添加 subtree）
-- `git subtree add --prefix=vcpkg https://github.com/microsoft/vcpkg --squash`
+- `git subtree add --prefix=vcpkg https://github.com/microsoft/vcpkg master --squash`
 
 ### 参考
 - https://github.com/microsoft/vcpkg
 - https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md
 
 ### 查询 & 添加 & 查看
-- `.\vcpkg\vcpkg.exe search xxx`
-- `.\vcpkg\vcpkg.exe install xxx` or `vcpkg.json`
-- `.\vcpkg\packages\xxx\CONTROL`
+```
+.\vcpkg\vcpkg.exe search xxx
+.\vcpkg\vcpkg.exe install xxx` or `vcpkg.json
+.\vcpkg\packages\xxx\CONTROL
+```
 
 ### Windows（已加入 build 脚本）
 - Windows 7 或更新的版本
@@ -50,13 +52,19 @@
 ### Unix（已加入 build 脚本）
 - g++ >= 6
 - macOS:
-  - `xcode-select --install`
-  - `brew install pkg-config`
+  ```
+  xcode-select --install
+  brew install pkg-config
+  ```
 - Debian，Ubuntu，popOS 或其他基于 Debian 的发行版:
-  - `sudo apt-get update`
-  - `sudo apt-get install build-essential tar curl zip unzip`
+  ```
+  sudo apt-get update
+  sudo apt-get install build-essential tar curl zip unzip
+  ```
 - CentOS:
-  - `sudo yum install centos-release-scl`
-  - `sudo yum install devtoolset-7`
-  - `scl enable devtoolset-7 bash`
+  ```
+  sudo yum install centos-release-scl
+  sudo yum install devtoolset-7
+  scl enable devtoolset-7 bash
+  ```
 - 运行 `bootstrap-vcpkg.sh` 脚本
