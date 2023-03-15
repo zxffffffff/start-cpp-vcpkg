@@ -1,0 +1,24 @@
+diff --git a/Source/Projects/VS2022/Console/Console.vcxproj b/Source/Projects/VS2022/Console/Console.vcxproj
+index 4a811b6..86c2c4f 100644
+--- a/Source/Projects/VS2022/Console/Console.vcxproj
++++ b/Source/Projects/VS2022/Console/Console.vcxproj
+@@ -189,9 +189,6 @@
+       <TargetMachine>MachineX86</TargetMachine>
+       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+     <Midl>
+@@ -285,9 +282,6 @@
+       <TargetMachine>MachineX64</TargetMachine>
+       <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+     </Link>
+-    <PostBuildEvent>
+-      <Command>..\..\..\Certificate\signtool.exe sign /f ..\..\..\Certificate\MAC.pfx /tr http://sha256timestamp.ws.symantec.com/sha256/timestamp /td sha256 /fd sha256 /a /as /p password "$(TargetPath)"</Command>
+-    </PostBuildEvent>
+   </ItemDefinitionGroup>
+   <ItemGroup>
+     <ClCompile Include="..\..\..\Console\Console.cpp">
