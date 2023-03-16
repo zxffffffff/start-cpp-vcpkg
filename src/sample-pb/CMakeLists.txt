@@ -6,16 +6,16 @@
 ## 
 #############################################################################
 
-message("[sample-pb] -------- start")
 project(sample-pb)
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-pb] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # 引入protobuf库
 find_package(Protobuf CONFIG REQUIRED)
-message(STATUS "[sample-pb] Protobuf_VERSION : ${Protobuf_VERSION}")
-message(STATUS "[sample-pb] Protobuf_INCLUDE_DIRS : ${Protobuf_INCLUDE_DIRS}")
-message(STATUS "[sample-pb] Protobuf_LIBRARIES : ${Protobuf_LIBRARIES}")
+message(STATUS "[${PROJECT_NAME}] Protobuf_VERSION : ${Protobuf_VERSION}")
+message(STATUS "[${PROJECT_NAME}] Protobuf_INCLUDE_DIRS : ${Protobuf_INCLUDE_DIRS}")
+message(STATUS "[${PROJECT_NAME}] Protobuf_LIBRARIES : ${Protobuf_LIBRARIES}")
 
 # 由于PROTOBUF_GENERATE_CPP只能编译一个目录下的proto，尽量选择手动生成pb.cc，参考general-cpp.bat
 
@@ -75,4 +75,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-pb] -------- done")
+message("[${PROJECT_NAME}] -------- done")
