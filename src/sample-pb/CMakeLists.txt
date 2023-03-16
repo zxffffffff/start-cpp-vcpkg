@@ -54,8 +54,11 @@ add_library(${PROJECT_NAME} STATIC
     ${sample_headers}
 )
 
+# protobuf::libprotoc         编译器.proto生成code
+# protobuf::libprotobuf       使用Messager序列号和反序列化
+# protobuf::libprotobuf-lite  使用MessageLite代替Messager，常用于移动端
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC ${Protobuf_LIBRARIES}
+    PUBLIC protobuf::libprotobuf
 )
 
 # 不暴露protobuf相关内容，仅暴露SmaplePB
