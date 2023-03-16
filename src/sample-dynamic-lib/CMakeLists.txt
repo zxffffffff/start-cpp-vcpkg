@@ -6,10 +6,10 @@
 ## 
 #############################################################################
 
-message("[sample-dynamic-lib] -------- start")
 project(sample-dynamic-lib)
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-dynamic-lib] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # dll导出宏
 add_compile_definitions(SAMPLE_DYNAMIC_LIB_EXPORTS)
@@ -35,4 +35,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-dynamic-lib] -------- done")
+message("[${PROJECT_NAME}] -------- done")

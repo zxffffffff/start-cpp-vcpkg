@@ -6,10 +6,10 @@
 ## 
 #############################################################################
 
-message("[sample-db] -------- start")
 project(sample-db)
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-db] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # MySQL
 find_package(unofficial-mysql-connector-cpp CONFIG REQUIRED)
@@ -50,4 +50,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-db] -------- done")
+message("[${PROJECT_NAME}] -------- done")

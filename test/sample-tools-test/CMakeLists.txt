@@ -6,10 +6,10 @@
 ## 
 #############################################################################
 
-message("[sample-tools-test] -------- start")
 project ("sample-tools-test")
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-tools-test] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # 引入 GTest
 enable_testing()
@@ -41,4 +41,4 @@ install(TARGETS ${PROJECT_NAME}
 include(GoogleTest)
 gtest_discover_tests(${PROJECT_NAME})
 
-message("[sample-tools-test] -------- done")
+message("[${PROJECT_NAME}] -------- done")

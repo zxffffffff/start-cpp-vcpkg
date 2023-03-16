@@ -6,19 +6,19 @@
 ## 
 #############################################################################
 
-message("[sample-net] -------- start")
 project(sample-net)
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-net] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # 引入libuv库
 find_package(libuv CONFIG REQUIRED)
 
 # 引入curl库
 find_package(CURL CONFIG REQUIRED)
-message(STATUS "[sample-net] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
-message(STATUS "[sample-net] CURL_INCLUDE_DIR : ${CURL_INCLUDE_DIR}")
-message(STATUS "[sample-net] CURL_LIBRARIES : ${CURL_LIBRARIES}")
+message(STATUS "[${PROJECT_NAME}] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
+message(STATUS "[${PROJECT_NAME}] CURL_INCLUDE_DIR : ${CURL_INCLUDE_DIR}")
+message(STATUS "[${PROJECT_NAME}] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
@@ -49,4 +49,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-net] -------- done")
+message("[${PROJECT_NAME}] -------- done")

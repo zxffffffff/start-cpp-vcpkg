@@ -6,10 +6,10 @@
 ## 
 #############################################################################
 
-message("[sample-main] -------- start")
 project ("sample-main")
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-main] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # 将源代码添加到此项目的可执行文件。
 add_executable (${PROJECT_NAME}
@@ -31,4 +31,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-main] -------- done")
+message("[${PROJECT_NAME}] -------- done")

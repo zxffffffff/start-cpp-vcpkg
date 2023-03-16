@@ -6,16 +6,16 @@
 ## 
 #############################################################################
 
-message("[sample-tools] -------- start")
 project(sample-tools)
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-tools] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # 引入zlib库
 find_package(ZLIB REQUIRED)
-message(STATUS "[sample-tools] ZLIB_VERSION_STRING : ${ZLIB_VERSION_STRING}")
-message(STATUS "[sample-tools] ZLIB_INCLUDE_DIRS : ${ZLIB_INCLUDE_DIRS}")
-message(STATUS "[sample-tools] ZLIB_LIBRARIES : ${ZLIB_LIBRARIES}")
+message(STATUS "[${PROJECT_NAME}] ZLIB_VERSION_STRING : ${ZLIB_VERSION_STRING}")
+message(STATUS "[${PROJECT_NAME}] ZLIB_INCLUDE_DIRS : ${ZLIB_INCLUDE_DIRS}")
+message(STATUS "[${PROJECT_NAME}] ZLIB_LIBRARIES : ${ZLIB_LIBRARIES}")
 
 # 引入 gflags
 find_package(gflags CONFIG REQUIRED)
@@ -62,4 +62,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-tools] -------- done")
+message("[${PROJECT_NAME}] -------- done")

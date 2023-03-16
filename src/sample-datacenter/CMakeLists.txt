@@ -6,10 +6,10 @@
 ## 
 #############################################################################
 
-message("[sample-datacenter] -------- start")
 project(sample-datacenter)
+message("[${PROJECT_NAME}] -------- start")
 
-message(STATUS "[sample-datacenter] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 add_library(${PROJECT_NAME} STATIC
     SampleDataCenter.cpp
@@ -34,4 +34,4 @@ install(TARGETS ${PROJECT_NAME}
     ARCHIVE DESTINATION lib
 )
 
-message("[sample-datacenter] -------- done")
+message("[${PROJECT_NAME}] -------- done")
