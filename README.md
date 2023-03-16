@@ -23,10 +23,14 @@
 - 已验证：
   - Windows 10 x64
   - Ubuntu 20.04 x64
-  - macOS 13.1 Apple M1（TODO：链接报错 duplicate symbol 未解决）
+  - macOS 13.1 Apple M1
 - 建议开发环境：
   - Visual Studio 2022 - Windows
   - VS Code - 全平台
+
+### 已知 macOS 问题
+- "protobuf" 和 "mysql-connector-cpp" 存在冲突，等待官方解决，暂时移除pb依赖
+- https://github.com/microsoft/vcpkg/issues/27873
 
 
 ## vcpkg
