@@ -16,7 +16,7 @@
 - mongo-cxx-driver: 连接 MongoDB 数据库。
 - hiredis: 连接 Redis 数据库。
 
-## 快速开始：
+### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
 - 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
 - Windows 优先使用静态库，UNIX 和 APPLE 优先使用动态库，可以减少很多编译烦恼（编译问题90%来自于链接库，运行问题90%来自于空/野指针）
@@ -33,7 +33,7 @@
 - https://github.com/microsoft/vcpkg/issues/27873
 
 
-## vcpkg
+## vcpkg 
 - 安装 vcpkg 工具（已添加 subtree）
 - `git subtree add --prefix=vcpkg https://github.com/microsoft/vcpkg master --squash`
 
@@ -73,7 +73,12 @@
   ```
 - 运行 `bootstrap-vcpkg.sh` 脚本
 
-### 目前支持的编译三元组
+### Triplet 可选编译配置集
+- https://learn.microsoft.com/en-us/vcpkg/users/triplets
+- 在经典模式下，您可以使用三元组名称限定包引用，例如 `zlib:x64-windows-static-md`
+- 在Manifest模式下，可以在命令行传递 `vcpkg install --triplet=<triplet>`
+- 使用 CMake，您可以设置 `set(VCPKG_TARGET_TRIPLET <triplet>)`
+- 使用 MSBuild，您可以设置 `VcpkgTriplet`
 ```
 vcpkg built-in triplets:（官方提供 triplets）
   x64-linux
@@ -84,7 +89,7 @@ vcpkg built-in triplets:（官方提供 triplets）
   x64-uwp
   x64-osx
   arm-uwp
-vcpkg community triplets:（社区提供 triplets 可能编译失败）
+vcpkg community triplets:（社区提供 triplets 未经过持续集成测试可能不兼容）
   wasm32-emscripten
   x64-xbox-scarlett-static
   ppc64le-linux
