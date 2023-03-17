@@ -19,7 +19,7 @@
 ## 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
 - 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
-- 优先使用静态库，可以减少很多编译烦恼，延长寿命
+- Windows 优先使用静态库，UNIX 和 APPLE 优先使用动态库，可以减少很多编译烦恼（编译问题90%来自于链接库，运行问题90%来自于空/野指针）
 - 已验证：
   - Windows 10 x64
   - Ubuntu 20.04 x64
@@ -72,3 +72,81 @@
   scl enable devtoolset-7 bash
   ```
 - 运行 `bootstrap-vcpkg.sh` 脚本
+
+### 目前支持的编译三元组
+```
+vcpkg built-in triplets:（官方提供 triplets）
+  x64-linux
+  x64-windows
+  x64-windows-static
+  x86-windows
+  arm64-windows
+  x64-uwp
+  x64-osx
+  arm-uwp
+vcpkg community triplets:（社区提供 triplets 可能编译失败）
+  wasm32-emscripten
+  x64-xbox-scarlett-static
+  ppc64le-linux
+  x64-xbox-xboxone
+  arm-linux-release
+  arm64-osx-release
+  x86-mingw-static
+  arm64-ios
+  x86-linux
+  x64-xbox-xboxone-static
+  x64-mingw-dynamic
+  x64-uwp-static-md
+  x64-windows-release
+  x86-freebsd
+  armv6-android
+  x64-osx-release
+  x64-linux-dynamic
+  x64-android
+  riscv64-linux
+  x86-windows-static
+  arm64ec-windows
+  arm-android
+  arm64-mingw-dynamic
+  arm64-uwp-static-md
+  arm64-osx
+  arm64-windows-static
+  arm-linux
+  arm-windows
+  arm64-uwp
+  x86-mingw-dynamic
+  x86-uwp-static-md
+  arm-uwp-static-md
+  s390x-linux
+  x64-openbsd
+  arm-mingw-dynamic
+  arm-neon-android
+  x64-ios
+  x64-xbox-scarlett
+  x64-mingw-static
+  arm-ios
+  x64-osx-dynamic
+  x64-linux-release
+  x86-android
+  x86-uwp
+  arm64-linux
+  x64-windows-static-release
+  x64-freebsd
+  arm64-linux-release
+  riscv64-linux-release
+  arm64-windows-static-md
+  arm64-mingw-static
+  x86-windows-static-md
+  arm-mingw-static
+  riscv32-linux-release
+  arm64-osx-dynamic
+  riscv32-linux
+  x86-ios
+  x64-windows-static-md
+  arm64-windows-static-release
+  arm64-android
+  arm-windows-static
+  s390x-linux-release
+  ppc64le-linux-release
+  x86-windows-v120
+```

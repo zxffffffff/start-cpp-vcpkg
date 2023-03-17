@@ -6,25 +6,26 @@
 ## 
 #############################################################################
 
-message("[cpp-deps-vcpkg] -------- start")
+message("[start-cpp-vcpkg] -------- start")
 cmake_minimum_required (VERSION 3.16)
 set(CMAKE_CXX_STANDARD 20)
 
 if (WIN32)
-    # ...
+    # Windows 可选编译配置集（vcpkg built-in/community triplets）
+    set(VCPKG_TARGET_TRIPLET x64-windows)
 else()
-    # APPLE 和 UNIX 需要设置-fPIC
+    # APPLE 和 UNIX 编译动态库需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 set(CMAKE_TOOLCHAIN_FILE "./vcpkg/scripts/buildsystems/vcpkg.cmake")
-message(STATUS "[cpp-deps-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
+message(STATUS "[start-cpp-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
 
-project ("cpp-deps-vcpkg")
+project ("start-cpp-vcpkg")
 
-message(STATUS "[cpp-deps-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
+message(STATUS "[start-cpp-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # src
 include_directories(${PROJECT_SOURCE_DIR}/src/sample-tools)
@@ -52,4 +53,4 @@ add_subdirectory(test/sample-net-test)
 add_subdirectory(test/sample-db-test)
 add_subdirectory(test/sample-datacenter-test)
 
-message("[cpp-deps-vcpkg] -------- done")
+message("[start-cpp-vcpkg] -------- done")
