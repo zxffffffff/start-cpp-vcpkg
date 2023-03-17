@@ -14,8 +14,6 @@ if [ ! -x ${vcpkg_exe} ]; then
   xcode-select --install
   sh ${vcpkg_sh}
 fi
-# VCPKG_DEFAULT_TRIPLET=arm64-osx-static
-# ${vcpkg_exe} install --triplet arm64-osx-static
 
 # cmake (Debug/Release)
 config=Debug
