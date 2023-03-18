@@ -42,7 +42,7 @@
 - https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md
 
 ### 查询 & 添加 & 查看
-```
+```Bash
 .\vcpkg\vcpkg.exe search xxx
 .\vcpkg\vcpkg.exe install xxx` or `vcpkg.json
 .\vcpkg\packages\xxx\CONTROL
@@ -56,17 +56,17 @@
 ### Unix（已加入 build 脚本）
 - g++ >= 6
 - macOS:
-  ```
+  ```Bash
   xcode-select --install
   brew install pkg-config
   ```
 - Debian，Ubuntu，popOS 或其他基于 Debian 的发行版:
-  ```
+  ```Bash
   sudo apt-get update
   sudo apt-get install build-essential tar curl zip unzip
   ```
 - CentOS:
-  ```
+  ```Bash
   sudo yum install centos-release-scl
   sudo yum install devtoolset-7
   scl enable devtoolset-7 bash
