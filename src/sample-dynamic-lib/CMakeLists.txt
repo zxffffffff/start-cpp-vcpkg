@@ -12,7 +12,7 @@ message("[${PROJECT_NAME}] -------- start")
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # dll导出宏
-add_compile_definitions(SAMPLE_DYNAMIC_LIB_EXPORTS)
+add_compile_definitions(SAMPLE_DYNAMIC_LIB_EXPORT)
 
 add_library(${PROJECT_NAME} SHARED
     define.h
