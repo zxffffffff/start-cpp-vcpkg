@@ -5,16 +5,15 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #include "tcp/TcpServer.h"
 #include "tcp/TcpClient.h"
 #include "gtest/gtest.h"
+#include <thread>
+#include <glog/logging.h>
 
-using namespace SampleTcp;
 using namespace std::chrono_literals;
 
-TEST(TcpConnTest, ClientWrite)
-{
+TEST(TcpConnTest, ClientWrite) {
     if (!google::IsGoogleLoggingInitialized())
         google::InitGoogleLogging("test");
 
@@ -22,18 +21,17 @@ TEST(TcpConnTest, ClientWrite)
 
     // run
     TcpServer server("0.0.0.0", 9123);
-    server.SetHandleConnOnRead([](SocketPtr id, const char *buf, size_t len)
-                               { buff = std::string(buf, len); });
+    server.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
+        buff = std::string(buf, len);
+    });
     server.Run();
-    while (!server.IsRunning())
-    {
+    while (!server.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 
     TcpClient client("0.0.0.0", 9123);
     client.Run();
-    while (!client.IsRunning())
-    {
+    while (!client.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 
@@ -46,14 +44,12 @@ TEST(TcpConnTest, ClientWrite)
     // close
     client.Close();
     server.Close();
-    while (client.IsRunning() || server.IsRunning())
-    {
+    while (client.IsRunning() || server.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 }
 
-TEST(TcpConnTest, ServerWrite)
-{
+TEST(TcpConnTest, ServerWrite) {
     if (!google::IsGoogleLoggingInitialized())
         google::InitGoogleLogging("test");
 
@@ -62,20 +58,20 @@ TEST(TcpConnTest, ServerWrite)
 
     // run
     TcpServer server("0.0.0.0", 9123);
-    server.SetHandleNewConn([](SocketPtr id)
-                            { conn_id = id; });
+    server.SetHandleNewConn([](SocketPtr id) {
+        conn_id = id;
+    });
     server.Run();
-    while (!server.IsRunning())
-    {
+    while (!server.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 
     TcpClient client("0.0.0.0", 9123);
-    client.SetHandleConnOnRead([](SocketPtr id, const char *buf, size_t len)
-                               { buff = std::string(buf, len); });
+    client.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
+        buff = std::string(buf, len);
+    });
     client.Run();
-    while (!client.IsRunning())
-    {
+    while (!client.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 
@@ -88,60 +84,56 @@ TEST(TcpConnTest, ServerWrite)
     // close
     client.Close();
     server.Close();
-    while (client.IsRunning() || server.IsRunning())
-    {
+    while (client.IsRunning() || server.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 }
 
-TEST(TcpConnTest, MultiPingPong)
-{
+TEST(TcpConnTest, MultiPingPong) {
     if (!google::IsGoogleLoggingInitialized())
         google::InitGoogleLogging("test");
 
     // run
     static TcpServer server("0.0.0.0", 9123);
-    server.SetHandleConnOnRead([](SocketPtr id, const char *buf, size_t len)
-                               {
+    server.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
         std::string buff(buf, len);
         int i = std::stoi(buff);
         buff = std::to_string(i + 1);
-        server.Write(id, buff.data(), buff.length()); });
+        server.Write(id, buff.data(), buff.length());
+    });
     server.Run();
-    while (!server.IsRunning())
-    {
+    while (!server.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 
     static TcpClient client1("0.0.0.0", 9123);
-    client1.SetHandleConnOnRead([](SocketPtr id, const char *buf, size_t len)
-                                {
+    client1.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
         std::string buff(buf, len);
         int i = std::stoi(buff);
         buff = std::to_string(i + 1);
-        client1.Write(buff.data(), buff.length()); });
+        client1.Write(buff.data(), buff.length());
+    });
 
     static TcpClient client2("0.0.0.0", 9123);
-    client2.SetHandleConnOnRead([](SocketPtr id, const char *buf, size_t len)
-                                {
+    client2.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
         std::string buff(buf, len);
         int i = std::stoi(buff);
         buff = std::to_string(i + 1);
-        client2.Write(buff.data(), buff.length()); });
+        client2.Write(buff.data(), buff.length());
+    });
 
     static TcpClient client3("0.0.0.0", 9123);
-    client3.SetHandleConnOnRead([](SocketPtr id, const char *buf, size_t len)
-                                {
+    client3.SetHandleConnOnRead([](SocketPtr id, const char* buf, size_t len) {
         std::string buff(buf, len);
         int i = std::stoi(buff);
         buff = std::to_string(i + 1);
-        client3.Write(buff.data(), buff.length()); });
+        client3.Write(buff.data(), buff.length());
+    });
 
     client1.Run();
     client2.Run();
     client3.Run();
-    while (!client1.IsRunning() || !client2.IsRunning() || !client3.IsRunning())
-    {
+    while (!client1.IsRunning() || !client2.IsRunning() || !client3.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 
@@ -159,8 +151,7 @@ TEST(TcpConnTest, MultiPingPong)
     client2.Close();
     client3.Close();
     server.Close();
-    while (client1.IsRunning() || client2.IsRunning() || client3.IsRunning() || server.IsRunning())
-    {
+    while (client1.IsRunning() || client2.IsRunning() || client3.IsRunning() || server.IsRunning()) {
         std::this_thread::sleep_for(50ms);
     }
 }

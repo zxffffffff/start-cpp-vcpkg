@@ -20,16 +20,22 @@ message(STATUS "[${PROJECT_NAME}] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
 message(STATUS "[${PROJECT_NAME}] CURL_INCLUDE_DIR : ${CURL_INCLUDE_DIR}")
 message(STATUS "[${PROJECT_NAME}] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 
+# 安装到 include
+file(GLOB_RECURSE EDV_INCLUDE_FILES
+    SampleNet.h
+    tcp/EventLoop.h
+    tcp/TcpCommon.h
+    tcp/TcpServer.h
+    tcp/TcpClient.h
+    http/HttpClient.h
+)
+
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
-    SampleNet.h
-    "tcp/TcpCommon.h"
-    "tcp/TcpServer.cpp"
-    "tcp/TcpServer.h"
-    "tcp/TcpClient.cpp"
-    "tcp/TcpClient.h"
-    "http/HttpClient.cpp"
-    "http/HttpClient.h"
+    tcp/TcpServer.cpp
+    tcp/TcpClient.cpp
+    http/HttpClient.cpp
+    ${EDV_INCLUDE_FILES}
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -40,6 +46,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    PUBLIC_HEADER "${EDV_INCLUDE_FILES}"
 )
 
 install(TARGETS ${PROJECT_NAME}
