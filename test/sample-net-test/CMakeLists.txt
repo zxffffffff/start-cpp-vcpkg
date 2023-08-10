@@ -18,8 +18,8 @@ find_package(GTest CONFIG REQUIRED)
 # 将源代码添加到此项目的可执行文件。
 add_executable (${PROJECT_NAME}
     SampleNetTest.cpp
-    "tcp/TcpTest.cpp"
-    "http/HttpTest.cpp"
+    http/HttpTest.cpp
+    tcp/tcp_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

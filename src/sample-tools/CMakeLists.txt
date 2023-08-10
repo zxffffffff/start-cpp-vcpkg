@@ -35,17 +35,19 @@ find_package(jsoncpp CONFIG REQUIRED)
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
     SampleTools.h
-    "Chrono.h"
-    "crypto/Crypto.h"
-    "crypto/Crypto.cpp"
-    "example/Example.h"
-    "example/Example.cpp"
+    Chrono.h
+    crypto/Crypto.h
+    crypto/Crypto.cpp
+    example/Example.h
+    example/Example.cpp
+    thread/threadpool_interface.h
+    thread/impl/stl_threadpool_impl.h 
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC ZLIB::ZLIB
     PUBLIC gflags::gflags
     PUBLIC glog::glog
+    PUBLIC ZLIB::ZLIB
     PUBLIC unofficial::sqlite3::sqlite3
     PUBLIC cryptopp::cryptopp
     PUBLIC JsonCpp::JsonCpp
