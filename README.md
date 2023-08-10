@@ -1,12 +1,12 @@
 # start-cpp-vcpkg
 
 ## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- boost: 标准库，可以按需单独安装某个库。
-- zlib: 最流行的数据压缩库。
-- libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
 - gflags: Google 命令行标志库。
 - glog: Google 日志库。
 - googletest: Google 测试框架。
+- boost: 标准库，可以按需单独安装某个库。
+- zlib: 最流行的数据压缩库。
+- libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
 - libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
 - protobuf: Google 数据序列化库。
 - sqlite3: 最流行的嵌入式关系数据库。
