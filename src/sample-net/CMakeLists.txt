@@ -23,13 +23,19 @@ message(STATUS "[${PROJECT_NAME}] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
     SampleNet.h
-    "tcp/TcpCommon.h"
-    "tcp/TcpServer.cpp"
-    "tcp/TcpServer.h"
-    "tcp/TcpClient.cpp"
-    "tcp/TcpClient.h"
-    "http/HttpClient.cpp"
-    "http/HttpClient.h"
+    http/HttpClient.cpp
+    http/HttpClient.h
+    tcp/tcp_proto.h
+    tcp/tcp_interface.h
+    tcp/tcp_package.h
+    tcp/tcp_client.h
+    tcp/tcp_server.h
+    tcp/impl/libuv_event_loop.cpp
+    tcp/impl/libuv_event_loop.h
+    tcp/impl/libuv_tcp_client_impl.cpp
+    tcp/impl/libuv_tcp_client_impl.h
+    tcp/impl/libuv_tcp_server_impl.cpp
+    tcp/impl/libuv_tcp_server_impl.h
 )
 
 target_link_libraries(${PROJECT_NAME}
