@@ -8,6 +8,7 @@
 #include "libuv_event_loop.h"
 #include <gflags/gflags.h>
 #include <glog/logging.h>
+#include <cassert>
 
 void EventLoop::start()
 {
