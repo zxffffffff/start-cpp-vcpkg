@@ -227,7 +227,7 @@ public:
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
-                << " errCode=" << err->second
+                << " errCode=" << err->first
                 << " errMsg" << err->second;
 
             assert(false);
@@ -280,7 +280,7 @@ public:
                 << " state=" << ToString(GetState())
                 << " connId=" << connId
                 << " bufferSize=" << buffer->size()
-                << " errCode=" << err->second
+                << " errCode=" << err->first
                 << " errMsg" << err->second;
 
             SetConnState(connId, ConnectionStates::NetError);
@@ -380,7 +380,7 @@ public:
                 << " connState=" << ToString(GetConnState(connId))
                 << " connId=" << connId
                 << " bufferSize=" << buffer->size()
-                << " errCode=" << err->second
+                << " errCode=" << err->first
                 << " errMsg" << err->second;
 
             SetConnState(connId, ConnectionStates::NetError);
