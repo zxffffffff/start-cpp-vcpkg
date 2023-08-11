@@ -63,7 +63,7 @@ public:
     void SetPort(int port) { this->port = port; }
     int GetPort() const { return port; }
 
-    ServerStates GetState() const 
+    ServerStates GetState() const
     {
         std::shared_lock lock(stateMutex);
         return state;
@@ -75,7 +75,7 @@ public:
             state = new_state;
         }
         if (call && handleStates)
-            handleStates(new_state);
+            threadPool->MoveToThread([=] { handleStates(new_state); return true; });
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
@@ -104,7 +104,7 @@ public:
             conn.state = new_state;
         }
         if (call && handleConnStates)
-            handleConnStates(connId, new_state);
+            threadPool->MoveToThread([=] { handleConnStates(connId, new_state); return true; });
     }
 
     /* 线程异步回调，注意线程安全 */
@@ -117,7 +117,44 @@ public:
     void SetHandleConnRead(HandleServerConnRead f) { handleConnRead = f; }
 
 public:
+    /* 异步 */
     std::future<bool> Listen()
+    {
+        return threadPool->MoveToThread(std::bind(&TcpServer::ListenSync, this));
+    }
+
+    std::future<bool> Close()
+    {
+        return threadPool->MoveToThread(std::bind(&TcpServer::CloseSync, this));
+    }
+
+    std::future<bool> Write(ConnId connId, Buffer buffer)
+    {
+        return threadPool->MoveToThread([=] { return WriteSync(connId, buffer); });
+    }
+
+    std::future<bool> Write(Buffer buffer)
+    {
+        return threadPool->MoveToThread([=] { return WriteSync(buffer); });
+    }
+
+    void OnNewConn(ConnId connId)
+    {
+        threadPool->MoveToThread([=] { OnNewConnSync(connId); return true; });
+    }
+
+    void OnCloseConn(ConnId connId)
+    {
+        threadPool->MoveToThread([=] { OnCloseConnSync(connId); return true; });
+    }
+
+    void OnConnRead(ConnId connId, Error err, Buffer buffer)
+    {
+        threadPool->MoveToThread([=] { return OnConnReadSync(connId, err, buffer); });
+    }
+
+    /* 同步 */
+    bool ListenSync()
     {
         if (IsRunning())
         {
@@ -127,89 +164,88 @@ public:
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Running !";
-            return MakeFuture(false);
+            return false;
         }
+
         LOG(INFO) << __func__
-            << " addr=" << addr 
-            << " port=" << port 
+            << " addr=" << addr
+            << " port=" << port
             << " tips=" << tips
             << " state=" << ToString(GetState());
 
         SetState(ServerStates::Listen);
-        auto cbk = [this]
+        auto err = server->Listen(GetAddr(), GetPort()).get();
+        if (err->first)
         {
-            auto err = server->Listen(GetAddr(), GetPort()).get();
-            if (err->first)
-            {
-                // err
-                LOG(ERROR) << "Listen-cbk"
-                    << " addr=" << addr
-                    << " port=" << port
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " Listen Failed !";
-                SetState(ServerStates::ListenFailed);
-                return false;
-            }
-            // success
-            LOG(INFO) << "Listen-cbk"
+            // err
+            LOG(ERROR) << __func__
                 << " addr=" << addr
-                << " port=" << port 
+                << " port=" << port
                 << " tips=" << tips
-                << " state=" << ToString(GetState());
-            SetState(ServerStates::Listening);
-            return true;
-        };
-        return threadPool->MoveToThread(cbk);
+                << " state=" << ToString(GetState())
+                << " Listen Failed !";
+            SetState(ServerStates::ListenFailed);
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState());
+        SetState(ServerStates::Listening);
+        return true;
     }
 
-    std::future<bool> Close()
+    bool CloseSync()
     {
         if (GetState() <= ServerStates::Closing)
         {
-            LOG(WARNING) << __func__ 
+            LOG(WARNING) << __func__
                 << " addr=" << addr
-                << " port=" << port 
+                << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Close/ing !";
-            return MakeFuture(false);
+            return false;
         }
-        LOG(INFO) << __func__ 
-            << " addr=" << addr 
-            << " port=" << port 
+
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
             << " tips=" << tips
             << " state=" << ToString(GetState());
 
         SetState(ServerStates::Closing);
-        auto cbk = [this]
+        auto err = server->Close().get();
+        if (err->first)
         {
-            auto err = server->Close().get();
-            if (err->first)
-            {
-                // never
-                LOG(ERROR) << "Close-cbk" 
-                    << " addr=" << addr 
-                    << " port=" << port
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                assert(false);
-                return false;
-            }
-            LOG(INFO) << "Close-cbk"  
-                << " addr=" << addr 
+            // never
+            LOG(ERROR) << __func__
+                << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
-                << " state=" << ToString(GetState());
-            SetState(ServerStates::Closed);
-            return true;
-        };
-        return threadPool->MoveToThread(cbk);
+                << " state=" << ToString(GetState())
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
+
+            assert(false);
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState());
+
+        SetState(ServerStates::Closed);
+        return true;
     }
 
-    std::future<bool> Write(ConnId connId, Buffer buffer)
+    bool WriteSync(ConnId connId, Buffer buffer)
     {
         if (!IsRunning())
         {
@@ -221,8 +257,9 @@ public:
                 << " connId=" << connId
                 << " bufferSize=" << buffer->size()
                 << " Is Not Running !";
-            return MakeFuture(false);
+            return false;
         }
+
         LOG(INFO) << __func__
             << " addr=" << addr
             << " port=" << port
@@ -231,38 +268,37 @@ public:
             << " connId=" << connId
             << " bufferSize=" << buffer->size();
 
-        auto cbk = [=]
+        auto& connection = connections[connId];
+        auto err = server->Write(connId, buffer).get();
+        if (err->first)
         {
-            auto& connection = connections[connId];
-            auto err = server->Write(connId, buffer).get();
-            if (err->first)
-            {
-                // err
-                LOG(ERROR) << "Write-cbk" 
-                    << " addr=" << addr
-                    << " port=" << port
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " connId=" << connId
-                    << " bufferSize=" << buffer->size()
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                SetConnState(connId, ConnectionStates::NetError);
-                return false;
-            }
-            LOG(INFO) << "Write-cbk"
+            // err
+            LOG(ERROR) << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " connId=" << connId
-                << " bufferSize=" << buffer->size();
-            return true;
-        };
-        return threadPool->MoveToThread(cbk);
+                << " bufferSize=" << buffer->size()
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
+
+            SetConnState(connId, ConnectionStates::NetError);
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " connId=" << connId
+            << " bufferSize=" << buffer->size();
+        return true;
     }
-    
-    std::future<bool> Write(Buffer buffer)
+
+    bool WriteSync(Buffer buffer)
     {
         if (!IsRunning())
         {
@@ -273,8 +309,9 @@ public:
                 << " state=" << ToString(GetState())
                 << " bufferSize=" << buffer->size()
                 << " Is Not Running !";
-            return MakeFuture(false);
+            return false;
         }
+
         LOG(INFO) << __func__
             << " addr=" << addr
             << " port=" << port
@@ -282,99 +319,86 @@ public:
             << " state=" << ToString(GetState())
             << " bufferSize=" << buffer->size();
 
-        auto cbk = [=]
+        std::vector<std::future<bool>> futures;
+        for (auto ite = connections.begin(); ite != connections.end(); ++ite)
         {
-            std::vector<std::future<bool>> futures;
-            for (auto ite = connections.begin(); ite != connections.end(); ++ite)
-            {
-                ConnId connId = ite->first;
-                futures.push_back(Write(connId, buffer));
-            }
+            ConnId connId = ite->first;
+            futures.push_back(Write(connId, buffer));
+        }
+        int ok = 0;
+        for (auto& future : futures)
+        {
+            if (future.get())
+                ++ok;
+        }
 
-            bool ok = false;
-            for (auto& future : futures)
-            {
-                if (future.get())
-                    ok = true;
-            }
-            LOG(INFO) << "Write-cbk"
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size()
-                << " ok=" << ok;
-            return ok;
-        };
-        return threadPool->MoveToThread(cbk);
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " bufferSize=" << buffer->size()
+            << " ok=" << ok << "/" << futures.size();
+        return ok;
     }
 
-    void OnNewConn(ConnId connId)
+    void OnNewConnSync(ConnId connId)
     {
-        auto cbk = [=]
-        {
-            LOG(INFO) << "OnNewConn-cbk"
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " connId=" << connId;
-            SetConnState(connId, ConnectionStates::Connected);
-            return true;
-        };
-        threadPool->MoveToThread(cbk);
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " connId=" << connId;
+
+        SetConnState(connId, ConnectionStates::Connected);
     }
 
-    void OnCloseConn(ConnId connId)
+    void OnCloseConnSync(ConnId connId)
     {
-        auto cbk = [=]
-        {
-            LOG(INFO) << "OnCloseConn-cbk"
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " connState=" << ToString(GetConnState(connId))
-                << " connId=" << connId;
-            SetConnState(connId, ConnectionStates::Closed);
-            return true;
-        };
-        threadPool->MoveToThread(cbk);
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " connState=" << ToString(GetConnState(connId))
+            << " connId=" << connId;
+
+        SetConnState(connId, ConnectionStates::Closed);
     }
 
-    void OnConnRead(ConnId connId, Error err, Buffer buffer)
+    bool OnConnReadSync(ConnId connId, Error err, Buffer buffer)
     {
-        auto cbk = [=]
+        if (err->first)
         {
-            if (err->first)
-            {
-                // err
-                LOG(ERROR) << "OnConnRead-cbk"
-                    << " addr=" << addr
-                    << " port=" << port
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " connState=" << ToString(GetConnState(connId))
-                    << " connId=" << connId
-                    << " bufferSize=" << buffer->size()
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                SetConnState(connId, ConnectionStates::NetError);
-                return false;
-            }
-            // success
-            LOG(INFO) << "OnConnRead-cbk"
+            // err
+            LOG(ERROR) << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " connState=" << ToString(GetConnState(connId))
                 << " connId=" << connId
-                << " bufferSize=" << buffer->size();
-            if (handleConnRead)
-                handleConnRead(connId, buffer);
-            return true;
-        };
-        threadPool->MoveToThread(cbk);
+                << " bufferSize=" << buffer->size()
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
+
+            SetConnState(connId, ConnectionStates::NetError);
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " connState=" << ToString(GetConnState(connId))
+            << " connId=" << connId
+            << " bufferSize=" << buffer->size();
+
+        if (handleConnRead)
+            threadPool->MoveToThread([=] { handleConnRead(connId, buffer); return true; });
+        return true;
     }
 };
