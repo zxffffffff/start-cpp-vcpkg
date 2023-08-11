@@ -43,7 +43,7 @@ TEST(tcp, pingpong)
     };
     server->SetHandleConnRead(serverRead);
     ASSERT_EQ(server->GetState(), ServerStates::Closed);
-    server->Listen().wait();
+    server->ListenSync();
     ASSERT_EQ(server->GetState(), ServerStates::Listening);
 
     // client
@@ -61,7 +61,7 @@ TEST(tcp, pingpong)
         };
         client->SetHandleRead(clientRead);
         ASSERT_EQ(client->GetState(), ConnectionStates::Closed);
-        client->Connect().wait();
+        client->ConnectSync();
         ASSERT_EQ(client->GetState(), ConnectionStates::Connected);
     }
 
@@ -89,7 +89,7 @@ TEST(tcp, pingpong)
         closeFuture.push_back(client->Close());
     }
     EXPECT_EQ(server->GetState(), ServerStates::Listening);
-    server->Close().wait();
+    server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerStates::Closed);
     for (int i = 0; i < cnt; ++i)
     {
@@ -119,7 +119,7 @@ TEST(tcp, monkeytest)
         server->Write(connId, buffer);
     };
     server->SetHandleConnRead(serverRead);
-    server->Listen().wait();
+    server->ListenSync();
 
     // client
     constexpr int client_cnt = 10;
@@ -141,9 +141,9 @@ TEST(tcp, monkeytest)
     {
         auto client = &(*clients)[i];
         if (client->IsRunning())
-            client->Close().wait();
+            client->CloseSync();
         else
-            client->Connect().wait();
+            client->ConnectSync();
     };
     auto ClientWrite = [&](int i)
     {
@@ -194,7 +194,7 @@ TEST(tcp, monkeytest)
         auto client = &(*clients)[i];
         closeFuture.push_back(client->Close());
     }
-    server->Close().wait();
+    server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerStates::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
@@ -221,13 +221,13 @@ TEST(tcp, monkeytest2)
         server_recv->buffer.push_back(buffer->data());
     };
     server->SetHandleConnRead(serverRead);
-    server->Listen().wait();
+    server->ListenSync();
     auto ServerListenClose = [&]
     {
         if (server->IsRunning())
-            server->Close().wait();
+            server->CloseSync();
         else
-            server->Listen().wait();
+            server->ListenSync();
     };
     auto ServerWrite = [&]
     {
@@ -297,7 +297,7 @@ TEST(tcp, monkeytest2)
         client->SetRetryConnect(false);
         closeFuture.push_back(client->Close());
     }
-    server->Close().wait();
+    server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerStates::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {

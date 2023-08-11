@@ -13,6 +13,7 @@
 #include <thread>
 #include <future>
 
+/* 兼容 windows */
 #undef min
 #undef max
 

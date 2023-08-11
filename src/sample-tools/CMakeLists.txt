@@ -41,7 +41,9 @@ add_library(${PROJECT_NAME} STATIC
     example/Example.h
     example/Example.cpp
     thread/threadpool_interface.h
+    thread/threadtimer_interface.h
     thread/impl/stl_threadpool_impl.h 
+    thread/impl/stl_threadtimer_impl.h 
 )
 
 target_link_libraries(${PROJECT_NAME}

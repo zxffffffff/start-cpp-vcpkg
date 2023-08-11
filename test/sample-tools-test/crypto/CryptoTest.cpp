@@ -5,11 +5,11 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
-#include "crypto/Crypto.h"
 #include "gtest/gtest.h"
+#include "crypto/Crypto.h"
 
-TEST(CryptoTest, EncodeAndDecode) {
+TEST(CryptoTest, EncodeAndDecode)
+{
     std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?ÄãºÃ";
 
     std::string encode = Crypto::Base64Encode(raw);

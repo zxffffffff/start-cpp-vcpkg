@@ -24,5 +24,5 @@ public:
     IThreadPool() { /* 开启 */ }
     virtual ~IThreadPool() { /* 结束 */ }
 
-    virtual std::future<bool> MoveToThread(std::function<bool()> task) = 0;
+    virtual std::future<bool> MoveToThread(std::function<bool()> f) = 0;
 };

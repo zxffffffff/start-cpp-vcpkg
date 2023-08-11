@@ -47,7 +47,7 @@ public:
     virtual ~TcpClient()
     {
         if (IsRunning())
-            Close().get();
+            CloseSync();
     }
 
     void SetAddr(const std::string& addr) { this->addr = addr; }
@@ -58,10 +58,10 @@ public:
 
     void SetRetryConnect(bool retry) { retryConn = retry; }
 
-    ConnectionStates GetState() const 
+    ConnectionStates GetState() const
     {
         std::shared_lock lock(stateMutex);
-        return state; 
+        return state;
     }
     void SetState(ConnectionStates new_state, bool call = true)
     {
@@ -70,7 +70,7 @@ public:
             state = new_state;
         }
         if (call && handleStates)
-            handleStates(new_state);
+            threadPool->MoveToThread([=] { handleStates(new_state); return true; });
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
@@ -81,152 +81,176 @@ public:
     void SetHandleRead(HandleClientRead f) { handleRead = f; }
 
 public:
+    /* 异步 */
     std::future<bool> Connect()
+    {
+        return threadPool->MoveToThread(std::bind(&TcpClient::ConnectSync, this));
+    }
+
+    std::future<bool> Close()
+    {
+        return threadPool->MoveToThread(std::bind(&TcpClient::CloseSync, this));
+    }
+
+    std::future<bool> ReConn()
+    {
+        return threadPool->MoveToThread(std::bind(&TcpClient::ReConnSync, this));
+    }
+
+    std::future<bool> Write(Buffer buffer)
+    {
+        return threadPool->MoveToThread([=] { return WriteSync(buffer); });
+    }
+
+    void OnRead(Error err, Buffer buffer)
+    {
+        threadPool->MoveToThread([=] { return OnReadSync(err, buffer); });
+    }
+
+    /* 同步 */
+    bool ConnectSync()
     {
         if (IsRunning())
         {
-            LOG(WARNING) << __func__ 
+            LOG(WARNING) << __func__
                 << " addr=" << addr
-                << " port=" << port 
+                << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Running !";
-            return MakeFuture(false);
+            return false;
         }
-        LOG(INFO) << __func__ 
+
+        LOG(INFO) << __func__
             << " addr=" << addr
             << " port=" << port
             << " tips=" << tips
             << " state=" << ToString(GetState());
 
         SetState(ConnectionStates::Connecting);
-        auto cbk = [this]
+        auto future = client->Connect(GetAddr(), GetPort());
+        auto err = future.get();
+        if (err->first)
         {
-            auto future = client->Connect(GetAddr(), GetPort());
-            auto err = future.get();
-            if (err->first)
-            {
-                // err
-                LOG(ERROR) << "Connect-cbk"
-                    << " addr=" << addr 
-                    << " port=" << port 
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                SetState(ConnectionStates::ConnFailed);
-                if (retryConn)
-                    ReConn();
-                return false;
-            }
-            // success
-            LOG(INFO) << "Connect-cbk"
-                << " addr=" << addr 
-                << " port=" << port 
-                << " tips=" << tips
-                << " state=" << ToString(GetState());
-            SetState(ConnectionStates::Connected);
-            return true;
-        };
-        return threadPool->MoveToThread(cbk);
-    }
-
-    std::future<bool> Close()
-    {
-        if (GetState() <= ConnectionStates::Closing)
-        {
-            LOG(WARNING) << __func__ 
-                << " addr=" << addr 
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " Is Close/ing !";
-            return MakeFuture(false);
-        }
-        LOG(INFO) << __func__
-            << " addr=" << addr 
-            << " port=" << port 
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
-
-        SetState(ConnectionStates::Closing);
-        auto cbk = [this]
-        {
-            auto future = client->Close();
-            auto err = future.get();
-            if (err->first)
-            {
-                // never
-                LOG(ERROR) << "Close-cbk"
-                    << " addr=" << addr 
-                    << " port=" << port 
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                assert(false);
-                return false;
-            }
-            LOG(INFO) << "Close-cbk" 
-                << " addr=" << addr 
-                << " port=" << port 
-                << " tips=" << tips
-                << " state=" << ToString(GetState());
-            SetState(ConnectionStates::Closed);
-            return true;
-        };
-        return threadPool->MoveToThread(cbk);
-    }
-
-    std::future<bool> ReConn()
-    {
-        auto cbk = [this]
-        {
-            if (!retryMutex.try_lock())
-                return false;
-
-            /* 指数退避算法可以在每次重连失败后，将等待时间逐渐增加，以避免频繁的重连尝试 */
-            std::function<int(int)> fibonacci = [&fibonacci](int n)
-            {
-                if (n <= 0) return 0;
-                if (n == 1) return 1;
-                return fibonacci(n - 1) + fibonacci(n - 2);
-            };
-
-            bool ok = false;
-            for (int reconnectCount = 0; retryConn && reconnectCount < 9999; ++reconnectCount)
-            {
-                LOG(WARNING) << "ReConn-cbk"
-                    << " addr=" << addr
-                    << " port=" << port
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " reconnectCount=" << reconnectCount;
-
-                Close().get();
-                ok = Connect().get();
-                if (ok)
-                    break;
-
-                if (int sleep_ms = fibonacci(reconnectCount))
-                {
-                    std::this_thread::sleep_for(1ms * std::min(sleep_ms * 100, 60 * 1000));
-                }
-            }
-            LOG(WARNING) << "ReConn-cbk"
+            // err
+            LOG(ERROR) << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
-                << " ok=" << ok;
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
 
-            retryMutex.unlock();
-            return ok;
-        };
-        return threadPool->MoveToThread(cbk);
+            SetState(ConnectionStates::ConnFailed);
+            if (retryConn)
+                ReConn();
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState());
+
+        SetState(ConnectionStates::Connected);
+        return true;
     }
 
-    std::future<bool> Write(Buffer buffer)
+    bool CloseSync()
+    {
+        if (GetState() <= ConnectionStates::Closing)
+        {
+            LOG(WARNING) << __func__
+                << " addr=" << addr
+                << " port=" << port
+                << " tips=" << tips
+                << " state=" << ToString(GetState())
+                << " Is Close/ing !";
+            return false;
+        }
+
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState());
+
+        SetState(ConnectionStates::Closing);
+        auto future = client->Close();
+        auto err = future.get();
+        if (err->first)
+        {
+            // never
+            LOG(ERROR) << __func__
+                << " addr=" << addr
+                << " port=" << port
+                << " tips=" << tips
+                << " state=" << ToString(GetState())
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
+
+            assert(false);
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState());
+
+        SetState(ConnectionStates::Closed);
+        return true;
+    }
+
+    bool ReConnSync()
+    {
+        if (!retryMutex.try_lock())
+            return false;
+
+        /* 指数退避算法可以在每次重连失败后，将等待时间逐渐增加，以避免频繁的重连尝试 */
+        std::function<int(int)> fibonacci = [&fibonacci](int n)
+        {
+            if (n <= 0) return 0;
+            if (n == 1) return 1;
+            return fibonacci(n - 1) + fibonacci(n - 2);
+        };
+
+        bool ok = false;
+        for (int reconnectCount = 0; retryConn && reconnectCount < 9999; ++reconnectCount)
+        {
+            LOG(WARNING) << __func__
+                << " addr=" << addr
+                << " port=" << port
+                << " tips=" << tips
+                << " state=" << ToString(GetState())
+                << " reconnectCount=" << reconnectCount;
+
+            CloseSync();
+            ok = ConnectSync();
+            if (ok)
+                break;
+
+            if (int sleep_ms = fibonacci(reconnectCount))
+            {
+                std::this_thread::sleep_for(1ms * std::min(sleep_ms * 100, 60 * 1000));
+            }
+        }
+        LOG(WARNING) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " ok=" << ok;
+
+        retryMutex.unlock();
+        return ok;
+    }
+
+    bool WriteSync(Buffer buffer)
     {
         if (!IsRunning())
         {
@@ -237,77 +261,76 @@ public:
                 << " state=" << ToString(GetState())
                 << " bufferSize=" << buffer->size()
                 << " Is Not Running !";
-            return MakeFuture(false);
+            return false;
         }
-        LOG(INFO) << __func__ 
-            << " addr=" << addr 
-            << " port=" << port 
+
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
             << " tips=" << tips
             << " state=" << ToString(GetState())
             << " bufferSize=" << buffer->size();
 
-        auto cbk = [=]
+        auto future = client->Write(buffer);
+        auto err = future.get();
+        if (err->first)
         {
-            auto future = client->Write(buffer);
-            auto err = future.get();
-            if (err->first)
-            {
-                // err
-                LOG(ERROR) << "Write-cbk" 
-                    << " addr=" << addr
-                    << " port=" << port
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " bufferSize=" << buffer->size()
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                SetState(ConnectionStates::NetError);
-                if (retryConn)
-                    ReConn();
-                return false;
-            }
-            LOG(INFO) << "Write-cbk"  
+            // err
+            LOG(ERROR) << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size();
-            return true;
-        };
-        return threadPool->MoveToThread(cbk);
+                << " bufferSize=" << buffer->size()
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
+
+            SetState(ConnectionStates::NetError);
+            if (retryConn)
+                ReConn();
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " bufferSize=" << buffer->size();
+        return true;
     }
 
-    void OnRead(Error err, Buffer buffer)
+    bool OnReadSync(Error err, Buffer buffer)
     {
-        auto cbk = [=]
+        if (err->first)
         {
-            if (err->first)
-            {
-                // err
-                LOG(ERROR) << "OnRead-cbk"
-                    << " addr=" << addr
-                    << " port=" << port 
-                    << " tips=" << tips
-                    << " state=" << ToString(GetState())
-                    << " bufferSize=" << buffer->size()
-                    << " errCode=" << err->second
-                    << " errMsg" << err->second;
-                SetState(ConnectionStates::NetError);
-                if (retryConn)
-                    ReConn();
-                return false;
-            }
-            // success
-            LOG(INFO) << "OnRead-cbk" 
+            // err
+            LOG(ERROR) << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size();
-            if (handleRead)
-                handleRead(buffer);
-            return true;
-        };
-        threadPool->MoveToThread(cbk);
+                << " bufferSize=" << buffer->size()
+                << " errCode=" << err->second
+                << " errMsg" << err->second;
+
+            SetState(ConnectionStates::NetError);
+            if (retryConn)
+                ReConn();
+            return false;
+        }
+
+        // success
+        LOG(INFO) << __func__
+            << " addr=" << addr
+            << " port=" << port
+            << " tips=" << tips
+            << " state=" << ToString(GetState())
+            << " bufferSize=" << buffer->size();
+
+        if (handleRead)
+            threadPool->MoveToThread([=] { handleRead(buffer); return true; });
+        return true;
     }
 };
