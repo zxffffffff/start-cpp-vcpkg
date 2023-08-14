@@ -32,18 +32,20 @@ find_package(cryptopp CONFIG REQUIRED)
 # 引入 jsoncpp
 find_package(jsoncpp CONFIG REQUIRED)
 
-add_library(${PROJECT_NAME} STATIC
-    SampleTools.cpp
+# Public 头文件
+file(GLOB_RECURSE include_headers
     SampleTools.h
     Chrono.h
     crypto/Crypto.h
-    crypto/Crypto.cpp
-    example/Example.h
-    example/Example.cpp
     thread/threadpool_interface.h
     thread/threadtimer_interface.h
     thread/impl/stl_threadpool_impl.h 
     thread/impl/stl_threadtimer_impl.h 
+)
+
+add_library(${PROJECT_NAME} STATIC
+    SampleTools.cpp
+    crypto/Crypto.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -57,6 +59,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    PUBLIC_HEADER "${include_headers}"
 )
 
 install(TARGETS ${PROJECT_NAME}

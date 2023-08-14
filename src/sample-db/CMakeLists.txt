@@ -21,13 +21,17 @@ find_package(hiredis CONFIG REQUIRED)
 # find_package(bsoncxx CONFIG REQUIRED)
 # find_package(mongocxx CONFIG REQUIRED)
 
-add_library(${PROJECT_NAME} STATIC
-    SampleDB.cpp
+# Public 头文件
+file(GLOB_RECURSE include_headers
     SampleDB.h
     "mysql/MySQLClient.h"
-    "mysql/MySQLClient.cpp"
     "redis/RedisCommon.h"
     "redis/RedisClient.h"
+)
+
+add_library(${PROJECT_NAME} STATIC
+    SampleDB.cpp
+    "mysql/MySQLClient.cpp"
     "redis/RedisClient.cpp"
 )
 
@@ -41,6 +45,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    PUBLIC_HEADER "${include_headers}"
 )
 
 install(TARGETS ${PROJECT_NAME}

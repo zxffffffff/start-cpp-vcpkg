@@ -14,10 +14,14 @@ message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 # dll导出宏
 add_compile_definitions(SAMPLE_DYNAMIC_LIB_EXPORT)
 
-add_library(${PROJECT_NAME} SHARED
+# Public 头文件
+file(GLOB_RECURSE include_headers
     define.h
-    SampleDynamicLib.cpp
     SampleDynamicLib.h
+)
+
+add_library(${PROJECT_NAME} SHARED
+    SampleDynamicLib.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -26,6 +30,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    PUBLIC_HEADER "${include_headers}"
 )
 
 install(TARGETS ${PROJECT_NAME}

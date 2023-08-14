@@ -19,39 +19,13 @@ message(STATUS "[${PROJECT_NAME}] Protobuf_LIBRARIES : ${Protobuf_LIBRARIES}")
 
 # 由于PROTOBUF_GENERATE_CPP只能编译一个目录下的proto，尽量选择手动生成pb.cc，参考general-cpp.bat
 
-set(sample_files
-    pb_cpp/MsgType.pb.cc
-    pb_cpp/Req.pb.cc
-    pb_cpp/Res.pb.cc
-    pb_cpp/common/Stock.pb.cc
-    pb_cpp/notify/QuotePushTickNotify.pb.cc
-    pb_cpp/req/HeartbeatReq.pb.cc
-    pb_cpp/req/QuoteSubscribeTickReq.pb.cc
-    pb_cpp/req/QuoteUnsubscribeTickReq.pb.cc
-    pb_cpp/res/HeartbeatRes.pb.cc
-    pb_cpp/res/QuoteSubscribeTickRes.pb.cc
-    pb_cpp/res/QuoteUnsubscribeTickRes.pb.cc
-    SamplePB.cpp
-)
-
-set(sample_headers
-    pb_cpp/MsgType.pb.cc
-    pb_cpp/Req.pb.cc
-    pb_cpp/Res.pb.cc
-    pb_cpp/common/Stock.pb.cc
-    pb_cpp/notify/QuotePushTickNotify.pb.cc
-    pb_cpp/req/HeartbeatReq.pb.cc
-    pb_cpp/req/QuoteSubscribeTickReq.pb.cc
-    pb_cpp/req/QuoteUnsubscribeTickReq.pb.cc
-    pb_cpp/res/HeartbeatRes.pb.cc
-    pb_cpp/res/QuoteSubscribeTickRes.pb.cc
-    pb_cpp/res/QuoteUnsubscribeTickRes.pb.cc
-    SamplePB.h
-)
+# Public 头文件
+file(GLOB_RECURSE c_headers pb_cpp/*.h)
+file(GLOB_RECURSE c_files pb_cpp/*.cc)
 
 add_library(${PROJECT_NAME} STATIC
-    ${sample_files}
-    ${sample_headers}
+    SamplePB.cpp
+    ${c_files}
 )
 
 # protobuf::libprotoc         编译器.proto生成code
@@ -61,11 +35,14 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC protobuf::libprotobuf
 )
 
-# 不暴露protobuf相关内容，仅暴露SmaplePB
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${Protobuf_INCLUDE_DIRS}
     PUBLIC ${PROJECT_SOURCE_DIR}/pb_cpp
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+target_include_directories(${PROJECT_NAME}
+    PUBLIC ${c_headers}
 )
 
 install(TARGETS ${PROJECT_NAME}

@@ -6,6 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
+#define GLOG_NO_ABBREVIATED_SEVERITIES 1
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <algorithm>

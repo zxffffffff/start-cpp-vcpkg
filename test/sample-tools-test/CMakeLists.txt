@@ -15,7 +15,7 @@ message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-# 将源代码添加到此项目的可执行文件。
+# Public 头文件
 add_executable (${PROJECT_NAME}
     SampleToolsTest.cpp
     crypto/CryptoTest.cpp
