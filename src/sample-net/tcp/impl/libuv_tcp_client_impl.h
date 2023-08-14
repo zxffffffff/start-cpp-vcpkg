@@ -6,7 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include "../tcp_interface.h"
 #include "libuv_event_loop.h"
 
 class ClientImpl : public IClient

@@ -6,9 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include <gflags/gflags.h>
-#include <glog/logging.h>
-#include "tcp_package.h"
 #include <algorithm>
 #include <string>
 #include <functional>

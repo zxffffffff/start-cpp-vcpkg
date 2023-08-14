@@ -45,7 +45,6 @@ file(GLOB_RECURSE include_headers
 
 add_library(${PROJECT_NAME} STATIC
     SampleTools.cpp
-    crypto/Crypto.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
