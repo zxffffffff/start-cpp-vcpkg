@@ -11,9 +11,13 @@ message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
+# Public 头文件
+file(GLOB_RECURSE include_headers
+    SampleDataCenter.h
+)
+
 add_library(${PROJECT_NAME} STATIC
     SampleDataCenter.cpp
-    SampleDataCenter.h
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -25,6 +29,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    PUBLIC_HEADER "${include_headers}"
 )
 
 install(TARGETS ${PROJECT_NAME}

@@ -20,22 +20,23 @@ message(STATUS "[${PROJECT_NAME}] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
 message(STATUS "[${PROJECT_NAME}] CURL_INCLUDE_DIR : ${CURL_INCLUDE_DIR}")
 message(STATUS "[${PROJECT_NAME}] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 
-add_library(${PROJECT_NAME} STATIC
-    SampleNet.cpp
+# Public 头文件
+file(GLOB_RECURSE include_headers
     SampleNet.h
-    http/HttpClient.cpp
     http/HttpClient.h
     tcp/tcp_proto.h
     tcp/tcp_interface.h
     tcp/tcp_package.h
     tcp/tcp_client.h
     tcp/tcp_server.h
-    tcp/impl/libuv_event_loop.cpp
     tcp/impl/libuv_event_loop.h
-    tcp/impl/libuv_tcp_client_impl.cpp
     tcp/impl/libuv_tcp_client_impl.h
-    tcp/impl/libuv_tcp_server_impl.cpp
     tcp/impl/libuv_tcp_server_impl.h
+)
+
+add_library(${PROJECT_NAME} STATIC
+    SampleNet.cpp
+    http/HttpClient.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
@@ -46,6 +47,11 @@ target_link_libraries(${PROJECT_NAME}
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}
+)
+
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    PUBLIC_HEADER "${include_headers}"
 )
 
 install(TARGETS ${PROJECT_NAME}

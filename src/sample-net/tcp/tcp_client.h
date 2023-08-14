@@ -10,6 +10,10 @@
 #include "tcp_interface.h"
 #include "thread/threadpool_interface.h"
 
+/* 兼容 windows */
+#undef min
+#undef max
+
 using namespace std::chrono_literals;
 
 /* 线程异步回调，注意线程安全 */
