@@ -6,7 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include "tcp_interface.h"
 #include <algorithm>
 #include <vector>
 

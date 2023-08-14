@@ -6,6 +6,8 @@
 **
 ****************************************************************************/
 #pragma once
+#include <gflags/gflags.h>
+#include <glog/logging.h>
 #include "../tcp_interface.h"
 #include <uv.h>
 #include <mutex>
