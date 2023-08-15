@@ -55,7 +55,7 @@ public:
             return;
         thread_data->m_running = true;
 
-        LOG(INFO) << __FUNCTION__ << " interval=" << thread_data->m_interval_ms;
+        //LOG(INFO) << __FUNCTION__ << " interval=" << thread_data->m_interval_ms;
         m_thread = std::thread(&ThreadTimerImpl::run, thread_data.get());
     }
 
@@ -78,7 +78,7 @@ public:
             return;
         thread_data->m_running = false;
 
-        LOG(INFO) << __func__;
+        //LOG(INFO) << __func__;
         if (m_thread.joinable())
         {
             m_thread.join();
@@ -107,18 +107,18 @@ private:
             {
                 if (thread_data->m_callback)
                 {
-                    DLOG(INFO) << __func__
-                        << " interval=" << thread_data->m_interval_ms
-                        << " count=" << ++count;
+                    //DLOG(INFO) << __func__
+                    //    << " interval=" << thread_data->m_interval_ms
+                    //    << " count=" << ++count;
 
                     thread_data->m_callback();
                 }
                 else
                 {
-                    DLOG(WARNING) << __func__
-                        << " interval=" << thread_data->m_interval_ms
-                        << " count=" << ++count
-                        << " no callback !";
+                    //DLOG(WARNING) << __func__
+                    //    << " interval=" << thread_data->m_interval_ms
+                    //    << " count=" << ++count
+                    //    << " no callback !";
                 }
             }
         }

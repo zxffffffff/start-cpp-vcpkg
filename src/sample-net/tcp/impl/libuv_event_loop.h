@@ -6,8 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include <gflags/gflags.h>
-#include <glog/logging.h>
 #include "../tcp_interface.h"
 #include <uv.h>
 #include <mutex>
@@ -42,7 +40,7 @@ public:
     /* 阻塞：等待线程运行 */
     void start()
     {
-        LOG(WARNING) << __func__;
+        //LOG(WARNING) << __func__;
 
         if (is_start)
             return assert(false);
@@ -60,7 +58,7 @@ public:
     /* 阻塞：等待线程结束 */
     void stop()
     {
-        LOG(WARNING) << __func__;
+        //LOG(WARNING) << __func__;
 
         if (!is_start)
             return assert(false);
@@ -91,7 +89,7 @@ public:
 private:
     static void run(void* arg)
     {
-        LOG(WARNING) << __func__;
+        //LOG(WARNING) << __func__;
 
         ThreadData* thread_data = (ThreadData*)arg;
 
@@ -114,11 +112,11 @@ private:
         }
             });
 
-        LOG(WARNING) << __func__ << " running!";
+        //LOG(WARNING) << __func__ << " running!";
         uv_run(&thread_data->loop, UV_RUN_DEFAULT); /* running */
 
-        LOG(WARNING) << __func__ << " closing";
+        //LOG(WARNING) << __func__ << " closing";
         uv_loop_close(&thread_data->loop);
-        LOG(WARNING) << __func__ << " closed!";
+        //LOG(WARNING) << __func__ << " closed!";
     }
 };

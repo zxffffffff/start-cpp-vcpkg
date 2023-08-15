@@ -6,8 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include <gflags/gflags.h>
-#include <glog/logging.h>
 #include <algorithm>
 #include <string>
 #include <functional>

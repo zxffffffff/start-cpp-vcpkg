@@ -31,7 +31,7 @@ public:
     }
 
     // 同步请求
-    static std::string Get(const char* url, int timeout)
+    static std::string Get(const char* url, int timeout, std::string& error)
     {
         std::stringstream res;
 
@@ -44,14 +44,18 @@ public:
         curl_easy_cleanup(curl);
 
         if (r != CURLE_OK) {
-            LOG(ERROR) << curl_easy_strerror(r);
+            std::stringstream ss;
+            ss << __func__
+                << " err=" << r
+                << " msg=" << curl_easy_strerror(r);
+            error = ss.str();
             return "";
         }
         return res.str();
     }
 
     // 同步请求
-    static std::string Post(const char* url, const char* body, int timeout)
+    static std::string Post(const char* url, const char* body, int timeout, std::string& error)
     {
         std::stringstream res;
 
@@ -71,7 +75,11 @@ public:
         curl_easy_cleanup(curl);
 
         if (r != CURLE_OK) {
-            LOG(ERROR) << curl_easy_strerror(r);
+            std::stringstream ss;
+            ss << __func__
+                << " err=" << r
+                << " msg=" << curl_easy_strerror(r);
+            error = ss.str();
             return "";
         }
         return res.str();
