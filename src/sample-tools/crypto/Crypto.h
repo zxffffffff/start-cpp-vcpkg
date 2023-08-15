@@ -6,7 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include "glog/logging.h"
 #include "cryptopp/aes.h"
 #include "cryptopp/base64.h"
 #include "cryptopp/cbcmac.h"
@@ -62,8 +61,8 @@ public:
         }
         catch (const std::exception &e)
         {
-            LOG(ERROR) << __func__
-                       << " err=" << e.what();
+            //LOG(ERROR) << __func__
+            //           << " err=" << e.what();
             return "";
         }
     }
@@ -111,8 +110,8 @@ public:
         }
         catch (const std::exception &e)
         {
-            LOG(ERROR) << __func__
-                       << " err=" << e.what();
+            //LOG(ERROR) << __func__
+            //           << " err=" << e.what();
             return "";
         }
     }
@@ -141,8 +140,8 @@ public:
             }
             catch (const std::exception &e)
             {
-                LOG(ERROR) << __func__
-                           << " err=" << e.what();
+                //LOG(ERROR) << __func__
+                //           << " err=" << e.what();
                 return "";
             }
         }

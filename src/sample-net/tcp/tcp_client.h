@@ -6,8 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include <gflags/gflags.h>
-#include <glog/logging.h>
 #include "tcp_proto.h"
 #include "tcp_interface.h"
 #include "thread/threadpool_interface.h"
@@ -15,8 +13,6 @@
 /* 兼容 windows */
 #undef min
 #undef max
-
-using namespace std::chrono_literals;
 
 /* 线程异步回调，注意线程安全 */
 using HandleClientStates = std::function<void(ConnectionStates)>;
@@ -88,24 +84,24 @@ public:
 
 public:
     /* 异步 */
-    std::future<bool> Connect()
+    std::future<Error> Connect()
     {
-        return threadPool->MoveToThread(std::bind(&TcpClient::ConnectSync, this));
+        return threadPool->MoveToThread<Error>(std::bind(&TcpClient::ConnectSync, this));
     }
 
-    std::future<bool> Close()
+    std::future<Error> Close()
     {
-        return threadPool->MoveToThread(std::bind(&TcpClient::CloseSync, this));
+        return threadPool->MoveToThread<Error>(std::bind(&TcpClient::CloseSync, this));
     }
 
-    std::future<bool> ReConn()
+    std::future<Error> ReConn()
     {
-        return threadPool->MoveToThread(std::bind(&TcpClient::ReConnSync, this));
+        return threadPool->MoveToThread<Error>(std::bind(&TcpClient::ReConnSync, this));
     }
 
-    std::future<bool> Write(Buffer buffer)
+    std::future<Error> Write(Buffer buffer)
     {
-        return threadPool->MoveToThread([=] { return WriteSync(buffer); });
+        return threadPool->MoveToThread<Error>([=] { return WriteSync(buffer); });
     }
 
     void OnRead(Error err, Buffer buffer)
@@ -114,24 +110,19 @@ public:
     }
 
     /* 同步 */
-    bool ConnectSync()
+    Error ConnectSync()
     {
         if (IsRunning())
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Running !";
-            return false;
+            return MakeError(false, ss.str());
         }
-
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
 
         SetState(ConnectionStates::Connecting);
         auto future = client->Connect(GetAddr(), GetPort());
@@ -139,7 +130,8 @@ public:
         if (err->first)
         {
             // err
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -150,38 +142,26 @@ public:
             SetState(ConnectionStates::ConnFailed);
             if (retryConn)
                 ReConn();
-            return false;
+            return MakeError(false, ss.str());
         }
-
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
-
         SetState(ConnectionStates::Connected);
-        return true;
+        return MakeSuccess();
     }
 
-    bool CloseSync()
+    Error CloseSync()
     {
         if (GetState() <= ConnectionStates::Closing)
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Close/ing !";
-            return false;
+            return MakeError(false, ss.str());
         }
-
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
 
         SetState(ConnectionStates::Closing);
         auto future = client->Close();
@@ -189,7 +169,8 @@ public:
         if (err->first)
         {
             // never
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -198,24 +179,17 @@ public:
                 << " errMsg" << err->second;
 
             assert(false);
-            return false;
+            return MakeError(false, ss.str());
         }
-
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
-
         SetState(ConnectionStates::Closed);
-        return true;
+        return MakeSuccess();
     }
 
-    bool ReConnSync()
+    Error ReConnSync()
     {
         if (!retryMutex.try_lock())
-            return false;
+            return MakeError(false, "!retryMutex.try_lock");
 
         /* 指数退避算法可以在每次重连失败后，将等待时间逐渐增加，以避免频繁的重连尝试 */
         std::function<int(int)> fibonacci = [&fibonacci](int n)
@@ -226,63 +200,74 @@ public:
         };
 
         bool ok = false;
-        for (int reconnectCount = 0; retryConn && reconnectCount < 9999; ++reconnectCount)
+        int sleep_ms = 0;
+        int reconnectCount = 0;
+        for (; retryConn && reconnectCount < 9999; ++reconnectCount)
         {
-            LOG(WARNING) << __func__
+            CloseSync();
+            auto ret = ConnectSync();
+            if (ok = ret->first)
+                break;
+
+            if (sleep_ms < 60 * 1000)
+            {
+                sleep_ms = fibonacci(reconnectCount);
+                sleep_ms = std::min(sleep_ms * 100, 60 * 1000);
+            }
+            if (sleep_ms)
+            {
+                using namespace std::chrono;
+                using namespace std::chrono_literals;
+
+                auto start = steady_clock::now();
+                milliseconds duration(sleep_ms);
+                while (retryConn && duration_cast<milliseconds>(steady_clock::now() - start).count() < duration.count())
+                {
+                    std::this_thread::sleep_for(10ms);
+                }
+            }
+        }
+
+        retryMutex.unlock();
+
+        if (!ok)
+        {
+            // err
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " reconnectCount=" << reconnectCount;
-
-            CloseSync();
-            ok = ConnectSync();
-            if (ok)
-                break;
-
-            if (int sleep_ms = fibonacci(reconnectCount))
-            {
-                std::this_thread::sleep_for(1ms * std::min(sleep_ms * 100, 60 * 1000));
-            }
+            return MakeError(false, ss.str());
         }
-        LOG(WARNING) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " ok=" << ok;
-
-        retryMutex.unlock();
-        return ok;
+        // success
+        return MakeSuccess();
     }
 
-    bool WriteSync(Buffer buffer)
+    Error WriteSync(Buffer buffer)
     {
         if (!IsRunning())
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " bufferSize=" << buffer->size()
                 << " Is Not Running !";
-            return false;
+            return MakeError(false, ss.str());
         }
-
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " bufferSize=" << buffer->size();
 
         auto future = client->Write(buffer);
         auto err = future.get();
         if (err->first)
         {
             // err
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -294,25 +279,19 @@ public:
             SetState(ConnectionStates::NetError);
             if (retryConn)
                 ReConn();
-            return false;
+            return MakeError(false, ss.str());
         }
-
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " bufferSize=" << buffer->size();
-        return true;
+        return MakeSuccess();
     }
 
-    bool OnReadSync(Error err, Buffer buffer)
+    Error OnReadSync(Error err, Buffer buffer)
     {
         if (err->first)
         {
             // err
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -324,19 +303,12 @@ public:
             SetState(ConnectionStates::NetError);
             if (retryConn)
                 ReConn();
-            return false;
+            return MakeError(false, ss.str());
         }
 
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " bufferSize=" << buffer->size();
-
         if (handleRead)
             threadPool->MoveToThread([=] { handleRead(buffer); return true; });
-        return true;
+        return MakeSuccess();
     }
 };

@@ -5,6 +5,8 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
+#include <gflags/gflags.h>
+#include <glog/logging.h>
 #include <gtest/gtest.h>
 #include "tcp/tcp_server.h"
 #include "tcp/tcp_client.h"
@@ -80,8 +82,7 @@ TEST(tcp, pingpong)
     std::sort(client_recv->buffer.begin(), client_recv->buffer.end());
     EXPECT_EQ(server_recv->buffer, client_recv->buffer);
 
-
-    std::vector<std::future<bool>> closeFuture;
+    std::vector<std::future<Error>> closeFuture;
     for (int i = 0; i < cnt; ++i)
     {
         auto client = &(*clients)[i];
@@ -188,7 +189,7 @@ TEST(tcp, monkeytest)
     }
     EXPECT_TRUE(client_size > 0);
 
-    std::vector<std::future<bool>> closeFuture;
+    std::vector<std::future<Error>> closeFuture;
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
@@ -290,7 +291,7 @@ TEST(tcp, monkeytest2)
     }
     EXPECT_TRUE(client_size > 0);
 
-    std::vector<std::future<bool>> closeFuture;
+    std::vector<std::future<Error>> closeFuture;
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];

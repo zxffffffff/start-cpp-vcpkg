@@ -38,18 +38,18 @@ public:
     {
         addThread(4);
 
-        LOG(INFO) << __func__
-            << " MaxCount=" << MaxCount()
-            << " TotCount=" << TotCount()
-            << " IdlCount=" << IdlCount();
+        //LOG(INFO) << __func__
+        //    << " MaxCount=" << MaxCount()
+        //    << " TotCount=" << TotCount()
+        //    << " IdlCount=" << IdlCount();
     }
 
     virtual ~ThreadPool()
     {
-        LOG(INFO) << __func__
-            << " MaxCount=" << MaxCount()
-            << " TotCount=" << TotCount()
-            << " IdlCount=" << IdlCount();
+        //LOG(INFO) << __func__
+        //    << " MaxCount=" << MaxCount()
+        //    << " TotCount=" << TotCount()
+        //    << " IdlCount=" << IdlCount();
 
         running = false;
         cv.notify_all(); /* 唤醒所有线程执行 */
@@ -72,11 +72,11 @@ public:
     /* [1] 添加指定数量的线程（构造时默认添加_idlThrNum） */
     void addThread(unsigned short size)
     {
-        LOG(INFO) << __func__
-            << " MaxCount=" << MaxCount()
-            << " TotCount=" << TotCount()
-            << " IdlCount=" << IdlCount()
-            << " addSize=" << size;
+        //LOG(INFO) << __func__
+        //    << " MaxCount=" << MaxCount()
+        //    << " TotCount=" << TotCount()
+        //    << " IdlCount=" << IdlCount()
+        //    << " addSize=" << size;
 
         for (; pool.size() < maxCount && size > 0; --size)
         {
@@ -129,11 +129,11 @@ public:
 class ThreadPoolImpl : public IThreadPool
 {
 public:
-    virtual std::future<bool> MoveToThread(std::function<bool()> f) override
+    virtual std::future<void> MoveToThread(std::function<void()> f) override
     {
-        auto promise = std::make_shared<std::promise<bool>>();
+        auto promise = std::make_shared<std::promise<void>>();
         auto future = promise->get_future();
-        ThreadPool::Singleton().MoveToThread([=] { promise->set_value(f()); });
+        ThreadPool::Singleton().MoveToThread([=] { f(); promise->set_value(); });
         return future;
     }
 };

@@ -28,7 +28,7 @@ std::string HttpClient::Get(
 )
 {
     std::string complete_url = url + "?" + ParseParam(params);
-    return HttpClientPrivate::Get(complete_url.c_str(), timeout);
+    return HttpClientPrivate::Get(complete_url.c_str(), timeout, lastError);
 }
 
 std::string HttpClient::Post(
@@ -39,7 +39,7 @@ std::string HttpClient::Post(
 )
 {
     std::string complete_url = url + "?" + ParseParam(params);
-    return HttpClientPrivate::Post(complete_url.c_str(), body.c_str(), timeout);
+    return HttpClientPrivate::Post(complete_url.c_str(), body.c_str(), timeout, lastError);
 }
 
 std::string HttpClient::ParseParam(const std::map<std::string, std::string>& params)

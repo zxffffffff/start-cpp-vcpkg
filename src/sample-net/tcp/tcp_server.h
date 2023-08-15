@@ -6,8 +6,6 @@
 **
 ****************************************************************************/
 #pragma once
-#include <gflags/gflags.h>
-#include <glog/logging.h>
 #include "tcp_proto.h"
 #include "tcp_interface.h"
 #include "thread/threadpool_interface.h"
@@ -86,12 +84,12 @@ public:
         auto ite = connections.find(connId);
         if (ite == connections.end())
         {
-            LOG(ERROR) << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " state=" << ToString(GetState())
-                << " connId=" << connId
-                << " no found !";
+            //LOG(ERROR) << __func__
+            //    << " addr=" << addr
+            //    << " port=" << port
+            //    << " state=" << ToString(GetState())
+            //    << " connId=" << connId
+            //    << " no found !";
             return ConnectionStates::Closed;
         }
         Connection& conn = ite->second;
@@ -120,111 +118,97 @@ public:
 
 public:
     /* 异步 */
-    std::future<bool> Listen()
+    std::future<Error> Listen()
     {
-        return threadPool->MoveToThread(std::bind(&TcpServer::ListenSync, this));
+        return threadPool->MoveToThread<Error>(std::bind(&TcpServer::ListenSync, this));
     }
 
-    std::future<bool> Close()
+    std::future<Error> Close()
     {
-        return threadPool->MoveToThread(std::bind(&TcpServer::CloseSync, this));
+        return threadPool->MoveToThread<Error>(std::bind(&TcpServer::CloseSync, this));
     }
 
-    std::future<bool> Write(ConnId connId, Buffer buffer)
+    std::future<Error> Write(ConnId connId, Buffer buffer)
     {
-        return threadPool->MoveToThread([=] { return WriteSync(connId, buffer); });
+        return threadPool->MoveToThread<Error>([=] { return WriteSync(connId, buffer); });
     }
 
-    std::future<bool> Write(Buffer buffer)
+    std::future<Error> Write(Buffer buffer)
     {
-        return threadPool->MoveToThread([=] { return WriteSync(buffer); });
+        return threadPool->MoveToThread<Error>([=] { return WriteSync(buffer); });
     }
 
     void OnNewConn(ConnId connId)
     {
-        threadPool->MoveToThread([=] { OnNewConnSync(connId); return true; });
+        threadPool->MoveToThread([=] { OnNewConnSync(connId); });
     }
 
     void OnCloseConn(ConnId connId)
     {
-        threadPool->MoveToThread([=] { OnCloseConnSync(connId); return true; });
+        threadPool->MoveToThread([=] { OnCloseConnSync(connId); });
     }
 
     void OnConnRead(ConnId connId, Error err, Buffer buffer)
     {
-        threadPool->MoveToThread([=] { return OnConnReadSync(connId, err, buffer); });
+        threadPool->MoveToThread([=] { OnConnReadSync(connId, err, buffer); });
     }
 
     /* 同步 */
-    bool ListenSync()
+    Error ListenSync()
     {
         if (IsRunning())
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Running !";
-            return false;
+            return MakeError(false, ss.str());
         }
-
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
 
         SetState(ServerStates::Listen);
         auto err = server->Listen(GetAddr(), GetPort()).get();
         if (err->first)
         {
             // err
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Listen Failed !";
             SetState(ServerStates::ListenFailed);
-            return false;
+            return MakeError(false, ss.str());
         }
-
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
         SetState(ServerStates::Listening);
-        return true;
+        return MakeSuccess();
     }
 
-    bool CloseSync()
+    Error CloseSync()
     {
         if (GetState() <= ServerStates::Closing)
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " Is Close/ing !";
-            return false;
+            return MakeError(false, ss.str());
         }
-
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
 
         SetState(ServerStates::Closing);
         auto err = server->Close().get();
         if (err->first)
         {
             // never
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -233,25 +217,20 @@ public:
                 << " errMsg" << err->second;
 
             assert(false);
-            return false;
+            return MakeError(false, ss.str());
         }
 
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState());
-
         SetState(ServerStates::Closed);
-        return true;
+        return MakeSuccess();
     }
 
-    bool WriteSync(ConnId connId, Buffer buffer)
+    Error WriteSync(ConnId connId, Buffer buffer)
     {
         if (!IsRunning())
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -259,23 +238,16 @@ public:
                 << " connId=" << connId
                 << " bufferSize=" << buffer->size()
                 << " Is Not Running !";
-            return false;
+            return MakeError(false, ss.str());
         }
-
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " connId=" << connId
-            << " bufferSize=" << buffer->size();
 
         auto& connection = connections[connId];
         auto err = server->Write(connId, buffer).get();
         if (err->first)
         {
             // err
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -286,95 +258,74 @@ public:
                 << " errMsg" << err->second;
 
             SetConnState(connId, ConnectionStates::NetError);
-            return false;
+            return MakeError(false, ss.str());
         }
 
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " connId=" << connId
-            << " bufferSize=" << buffer->size();
-        return true;
+        return MakeSuccess();
     }
 
-    bool WriteSync(Buffer buffer)
+    Error WriteSync(Buffer buffer)
     {
         if (!IsRunning())
         {
-            LOG(WARNING) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
                 << " state=" << ToString(GetState())
                 << " bufferSize=" << buffer->size()
                 << " Is Not Running !";
-            return false;
+
+            return MakeError(false, ss.str());
         }
 
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " bufferSize=" << buffer->size();
-
-        std::vector<std::future<bool>> futures;
+        std::vector<std::future<Error>> futures;
         for (auto ite = connections.begin(); ite != connections.end(); ++ite)
         {
             ConnId connId = ite->first;
             futures.push_back(Write(connId, buffer));
         }
-        int ok = 0;
+        int cnt = 0;
         for (auto& future : futures)
         {
             if (future.get())
-                ++ok;
+                ++cnt;
         }
 
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " bufferSize=" << buffer->size()
-            << " ok=" << ok << "/" << futures.size();
-        return ok;
+        if (cnt == 0)
+        {
+            std::stringstream ss;
+            ss << __func__
+                << " addr=" << addr
+                << " port=" << port
+                << " tips=" << tips
+                << " state=" << ToString(GetState())
+                << " bufferSize=" << buffer->size()
+                << " percent=" << cnt << "/" << futures.size();
+            return MakeError(false, ss.str());
+        }
+        return MakeSuccess();
     }
 
     void OnNewConnSync(ConnId connId)
     {
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " connId=" << connId;
-
         SetConnState(connId, ConnectionStates::Connected);
     }
 
     void OnCloseConnSync(ConnId connId)
     {
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " connState=" << ToString(GetConnState(connId))
-            << " connId=" << connId;
-
         SetConnState(connId, ConnectionStates::Closed);
     }
 
-    bool OnConnReadSync(ConnId connId, Error err, Buffer buffer)
+    Error OnConnReadSync(ConnId connId, Error err, Buffer buffer)
     {
         if (err->first)
         {
             // err
-            LOG(ERROR) << __func__
+            std::stringstream ss;
+            ss << __func__
                 << " addr=" << addr
                 << " port=" << port
                 << " tips=" << tips
@@ -386,21 +337,12 @@ public:
                 << " errMsg" << err->second;
 
             SetConnState(connId, ConnectionStates::NetError);
-            return false;
+            return MakeError(false, ss.str());
         }
 
         // success
-        LOG(INFO) << __func__
-            << " addr=" << addr
-            << " port=" << port
-            << " tips=" << tips
-            << " state=" << ToString(GetState())
-            << " connState=" << ToString(GetConnState(connId))
-            << " connId=" << connId
-            << " bufferSize=" << buffer->size();
-
         if (handleConnRead)
             threadPool->MoveToThread([=] { handleConnRead(connId, buffer); return true; });
-        return true;
+        return MakeSuccess();
     }
 };
