@@ -37,6 +37,7 @@ file(GLOB_RECURSE include_headers
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
     http/HttpClient.cpp
+    ${include_headers}
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -33,6 +33,7 @@ add_library(${PROJECT_NAME} STATIC
     SampleDB.cpp
     "mysql/MySQLClient.cpp"
     "redis/RedisClient.cpp"
+    ${include_headers}
 )
 
 target_link_libraries(${PROJECT_NAME}

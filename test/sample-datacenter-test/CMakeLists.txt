@@ -15,7 +15,6 @@ message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-# Public 头文件
 add_executable (${PROJECT_NAME}
     SampleDataCenterTest.cpp
 )
