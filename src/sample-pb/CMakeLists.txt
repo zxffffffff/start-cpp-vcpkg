@@ -26,6 +26,7 @@ file(GLOB_RECURSE c_files pb_cpp/*.cc)
 add_library(${PROJECT_NAME} STATIC
     SamplePB.cpp
     ${c_files}
+    ${c_headers}
 )
 
 # protobuf::libprotoc         编译器.proto生成code

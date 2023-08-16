@@ -18,6 +18,7 @@ file(GLOB_RECURSE include_headers
 
 add_library(${PROJECT_NAME} STATIC
     SampleDataCenter.cpp
+    ${include_headers}
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -22,6 +22,7 @@ file(GLOB_RECURSE include_headers
 
 add_library(${PROJECT_NAME} SHARED
     SampleDynamicLib.cpp
+    ${include_headers}
 )
 
 target_link_libraries(${PROJECT_NAME}
