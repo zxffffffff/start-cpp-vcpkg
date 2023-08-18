@@ -33,11 +33,11 @@ file(GLOB_RECURSE include_headers
     impl/HttpClient_p
     net_common.h
     net_states.h
-    tcp_interface.h
     tcp_client.h
     tcp_server.h
-    http_interface.h
     http_server.h
+    interface/tcp_interface.h
+    interface/http_interface.h
     impl/libuv_event_loop.h
     impl/libuv_tcp_client_impl.h
     impl/libuv_tcp_server_impl.h

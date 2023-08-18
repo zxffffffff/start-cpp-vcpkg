@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
-#include "../threadtimer_interface.h"
+#include "../interface/threadtimer_interface.h"
 #include <thread>
 #include <future>
 

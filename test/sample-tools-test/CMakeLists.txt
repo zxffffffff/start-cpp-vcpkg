@@ -17,9 +17,9 @@ find_package(GTest CONFIG REQUIRED)
 
 add_executable (${PROJECT_NAME}
     SampleToolsTest.cpp
-    crypto/CryptoTest.cpp
-    thread/threadpool_test.cpp
-    thread/threadtimer_test.cpp
+    CryptoTest.cpp
+    threadpool_test.cpp
+    threadtimer_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

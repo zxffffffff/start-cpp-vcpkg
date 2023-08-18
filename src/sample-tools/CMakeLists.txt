@@ -36,9 +36,9 @@ find_package(jsoncpp CONFIG REQUIRED)
 file(GLOB_RECURSE include_headers
     SampleTools.h
     Chrono.h
-    crypto/Crypto.h
-    threadpool_interface.h
-    threadtimer_interface.h
+    Crypto.h
+    interface/threadpool_interface.h
+    interface/threadtimer_interface.h
     impl/stl_threadpool_impl.h 
     impl/stl_threadtimer_impl.h 
 )

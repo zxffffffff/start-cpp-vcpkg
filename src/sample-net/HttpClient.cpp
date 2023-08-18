@@ -23,28 +23,28 @@ HttpClient::~HttpClient()
 std::string HttpClient::Get(
     const std::string& url,
     const std::map<std::string, std::string>& params,
-    int timeout /*= 10*/
+    int timeout_sec /*= 10*/
 )
 {
     std::stringstream ss;
     ss << url;
     if (params.size())
         ss << '?' << ParseParam(params);
-    return HttpClientPrivate::Get(ss.str(), timeout, lastError);
+    return HttpClientPrivate::Get(ss.str(), timeout_sec, lastError);
 }
 
 std::string HttpClient::Post(
     const std::string& url,
     const std::map<std::string, std::string>& params,
     const std::string& body,
-    int timeout /*= 10*/
+    int timeout_sec /*= 10*/
 )
 {
     std::stringstream ss;
     ss << url;
     if (params.size())
         ss << '?' << ParseParam(params);
-    return HttpClientPrivate::Post(ss.str(), body.c_str(), timeout, lastError);
+    return HttpClientPrivate::Post(ss.str(), body.c_str(), timeout_sec, lastError);
 }
 
 std::string HttpClient::ParseParam(const std::map<std::string, std::string>& params)

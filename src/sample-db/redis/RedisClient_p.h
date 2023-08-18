@@ -5,8 +5,8 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #pragma once
+#include "glog/logging.h"
 #include "RedisCommon.h"
 #include "hiredis/hiredis.h"
 #include "Chrono.h"
