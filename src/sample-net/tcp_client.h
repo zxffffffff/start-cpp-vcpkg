@@ -6,9 +6,9 @@
 **
 ****************************************************************************/
 #pragma once
-#include "tcp_proto.h"
 #include "tcp_interface.h"
-#include "thread/threadpool_interface.h"
+#include "net_states.h"
+#include "threadpool_interface.h"
 
 /* 兼容 windows */
 #undef min
@@ -37,7 +37,7 @@ class TcpClient
     std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
 
 public:
-    TcpClient(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "client")
+    TcpClient(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "TcpClient")
         : addr(addr)
         , port(port)
         , tips(tips)
@@ -48,6 +48,7 @@ public:
 
     virtual ~TcpClient()
     {
+        SetRetryConnect(false);
         if (IsRunning())
             CloseSync();
     }
@@ -65,13 +66,13 @@ public:
         std::shared_lock lock(stateMutex);
         return state;
     }
-    void SetState(ConnectionStates new_state, bool call = true)
+    void SetState(ConnectionStates new_state)
     {
         {
             std::unique_lock lock(stateMutex);
             state = new_state;
         }
-        if (call && handleStates)
+        if (handleStates)
             threadPool->MoveToThread([=] { handleStates(new_state); return true; });
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
@@ -104,7 +105,7 @@ public:
         return threadPool->MoveToThread<Error>([=] { return WriteSync(buffer); });
     }
 
-    void OnRead(Error err, Buffer buffer)
+    virtual void OnRead(Error err, Buffer buffer)
     {
         threadPool->MoveToThread([=] { return OnReadSync(err, buffer); });
     }
@@ -285,7 +286,7 @@ public:
         return MakeSuccess();
     }
 
-    Error OnReadSync(Error err, Buffer buffer)
+    virtual Error OnReadSync(Error err, Buffer buffer)
     {
         if (err->first)
         {

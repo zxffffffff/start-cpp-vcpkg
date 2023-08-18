@@ -128,12 +128,14 @@ public:
 
 class ThreadPoolImpl : public IThreadPool
 {
+    ThreadPool threadPool;
+
 public:
     virtual std::future<void> MoveToThread(std::function<void()> f) override
     {
         auto promise = std::make_shared<std::promise<void>>();
         auto future = promise->get_future();
-        ThreadPool::Singleton().MoveToThread([=] { f(); promise->set_value(); });
+        threadPool.MoveToThread([=] { f(); promise->set_value(); });
         return future;
     }
 };

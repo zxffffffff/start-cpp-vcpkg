@@ -17,26 +17,36 @@ find_package(libuv CONFIG REQUIRED)
 # 引入curl库
 find_package(CURL CONFIG REQUIRED)
 message(STATUS "[${PROJECT_NAME}] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
-message(STATUS "[${PROJECT_NAME}] CURL_INCLUDE_DIR : ${CURL_INCLUDE_DIR}")
 message(STATUS "[${PROJECT_NAME}] CURL_LIBRARIES : ${CURL_LIBRARIES}")
+
+# 引入boost库（header-only的库不需要）
+find_package(Boost REQUIRED COMPONENTS url)
+message(STATUS "[${PROJECT_NAME}] Boost_VERSION_STRING : ${Boost_VERSION_STRING}")
+message(STATUS "[${PROJECT_NAME}] Boost_INCLUDE_DIRS : ${Boost_INCLUDE_DIRS}")
+message(STATUS "[${PROJECT_NAME}] Boost_LIBRARY_DIRS : ${Boost_LIBRARY_DIRS}")
+include_directories(${Boost_INCLUDE_DIRS})
 
 # Public 头文件
 file(GLOB_RECURSE include_headers
     SampleNet.h
-    http/HttpClient.h
-    tcp/tcp_proto.h
-    tcp/tcp_interface.h
-    tcp/tcp_package.h
-    tcp/tcp_client.h
-    tcp/tcp_server.h
-    tcp/impl/libuv_event_loop.h
-    tcp/impl/libuv_tcp_client_impl.h
-    tcp/impl/libuv_tcp_server_impl.h
+    HttpClient.h
+    impl/HttpClient_p
+    net_common.h
+    net_states.h
+    tcp_interface.h
+    tcp_client.h
+    tcp_server.h
+    http_interface.h
+    http_server.h
+    impl/libuv_event_loop.h
+    impl/libuv_tcp_client_impl.h
+    impl/libuv_tcp_server_impl.h
+    impl/boost_http_request.h
 )
 
 add_library(${PROJECT_NAME} STATIC
     SampleNet.cpp
-    http/HttpClient.cpp
+    HttpClient.cpp
     ${include_headers}
 )
 
@@ -44,6 +54,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-tools
     PRIVATE $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>
     PRIVATE CURL::libcurl
+    PRIVATE Boost::boost Boost::url
 )
 
 target_include_directories(${PROJECT_NAME}

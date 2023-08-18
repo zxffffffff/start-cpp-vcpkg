@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #include <gtest/gtest.h>
-#include "thread/impl/stl_threadpool_impl.h"
+#include "impl/stl_threadpool_impl.h"
 
 TEST(ThreadPoolImpl, Test)
 {

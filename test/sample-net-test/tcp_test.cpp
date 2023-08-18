@@ -8,11 +8,12 @@
 #include <gflags/gflags.h>
 #include <glog/logging.h>
 #include <gtest/gtest.h>
-#include "tcp/tcp_server.h"
-#include "tcp/tcp_client.h"
-#include "tcp/impl/libuv_tcp_server_impl.h"
-#include "tcp/impl/libuv_tcp_client_impl.h"
-#include "thread/impl/stl_threadpool_impl.h"
+
+#include "tcp_server.h"
+#include "tcp_client.h"
+#include "impl/libuv_tcp_server_impl.h"
+#include "impl/libuv_tcp_client_impl.h"
+#include "impl/stl_threadpool_impl.h"
 
 using namespace std::chrono_literals;
 
@@ -29,7 +30,6 @@ TEST(tcp, pingpong)
 {
     if (!google::IsGoogleLoggingInitialized())
         google::InitGoogleLogging("test");
-    FLAGS_logtostderr = false;
 
     // server
     auto server = std::make_shared<TestTcpServer>();
@@ -105,7 +105,6 @@ TEST(tcp, monkeytest)
 {
     if (!google::IsGoogleLoggingInitialized())
         google::InitGoogleLogging("test");
-    FLAGS_logtostderr = false;
 
     // server
     auto server = std::make_shared<TestTcpServer>();
@@ -210,7 +209,6 @@ TEST(tcp, monkeytest2)
 {
     if (!google::IsGoogleLoggingInitialized())
         google::InitGoogleLogging("test");
-    FLAGS_logtostderr = false;
 
     // server
     auto server = std::make_shared<TestTcpServer>();

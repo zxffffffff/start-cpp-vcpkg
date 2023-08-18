@@ -5,9 +5,8 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #include "HttpClient.h"
-#include "HttpClient_p.h"
+#include "impl/HttpClient_p.h"
 
 std::once_flag flag;
 
@@ -27,8 +26,11 @@ std::string HttpClient::Get(
     int timeout /*= 10*/
 )
 {
-    std::string complete_url = url + "?" + ParseParam(params);
-    return HttpClientPrivate::Get(complete_url.c_str(), timeout, lastError);
+    std::stringstream ss;
+    ss << url;
+    if (params.size())
+        ss << '?' << ParseParam(params);
+    return HttpClientPrivate::Get(ss.str(), timeout, lastError);
 }
 
 std::string HttpClient::Post(
@@ -38,14 +40,15 @@ std::string HttpClient::Post(
     int timeout /*= 10*/
 )
 {
-    std::string complete_url = url + "?" + ParseParam(params);
-    return HttpClientPrivate::Post(complete_url.c_str(), body.c_str(), timeout, lastError);
+    std::stringstream ss;
+    ss << url;
+    if (params.size())
+        ss << '?' << ParseParam(params);
+    return HttpClientPrivate::Post(ss.str(), body.c_str(), timeout, lastError);
 }
 
 std::string HttpClient::ParseParam(const std::map<std::string, std::string>& params)
 {
-    if (params.empty())
-        return "";
     std::stringstream ss;
     for (auto ite = params.begin(); ite != params.end(); ++ite) {
         if (ite != params.begin())

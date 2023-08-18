@@ -1,4 +1,7 @@
 # start-cpp-vcpkg
+- 不是所有的库都支持vcpkg的
+- 不是所有支持vcpkg的库都能编译过的
+- 该手动引入third-party的库还得手动来
 
 ## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - gflags: Google 命令行标志库。
