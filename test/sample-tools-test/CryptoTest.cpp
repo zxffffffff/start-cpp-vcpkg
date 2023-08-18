@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #include "gtest/gtest.h"
-#include "crypto/Crypto.h"
+#include "Crypto.h"
 
 TEST(CryptoTest, EncodeAndDecode)
 {

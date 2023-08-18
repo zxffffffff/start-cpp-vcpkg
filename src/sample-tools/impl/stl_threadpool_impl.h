@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
-#include "../threadpool_interface.h"
+#include "../interface/threadpool_interface.h"
 #include <queue>
 #include <atomic>
 #include <mutex>

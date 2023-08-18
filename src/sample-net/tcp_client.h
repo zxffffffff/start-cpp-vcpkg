@@ -6,9 +6,9 @@
 **
 ****************************************************************************/
 #pragma once
-#include "tcp_interface.h"
+#include "interface/tcp_interface.h"
+#include "interface/threadpool_interface.h"
 #include "net_states.h"
-#include "threadpool_interface.h"
 
 /* 兼容 windows */
 #undef min
@@ -84,7 +84,7 @@ public:
     void SetHandleRead(HandleClientRead f) { handleRead = f; }
 
 public:
-    /* 异步 */
+    /* 异步，线程安全，可重入 */
     std::future<Error> Connect()
     {
         return threadPool->MoveToThread<Error>(std::bind(&TcpClient::ConnectSync, this));
@@ -110,7 +110,7 @@ public:
         threadPool->MoveToThread([=] { return OnReadSync(err, buffer); });
     }
 
-    /* 同步 */
+    /* 同步，线程安全，可重入 */
     Error ConnectSync()
     {
         if (IsRunning())
@@ -207,7 +207,8 @@ public:
         {
             CloseSync();
             auto ret = ConnectSync();
-            if (ok = ret->first)
+            ok = ret->first;
+            if (ok)
                 break;
 
             if (sleep_ms < 60 * 1000)

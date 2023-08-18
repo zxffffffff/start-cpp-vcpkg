@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #pragma once
-#include "../tcp_interface.h"
+#include "../interface/tcp_interface.h"
 #include <uv.h>
 #include <mutex>
 #include <future>

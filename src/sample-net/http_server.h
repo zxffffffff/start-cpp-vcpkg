@@ -7,12 +7,17 @@
 ****************************************************************************/
 #pragma once
 #include "tcp_server.h"
-#include "http_interface.h"
+#include "interface/http_interface.h"
+
+/* 线程异步回调，注意线程安全 */
+using HandleServerRequest = std::function<std::string(ConnId, const HttpRequest&)>;
 
 template<class IHttpParserImpl, class ITcpServerImpl, class IThreadPoolImpl>
 class HttpServer : public TcpServer<ITcpServerImpl, IThreadPoolImpl>
 {
     using Super = TcpServer<ITcpServerImpl, IThreadPoolImpl>;
+
+    HandleServerRequest handleServerRequest;
 
     struct Connection
     {
@@ -33,7 +38,11 @@ public:
     {
     }
 
+    /* 线程异步回调，注意线程安全 */
+    void SetHandleServerRequest(HandleServerRequest f) { handleServerRequest = f;}
+
 private:
+    /* 同步，线程安全，可重入 */
     virtual void OnNewConnSync(ConnId connId) override
     {
         Super::OnNewConnSync(connId);
@@ -56,7 +65,7 @@ private:
 
     virtual Error OnConnReadSync(ConnId connId, Error err, Buffer buffer) override
     {
-        if (!err->first)
+        if (handleServerRequest && !err->first)
         {
             std::shared_ptr<Connection> conn;
             {
@@ -75,9 +84,9 @@ private:
                 auto parseErr = conn->parser->ParseReq(buffer, req);
                 if (!parseErr->first)
                 {
-                    // todo
-                    HttpResponse res;
-                    resBuffer = conn->parser->MakeRes(req, res);
+                    std::string resBody = handleServerRequest(connId, req);
+                    std::string res = conn->parser->MakeRes(resBody);
+                    Super::Write(connId, MakeBuffer(res));
                 }
             }
             if (resBuffer)

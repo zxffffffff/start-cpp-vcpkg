@@ -16,7 +16,6 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable (${PROJECT_NAME}
-    SampleNetTest.cpp
     HttpTest.cpp
     tcp_test.cpp
     http_server_test.cpp

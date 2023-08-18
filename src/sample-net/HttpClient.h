@@ -5,9 +5,18 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #pragma once
-#include "Common.h"
+#include <memory>
+#include <list>
+#include <map>
+#include <unordered_map>
+#include <iostream>
+#include <functional>
+#include <thread>
+#include <mutex>
+#include <iostream>
+#include <sstream>
+#include <chrono>
 
 class HttpClient
 {
@@ -28,7 +37,7 @@ public:
     std::string Get(
         const std::string& url,
         const std::map<std::string, std::string>& params,
-        int timeout = 10
+        int timeout_sec = 10
     );
 
     /* 同步请求 */
@@ -36,7 +45,7 @@ public:
         const std::string& url,
         const std::map<std::string, std::string>& params,
         const std::string& body,
-        int timeout = 10
+        int timeout_sec = 10
     );
 
     /* 获取错误信息 */

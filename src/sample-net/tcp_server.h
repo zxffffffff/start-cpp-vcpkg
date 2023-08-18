@@ -6,9 +6,9 @@
 **
 ****************************************************************************/
 #pragma once
-#include "tcp_interface.h"
+#include "interface/tcp_interface.h"
+#include "interface/threadpool_interface.h"
 #include "net_states.h"
-#include "threadpool_interface.h"
 
 /* 线程异步回调，注意线程安全 */
 using HandleServerStates = std::function<void(ServerStates)>;
@@ -50,7 +50,7 @@ public:
     virtual ~TcpServer()
     {
         if (IsRunning())
-            Close().get();
+            CloseSync();
     }
 
     void SetAddr(const std::string& addr) { this->addr = addr; }
@@ -120,7 +120,7 @@ public:
     void SetHandleConnRead(HandleServerConnRead f) { handleConnRead = f; }
 
 public:
-    /* 异步 */
+    /* 异步，线程安全，可重入 */
     std::future<Error> Listen()
     {
         return threadPool->MoveToThread<Error>(std::bind(&TcpServer::ListenSync, this));
@@ -156,7 +156,7 @@ public:
         threadPool->MoveToThread([=] { OnConnReadSync(connId, err, buffer); });
     }
 
-    /* 同步 */
+    /* 同步，线程安全，可重入 */
     Error ListenSync()
     {
         if (IsRunning())

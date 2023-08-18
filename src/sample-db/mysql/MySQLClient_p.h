@@ -5,9 +5,19 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #pragma once
-#include "Common.h"
+#include "glog/logging.h"
+#include <memory>
+#include <list>
+#include <map>
+#include <unordered_map>
+#include <iostream>
+#include <functional>
+#include <thread>
+#include <mutex>
+#include <iostream>
+#include <sstream>
+#include <chrono>
 #include <mysqlx/xdevapi.h>
 #include "Chrono.h"
 

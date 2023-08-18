@@ -41,11 +41,7 @@ inline Buffer MakeBuffer(const char* buf, int len)
 {
     Buffer buffer = std::make_shared<std::vector<char>>(len);
     if (len > 0)
-    {
         memcpy(buffer->data(), buf, len);
-        if (buffer->at(len - 1) != '\0')
-            buffer->push_back('\0');
-    }
     return buffer;
 }
 

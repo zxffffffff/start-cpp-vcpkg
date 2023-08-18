@@ -13,11 +13,7 @@ struct HttpRequest
     std::string method; // "GET"
     std::string path;   // "/api/search"
     std::map<std::string, std::string> parameters;
-};
-
-struct HttpResponse
-{
-    std::string json;
+    std::string post_body;
 };
 
 /* HTTP Parser ³éÏó½Ó¿Ú
@@ -29,7 +25,7 @@ class IHttpParser
 public:
     virtual ~IHttpParser() {}
 
-    virtual Error ParseReq(Buffer buffer, HttpRequest& out_req) = 0;
+    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) = 0;
 
-    virtual Buffer MakeRes(const HttpRequest& req, const HttpResponse& res) = 0;
+    virtual std::string MakeRes(const std::string &body) = 0;
 };
