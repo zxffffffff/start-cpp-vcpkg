@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #include <gtest/gtest.h>
-#include "thread/impl/stl_threadtimer_impl.h"
+#include "impl/stl_threadtimer_impl.h"
 
 TEST(ThreadTimerImpl, Test)
 {

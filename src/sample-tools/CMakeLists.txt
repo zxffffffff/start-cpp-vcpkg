@@ -37,10 +37,10 @@ file(GLOB_RECURSE include_headers
     SampleTools.h
     Chrono.h
     crypto/Crypto.h
-    thread/threadpool_interface.h
-    thread/threadtimer_interface.h
-    thread/impl/stl_threadpool_impl.h 
-    thread/impl/stl_threadtimer_impl.h 
+    threadpool_interface.h
+    threadtimer_interface.h
+    impl/stl_threadpool_impl.h 
+    impl/stl_threadtimer_impl.h 
 )
 
 add_library(${PROJECT_NAME} STATIC

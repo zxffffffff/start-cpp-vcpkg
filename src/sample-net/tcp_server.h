@@ -6,9 +6,9 @@
 **
 ****************************************************************************/
 #pragma once
-#include "tcp_proto.h"
 #include "tcp_interface.h"
-#include "thread/threadpool_interface.h"
+#include "net_states.h"
+#include "threadpool_interface.h"
 
 /* 线程异步回调，注意线程安全 */
 using HandleServerStates = std::function<void(ServerStates)>;
@@ -24,6 +24,7 @@ class TcpServer
 
     ServerStates state = ServerStates::Closed;
     mutable std::shared_mutex stateMutex;
+
     HandleServerStates handleStates;
     HandleServerConnStates handleConnStates;
     HandleServerConnRead handleConnRead;
@@ -31,16 +32,11 @@ class TcpServer
     std::unique_ptr<IServer> server = std::make_unique<ITcpServerImpl>();
     std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
 
-    struct Connection
-    {
-        ConnId connId = 0;
-        ConnectionStates state = ConnectionStates::Closed;
-        mutable std::shared_mutex stateMutex;
-    };
-    std::map<ConnId, Connection> connections;
+    std::map<ConnId, ConnectionStates> connections;
+    mutable std::shared_mutex connectionsMutex;
 
 public:
-    TcpServer(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "server")
+    TcpServer(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "TcpServer")
         : addr(addr)
         , port(port)
         , tips(tips)
@@ -65,46 +61,53 @@ public:
 
     ServerStates GetState() const
     {
-        std::shared_lock lock(stateMutex);
+        std::shared_lock readLock(stateMutex);
         return state;
     }
-    void SetState(ServerStates new_state, bool call = true)
+    void SetState(ServerStates new_state)
     {
         {
-            std::unique_lock lock(stateMutex);
+            std::unique_lock writeLock(stateMutex);
             state = new_state;
         }
-        if (call && handleStates)
+        if (handleStates)
             threadPool->MoveToThread([=] { handleStates(new_state); return true; });
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
     ConnectionStates GetConnState(ConnId connId)
     {
+        std::shared_lock readLock(connectionsMutex);
         auto ite = connections.find(connId);
-        if (ite == connections.end())
-        {
-            //LOG(ERROR) << __func__
-            //    << " addr=" << addr
-            //    << " port=" << port
-            //    << " state=" << ToString(GetState())
-            //    << " connId=" << connId
-            //    << " no found !";
-            return ConnectionStates::Closed;
-        }
-        Connection& conn = ite->second;
-        std::shared_lock lock(conn.stateMutex);
-        return conn.state;
+        if (ite != connections.end())
+            return ite->second;
+        return ConnectionStates::Closed;
     }
-    void SetConnState(ConnId connId, ConnectionStates new_state, bool call = true)
+    void SetConnState(ConnId connId, ConnectionStates new_state)
     {
-        Connection& conn = connections[connId];
         {
-            std::unique_lock lock(conn.stateMutex);
-            conn.state = new_state;
+            std::unique_lock writeLock(connectionsMutex);
+            if (new_state == ConnectionStates::Closed)
+                connections.erase(connections.find(connId));
+            else
+                connections[connId] = new_state;
         }
-        if (call && handleConnStates)
+
+        if (handleConnStates)
             threadPool->MoveToThread([=] { handleConnStates(connId, new_state); return true; });
+    }
+    std::vector<ConnId> GetConns(ConnectionStates find_state)
+    {
+        std::vector<ConnId> ret;
+        {
+            std::shared_lock readLock(connectionsMutex);
+            for (auto ite = connections.begin(); ite != connections.end(); ++ite)
+            {
+                if (ite->second == find_state)
+                    ret.push_back(ite->first);
+            }
+        }
+        return ret;
     }
 
     /* 线程异步回调，注意线程安全 */
@@ -138,17 +141,17 @@ public:
         return threadPool->MoveToThread<Error>([=] { return WriteSync(buffer); });
     }
 
-    void OnNewConn(ConnId connId)
+    virtual void OnNewConn(ConnId connId)
     {
         threadPool->MoveToThread([=] { OnNewConnSync(connId); });
     }
 
-    void OnCloseConn(ConnId connId)
+    virtual void OnCloseConn(ConnId connId)
     {
         threadPool->MoveToThread([=] { OnCloseConnSync(connId); });
     }
 
-    void OnConnRead(ConnId connId, Error err, Buffer buffer)
+    virtual void OnConnRead(ConnId connId, Error err, Buffer buffer)
     {
         threadPool->MoveToThread([=] { OnConnReadSync(connId, err, buffer); });
     }
@@ -241,7 +244,6 @@ public:
             return MakeError(false, ss.str());
         }
 
-        auto& connection = connections[connId];
         auto err = server->Write(connId, buffer).get();
         if (err->first)
         {
@@ -281,10 +283,10 @@ public:
             return MakeError(false, ss.str());
         }
 
+        std::vector<ConnId> connIds = GetConns(ConnectionStates::Connected);
         std::vector<std::future<Error>> futures;
-        for (auto ite = connections.begin(); ite != connections.end(); ++ite)
+        for (auto connId : connIds)
         {
-            ConnId connId = ite->first;
             futures.push_back(Write(connId, buffer));
         }
         int cnt = 0;
@@ -309,17 +311,17 @@ public:
         return MakeSuccess();
     }
 
-    void OnNewConnSync(ConnId connId)
+    virtual void OnNewConnSync(ConnId connId)
     {
         SetConnState(connId, ConnectionStates::Connected);
     }
 
-    void OnCloseConnSync(ConnId connId)
+    virtual void OnCloseConnSync(ConnId connId)
     {
         SetConnState(connId, ConnectionStates::Closed);
     }
 
-    Error OnConnReadSync(ConnId connId, Error err, Buffer buffer)
+    virtual Error OnConnReadSync(ConnId connId, Error err, Buffer buffer)
     {
         if (err->first)
         {
