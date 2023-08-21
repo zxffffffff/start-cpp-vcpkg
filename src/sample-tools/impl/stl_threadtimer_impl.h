@@ -103,7 +103,7 @@ private:
             milliseconds duration(thread_data->m_interval_ms);
             while (thread_data->m_running && duration_cast<milliseconds>(steady_clock::now() - start).count() < duration.count())
             {
-                std::this_thread::sleep_for(10ms);
+                std::this_thread::sleep_for(10ms); /* 最小精度 */
             }
 
             if (thread_data->m_running)

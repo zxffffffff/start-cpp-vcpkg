@@ -25,7 +25,7 @@ class IHttpParser
 public:
     virtual ~IHttpParser() {}
 
-    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) = 0;
+    virtual Error ParseReq(Buffer buffer, std::shared_ptr<HttpRequest> out_req) = 0;
 
-    virtual std::string MakeRes(const std::string &body) = 0;
+    virtual std::string MakeRes(std::string body) = 0;
 };

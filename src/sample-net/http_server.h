@@ -10,13 +10,15 @@
 #include "interface/http_interface.h"
 
 /* 线程异步回调，注意线程安全 */
-using HandleServerRequest = std::function<std::string(ConnId, const HttpRequest&)>;
+using ServerResponseCbk = std::function<void(std::string)>;
+using HandleServerRequest = std::function<void(ConnId, std::shared_ptr<const HttpRequest>, ServerResponseCbk)>;
 
-template<class IHttpParserImpl, class ITcpServerImpl, class IThreadPoolImpl>
+template <class IHttpParserImpl, class ITcpServerImpl, class IThreadPoolImpl>
 class HttpServer : public TcpServer<ITcpServerImpl, IThreadPoolImpl>
 {
     using Super = TcpServer<ITcpServerImpl, IThreadPoolImpl>;
 
+private:
     HandleServerRequest handleServerRequest;
 
     struct Connection
@@ -29,7 +31,7 @@ class HttpServer : public TcpServer<ITcpServerImpl, IThreadPoolImpl>
     mutable std::shared_mutex connsMutex;
 
 public:
-    HttpServer(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "HttpServer")
+    HttpServer(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "HttpServer")
         : Super(addr, port, tips)
     {
     }
@@ -39,7 +41,7 @@ public:
     }
 
     /* 线程异步回调，注意线程安全 */
-    void SetHandleServerRequest(HandleServerRequest f) { handleServerRequest = f;}
+    void SetHandleServerRequest(HandleServerRequest f) { handleServerRequest = f; }
 
 private:
     /* 同步，线程安全，可重入 */
@@ -72,25 +74,24 @@ private:
                 std::shared_lock readLock(connsMutex);
                 conn = conns[connId];
             }
-            Buffer resBuffer;
             {
                 std::unique_lock writeLock(conn->connMutex);
                 if (conn->recv == nullptr)
                     conn->recv = buffer;
                 else
                     conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
-
-                HttpRequest req;
-                auto parseErr = conn->parser->ParseReq(buffer, req);
-                if (!parseErr->first)
+            }
+            auto req = std::make_shared<HttpRequest>();
+            auto parseErr = conn->parser->ParseReq(buffer, req);
+            if (!parseErr->first)
+            {
+                auto cbk = [=](std::string resBody)
                 {
-                    std::string resBody = handleServerRequest(connId, req);
                     std::string res = conn->parser->MakeRes(resBody);
                     Super::Write(connId, MakeBuffer(res));
-                }
+                };
+                handleServerRequest(connId, req, cbk);
             }
-            if (resBuffer)
-                Super::Write(connId, resBuffer);
         }
         return Super::OnConnReadSync(connId, err, buffer);
     }

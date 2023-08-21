@@ -18,9 +18,13 @@
 using HandleClientStates = std::function<void(ConnectionStates)>;
 using HandleClientRead = std::function<void(Buffer)>;
 
-template<class ITcpClientImpl, class IThreadPoolImpl>
+template <class ITcpClientImpl, class IThreadPoolImpl>
 class TcpClient
 {
+    std::unique_ptr<IClient> client = std::make_unique<ITcpClientImpl>();
+    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
+
+private:
     std::string addr;
     int port;
     std::string tips;
@@ -33,14 +37,9 @@ class TcpClient
     HandleClientStates handleStates;
     HandleClientRead handleRead;
 
-    std::unique_ptr<IClient> client = std::make_unique<ITcpClientImpl>();
-    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
-
 public:
-    TcpClient(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "TcpClient")
-        : addr(addr)
-        , port(port)
-        , tips(tips)
+    TcpClient(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "TcpClient")
+        : addr(addr), port(port), tips(tips)
     {
         using namespace std::placeholders;
         client->SetHandleRead(std::bind(&TcpClient::OnRead, this, _1, _2));
@@ -53,8 +52,8 @@ public:
             CloseSync();
     }
 
-    void SetAddr(const std::string& addr) { this->addr = addr; }
-    const std::string& GetAddr() const { return addr; }
+    void SetAddr(const std::string &addr) { this->addr = addr; }
+    const std::string &GetAddr() const { return addr; }
 
     void SetPort(int port) { this->port = port; }
     int GetPort() const { return port; }
@@ -117,11 +116,11 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " Is Running !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " Is Running !";
             return MakeError(false, ss.str());
         }
 
@@ -133,12 +132,12 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             SetState(ConnectionStates::ConnFailed);
             if (retryConn)
@@ -156,11 +155,11 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " Is Close/ing !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " Is Close/ing !";
             return MakeError(false, ss.str());
         }
 
@@ -172,12 +171,12 @@ public:
             // never
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             assert(false);
             return MakeError(false, ss.str());
@@ -195,8 +194,10 @@ public:
         /* 指数退避算法可以在每次重连失败后，将等待时间逐渐增加，以避免频繁的重连尝试 */
         std::function<int(int)> fibonacci = [&fibonacci](int n)
         {
-            if (n <= 0) return 0;
-            if (n == 1) return 1;
+            if (n <= 0)
+                return 0;
+            if (n == 1)
+                return 1;
             return fibonacci(n - 1) + fibonacci(n - 2);
         };
 
@@ -237,11 +238,11 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " reconnectCount=" << reconnectCount;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " reconnectCount=" << reconnectCount;
             return MakeError(false, ss.str());
         }
         // success
@@ -254,12 +255,12 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size()
-                << " Is Not Running !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " bufferSize=" << buffer->size()
+               << " Is Not Running !";
             return MakeError(false, ss.str());
         }
 
@@ -270,13 +271,13 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size()
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " bufferSize=" << buffer->size()
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             SetState(ConnectionStates::NetError);
             if (retryConn)
@@ -294,13 +295,13 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size()
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " bufferSize=" << buffer->size()
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             SetState(ConnectionStates::NetError);
             if (retryConn)
