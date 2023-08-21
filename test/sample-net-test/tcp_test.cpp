@@ -39,7 +39,7 @@ TEST(tcp, pingpong)
         // [2] -> pingpong ->
         {
             std::lock_guard<std::mutex> guard(server_recv->mutex);
-            server_recv->buffer.push_back(buffer->data());
+            server_recv->buffer.push_back(std::string(buffer->data(), buffer->size()));
         }
         server->Write(connId, buffer);
     };
@@ -59,7 +59,7 @@ TEST(tcp, pingpong)
         {
             // [3] -> pong
             std::lock_guard<std::mutex> guard(client_recv->mutex);
-            client_recv->buffer.push_back(buffer->data());
+            client_recv->buffer.push_back(std::string(buffer->data(), buffer->size()));
         };
         client->SetHandleRead(clientRead);
         ASSERT_EQ(client->GetState(), ConnectionStates::Closed);
@@ -75,7 +75,7 @@ TEST(tcp, pingpong)
         client->Write(MakeBuffer(msg));
     }
 
-    std::this_thread::sleep_for(100ms + cnt * 10ms);
+    std::this_thread::sleep_for(200ms + cnt * 10ms);
 
     EXPECT_EQ(server_recv->buffer.size(), cnt);
     std::sort(server_recv->buffer.begin(), server_recv->buffer.end());

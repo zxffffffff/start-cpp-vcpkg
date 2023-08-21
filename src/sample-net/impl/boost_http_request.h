@@ -18,7 +18,7 @@
 class HttpParserImpl : public IHttpParser
 {
 public:
-    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) override
+    virtual Error ParseReq(Buffer buffer, std::shared_ptr<HttpRequest> out_req) override
     {
         namespace beast = boost::beast;
         namespace http = boost::beast::http;
@@ -40,8 +40,8 @@ public:
         auto body = request.body();
         auto query = url.query();
 
-        out_req.method = request.method_string();
-        out_req.path = url.path();
+        out_req->method = request.method_string();
+        out_req->path = url.path();
 
         std::vector<std::string> keyValues;
         auto add_params = [&](const std::vector<std::string> &keyValues)
@@ -52,7 +52,7 @@ public:
                 boost::algorithm::split(keyValueSplit, keyValue, boost::is_any_of("="));
                 if (keyValueSplit.size() == 2)
                 {
-                    out_req.parameters[keyValueSplit[0]] = keyValueSplit[1];
+                    out_req->parameters[keyValueSplit[0]] = keyValueSplit[1];
                 }
             }
         };
@@ -60,21 +60,21 @@ public:
         boost::algorithm::split(keyValues, url.query(), boost::is_any_of("&"));
         add_params(keyValues);
 
-        if ("POST" == out_req.method)
+        if ("POST" == out_req->method)
         {
             std::string data(buffer->data(), buffer->size());
             std::size_t bodyStart = data.find("\r\n\r\n") + 4;
             std::size_t bodyLength = data.size() - bodyStart;
-            out_req.post_body = data.substr(bodyStart, bodyLength);
+            out_req->post_body = data.substr(bodyStart, bodyLength);
 
             /* 自定义body处理规则 */
-            boost::algorithm::split(keyValues, out_req.post_body, boost::is_any_of("&"));
+            boost::algorithm::split(keyValues, out_req->post_body, boost::is_any_of("&"));
             add_params(keyValues);
         }
         return MakeSuccess();
     }
 
-    virtual std::string MakeRes(const std::string &body) override
+    virtual std::string MakeRes(std::string body) override
     {
         namespace beast = boost::beast;
         namespace http = boost::beast::http;
@@ -84,7 +84,7 @@ public:
         response.result(http::status::ok);
         response.set(http::field::server, "zxf-server");
         response.set(http::field::content_type, "text/plain");
-        response.body() = body;
+        response.body() = std::move(body);
         response.prepare_payload(); /* 准备响应体 */
 
         /* 手动构建 HTTP 响应字符串 */

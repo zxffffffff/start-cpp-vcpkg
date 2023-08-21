@@ -15,9 +15,13 @@ using HandleServerStates = std::function<void(ServerStates)>;
 using HandleServerConnStates = std::function<void(ConnId, ConnectionStates)>;
 using HandleServerConnRead = std::function<void(ConnId, Buffer)>;
 
-template<class ITcpServerImpl, class IThreadPoolImpl>
+template <class ITcpServerImpl, class IThreadPoolImpl>
 class TcpServer
 {
+    std::unique_ptr<IServer> server = std::make_unique<ITcpServerImpl>();
+    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
+
+private:
     std::string addr;
     int port;
     std::string tips;
@@ -29,17 +33,12 @@ class TcpServer
     HandleServerConnStates handleConnStates;
     HandleServerConnRead handleConnRead;
 
-    std::unique_ptr<IServer> server = std::make_unique<ITcpServerImpl>();
-    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
-
     std::map<ConnId, ConnectionStates> connections;
     mutable std::shared_mutex connectionsMutex;
 
 public:
-    TcpServer(const std::string& addr = "127.0.0.1", int port = 12345, const std::string& tips = "TcpServer")
-        : addr(addr)
-        , port(port)
-        , tips(tips)
+    TcpServer(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "TcpServer")
+        : addr(addr), port(port), tips(tips)
     {
         using namespace std::placeholders;
         server->SetHandleNewConn(std::bind(&TcpServer::OnNewConn, this, _1));
@@ -53,8 +52,8 @@ public:
             CloseSync();
     }
 
-    void SetAddr(const std::string& addr) { this->addr = addr; }
-    const std::string& GetAddr() const { return addr; }
+    void SetAddr(const std::string &addr) { this->addr = addr; }
+    const std::string &GetAddr() const { return addr; }
 
     void SetPort(int port) { this->port = port; }
     int GetPort() const { return port; }
@@ -163,11 +162,11 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " Is Running !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " Is Running !";
             return MakeError(false, ss.str());
         }
 
@@ -178,11 +177,11 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " Listen Failed !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " Listen Failed !";
             SetState(ServerStates::ListenFailed);
             return MakeError(false, ss.str());
         }
@@ -197,11 +196,11 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " Is Close/ing !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " Is Close/ing !";
             return MakeError(false, ss.str());
         }
 
@@ -212,12 +211,12 @@ public:
             // never
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             assert(false);
             return MakeError(false, ss.str());
@@ -234,13 +233,13 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " connId=" << connId
-                << " bufferSize=" << buffer->size()
-                << " Is Not Running !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " connId=" << connId
+               << " bufferSize=" << buffer->size()
+               << " Is Not Running !";
             return MakeError(false, ss.str());
         }
 
@@ -250,14 +249,14 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " connId=" << connId
-                << " bufferSize=" << buffer->size()
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " connId=" << connId
+               << " bufferSize=" << buffer->size()
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             SetConnState(connId, ConnectionStates::NetError);
             return MakeError(false, ss.str());
@@ -273,12 +272,12 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size()
-                << " Is Not Running !";
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " bufferSize=" << buffer->size()
+               << " Is Not Running !";
 
             return MakeError(false, ss.str());
         }
@@ -290,7 +289,7 @@ public:
             futures.push_back(Write(connId, buffer));
         }
         int cnt = 0;
-        for (auto& future : futures)
+        for (auto &future : futures)
         {
             if (future.get())
                 ++cnt;
@@ -300,12 +299,12 @@ public:
         {
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " bufferSize=" << buffer->size()
-                << " percent=" << cnt << "/" << futures.size();
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " bufferSize=" << buffer->size()
+               << " percent=" << cnt << "/" << futures.size();
             return MakeError(false, ss.str());
         }
         return MakeSuccess();
@@ -328,15 +327,15 @@ public:
             // err
             std::stringstream ss;
             ss << __func__
-                << " addr=" << addr
-                << " port=" << port
-                << " tips=" << tips
-                << " state=" << ToString(GetState())
-                << " connState=" << ToString(GetConnState(connId))
-                << " connId=" << connId
-                << " bufferSize=" << buffer->size()
-                << " errCode=" << err->first
-                << " errMsg" << err->second;
+               << " addr=" << addr
+               << " port=" << port
+               << " tips=" << tips
+               << " state=" << ToString(GetState())
+               << " connState=" << ToString(GetConnState(connId))
+               << " connId=" << connId
+               << " bufferSize=" << buffer->size()
+               << " errCode=" << err->first
+               << " errMsg" << err->second;
 
             SetConnState(connId, ConnectionStates::NetError);
             return MakeError(false, ss.str());
