@@ -14,11 +14,10 @@
 #include "impl/libuv_tcp_server_impl.h"
 #include "impl/libuv_tcp_client_impl.h"
 #include "impl/stl_threadpool_impl.h"
-
-using namespace std::chrono_literals;
-
 using TestTcpServer = TcpServer<ServerImpl, ThreadPoolImpl>;
 using TestTcpClient = TcpClient<ClientImpl, ThreadPoolImpl>;
+
+using namespace std::chrono_literals;
 
 struct Data
 {
