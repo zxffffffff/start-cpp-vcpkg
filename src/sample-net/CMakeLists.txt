@@ -28,25 +28,22 @@ include_directories(${Boost_INCLUDE_DIRS})
 
 # Public 头文件
 file(GLOB_RECURSE include_headers
-    SampleNet.h
-    HttpClient.h
-    impl/HttpClient_p
     net_common.h
     net_states.h
     tcp_client.h
     tcp_server.h
     http_server.h
+    http_client.h
     interface/tcp_interface.h
     interface/http_interface.h
     impl/libuv_event_loop.h
     impl/libuv_tcp_client_impl.h
     impl/libuv_tcp_server_impl.h
-    impl/boost_http_request.h
+    impl/boost_http_parser.h
+    impl/curl_http_client.h
 )
 
 add_library(${PROJECT_NAME} STATIC
-    SampleNet.cpp
-    HttpClient.cpp
     ${include_headers}
 )
 

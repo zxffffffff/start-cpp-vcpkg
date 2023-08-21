@@ -16,9 +16,9 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable (${PROJECT_NAME}
-    HttpTest.cpp
     tcp_test.cpp
     http_server_test.cpp
+    http_client_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

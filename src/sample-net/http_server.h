@@ -11,7 +11,7 @@
 
 /* 线程异步回调，注意线程安全 */
 using ServerResponseCbk = std::function<void(std::string)>;
-using HandleServerRequest = std::function<void(ConnId, std::shared_ptr<const HttpRequest>, ServerResponseCbk)>;
+using HandleServerRequest = std::function<void(ConnId, const HttpRequest&, ServerResponseCbk)>;
 
 template <class IHttpParserImpl, class ITcpServerImpl, class IThreadPoolImpl>
 class HttpServer : public TcpServer<ITcpServerImpl, IThreadPoolImpl>
@@ -72,7 +72,10 @@ private:
             std::shared_ptr<Connection> conn;
             {
                 std::shared_lock readLock(connsMutex);
-                conn = conns[connId];
+                auto ite = conns.find(connId);
+                if (ite == conns.end())
+                    return err;
+                conn = ite->second;
             }
             {
                 std::unique_lock writeLock(conn->connMutex);
@@ -81,7 +84,7 @@ private:
                 else
                     conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
             }
-            auto req = std::make_shared<HttpRequest>();
+            HttpRequest req;
             auto parseErr = conn->parser->ParseReq(buffer, req);
             if (!parseErr->first)
             {

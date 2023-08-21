@@ -9,15 +9,15 @@
 #include "glog/logging.h"
 
 #include "http_server.h"
-#include "impl/boost_http_request.h"
+#include "impl/boost_http_parser.h"
 #include "impl/libuv_tcp_server_impl.h"
 #include "impl/stl_threadpool_impl.h"
-
-#include "HttpClient.h"
-
-using namespace std::chrono_literals;
-
 using TestHttpServer = HttpServer<HttpParserImpl, ServerImpl, ThreadPoolImpl>;
+
+#include "http_client.h"
+#include "impl/curl_http_client.h"
+#include "impl/stl_threadpool_impl.h"
+using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl>;
 
 TEST(HttpServerTest, GetPost)
 {
@@ -25,35 +25,33 @@ TEST(HttpServerTest, GetPost)
         google::InitGoogleLogging("test");
 
     auto server = std::make_shared<TestHttpServer>("127.0.0.1", 12333);
-    auto handler = [](ConnId, std::shared_ptr<const HttpRequest> req, ServerResponseCbk cbk)
+    auto handler = [](ConnId, const HttpRequest& req, ServerResponseCbk cbk)
     {
         std::stringstream ss;
         ss << "res";
-        ss << " method=" << req->method;
-        ss << " path=" << req->path;
-        for (auto ite = req->parameters.begin(); ite != req->parameters.end(); ++ite)
+        ss << " method=" << req.method;
+        ss << " path=" << req.path;
+        for (auto ite = req.parameters.begin(); ite != req.parameters.end(); ++ite)
             ss << " " << ite->first << "=" << ite->second;
-        if (req->post_body.size())
-            ss << " post_body=" << req->post_body;
+        if (req.post_body.size())
+            ss << " post_body=" << req.post_body;
         cbk(ss.str());
     };
     server->SetHandleServerRequest(handler);
     server->ListenSync();
 
-    auto s = HttpClient::Singleton().Get("http://127.0.0.1:12333", {}, 3);
-    if (s.empty())
-        std::cerr << HttpClient::Singleton().LastError() << std::endl;
-    EXPECT_EQ(s, "res method=GET path=/");
+    auto response = TestHttpClient::Singleton().Get("http://127.0.0.1:12333", {}, 3).get();
+    EXPECT_EQ(response.errCode, 0) << response.errMsg;
+    EXPECT_EQ(response.data, "res method=GET path=/");
 
-    auto s2 = HttpClient::Singleton().Get("http://127.0.0.1:12333/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
-    if (s2.empty())
-        std::cerr << HttpClient::Singleton().LastError() << std::endl;
-    EXPECT_EQ(s2, "res method=GET path=/s cl=3 wd=zxffffffff");
+    auto response2 = TestHttpClient::Singleton().GetSync("http://127.0.0.1:12333/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
+    EXPECT_EQ(response2.errCode, 0) << response.errMsg;
+    EXPECT_EQ(response2.data, "res method=GET path=/s cl=3 wd=zxffffffff");
 
-    auto s3 = HttpClient::Singleton().Post("http://127.0.0.1:12333/test/xxx", {{"test", "1"}}, "test2=2", 3);
-    if (s3.empty())
-        std::cerr << HttpClient::Singleton().LastError() << std::endl;
-    EXPECT_EQ(s3, "res method=POST path=/test/xxx test=1 test2=2 post_body=test2=2");
+    auto response3 = TestHttpClient::Singleton().PostSync("http://127.0.0.1:12333/test/xxx", {{"test", "1"}}, "test2=2", 3);
+    EXPECT_EQ(response3.errCode, 0) << response.errMsg;
+    EXPECT_EQ(response3.data, "res method=POST path=/test/xxx test=1 post_body=test2=2");
 
+    // using namespace std::chrono_literals;
     // std::this_thread::sleep_for(30s);
 }
