@@ -10,8 +10,8 @@
 
 #include "http_client.h"
 #include "impl/curl_http_client.h"
-#include "impl/stl_threadpool_impl.h"
-using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl>;
+#include "impl/boost_threadpool_impl.h"
+using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl<8>>;
 
 TEST(HttpClientTest, TestBaidu)
 {
