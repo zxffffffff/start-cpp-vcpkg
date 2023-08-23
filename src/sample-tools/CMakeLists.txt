@@ -41,6 +41,7 @@ file(GLOB_RECURSE include_headers
     interface/threadpool_interface.h
     interface/threadtimer_interface.h
     impl/stl_threadpool_impl.h 
+    impl/boost_threadpool_impl.h 
     impl/stl_threadtimer_impl.h 
 )
 

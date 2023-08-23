@@ -11,13 +11,13 @@
 #include "http_server.h"
 #include "impl/boost_http_parser.h"
 #include "impl/libuv_tcp_server_impl.h"
-#include "impl/stl_threadpool_impl.h"
-using TestHttpServer = HttpServer<HttpParserImpl, ServerImpl, ThreadPoolImpl>;
+#include "impl/boost_threadpool_impl.h"
+using TestHttpServer = HttpServer<HttpParserImpl, ServerImpl, ThreadPoolImpl<8>>;
 
 #include "http_client.h"
 #include "impl/curl_http_client.h"
-#include "impl/stl_threadpool_impl.h"
-using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl>;
+#include "impl/boost_threadpool_impl.h"
+using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl<8>>;
 
 TEST(HttpServerTest, GetPost)
 {

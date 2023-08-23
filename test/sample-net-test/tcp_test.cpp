@@ -13,9 +13,9 @@
 #include "tcp_client.h"
 #include "impl/libuv_tcp_server_impl.h"
 #include "impl/libuv_tcp_client_impl.h"
-#include "impl/stl_threadpool_impl.h"
-using TestTcpServer = TcpServer<ServerImpl, ThreadPoolImpl>;
-using TestTcpClient = TcpClient<ClientImpl, ThreadPoolImpl>;
+#include "impl/boost_threadpool_impl.h"
+using TestTcpServer = TcpServer<ServerImpl, ThreadPoolImpl<8>>;
+using TestTcpClient = TcpClient<ClientImpl, ThreadPoolImpl<8>>;
 
 using namespace std::chrono_literals;
 

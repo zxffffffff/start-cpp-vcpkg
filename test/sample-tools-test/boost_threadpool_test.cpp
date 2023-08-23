@@ -6,9 +6,9 @@
 **
 ****************************************************************************/
 #include <gtest/gtest.h>
-#include "impl/stl_threadpool_impl.h"
+#include "impl/boost_threadpool_impl.h"
 
-TEST(ThreadPoolImpl, Test)
+TEST(BoostThreadPoolImpl, Test)
 {
     auto pool = std::make_shared<ThreadPoolImpl<4>>();
     static std::atomic_int flag = 0;
@@ -30,7 +30,7 @@ TEST(ThreadPoolImpl, Test)
     pool = nullptr;
 }
 
-TEST(ThreadPoolImpl, Recursive)
+TEST(BoostThreadPoolImpl, Recursive)
 {
     auto pool = std::make_shared<ThreadPoolImpl<4>>();
     static std::atomic_int flag = 0;
@@ -58,6 +58,4 @@ TEST(ThreadPoolImpl, Recursive)
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     ASSERT_GT(flag, 8);
-
-    pool = nullptr;
 }

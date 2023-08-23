@@ -20,6 +20,7 @@ add_executable (${PROJECT_NAME}
     CryptoTest.cpp
     json_test.cpp
     threadpool_test.cpp
+    boost_threadpool_test.cpp
     threadtimer_test.cpp
 )
 
