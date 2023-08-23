@@ -14,6 +14,18 @@ struct HttpRequest
     std::string path;   // "/api/search"
     std::map<std::string, std::string> parameters;
     std::string post_body;
+
+    std::string to_string() const
+    {
+        std::stringstream ss;
+        ss << method;
+        ss << " " << path;
+        for (auto ite = parameters.begin(); ite != parameters.end(); ++ite)
+            ss << " " << ite->first << ":" << ite->second;
+        if (post_body.size())
+            ss << " " << post_body;
+        return ss.str();
+    }
 };
 
 struct HttpResponse
@@ -21,6 +33,17 @@ struct HttpResponse
     int errCode = 0;
     std::string errMsg;
     std::string data;
+
+    std::string to_string() const
+    {
+        std::stringstream ss;
+        ss << errCode;
+        if (errMsg.size())
+            ss << " " << errMsg;
+        if (data.size())
+            ss << " " << data;
+        return ss.str();
+    }
 };
 
 /* HTTP ³éÏó½Ó¿Ú

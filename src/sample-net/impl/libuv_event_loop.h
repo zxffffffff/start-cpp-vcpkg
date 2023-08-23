@@ -12,11 +12,11 @@
 #include <future>
 #include <cassert>
 
-inline Error MakeStatusError(int status)
+inline Error MakeStatusError(int state, int uv_status)
 {
     std::stringstream ss;
-    ss << uv_err_name(status) << ":" << uv_strerror(status);
-    return MakeError(status, ss.str());
+    ss << uv_err_name(uv_status) << ":" << uv_strerror(uv_status);
+    return MakeError(state, ss.str());
 }
 
 class EventLoop
@@ -24,23 +24,25 @@ class EventLoop
 private:
     struct ThreadData
     {
-        uv_loop_t loop{ 0 };
+        std::thread::id id;
+
+        uv_loop_t loop{0};
         std::promise<bool> promise_loop;
 
-        uv_async_t async{ 0 };
+        uv_async_t async{0};
         std::mutex async_mutex;
         std::vector<std::function<void()>> async_cbk;
     };
     std::unique_ptr<ThreadData> thread_data = std::make_unique<ThreadData>();
 
-    std::atomic_bool is_start { false };
+    std::atomic_bool is_start{false};
     uv_thread_t thread_id = nullptr;
 
 public:
     /* 阻塞：等待线程运行 */
     void start()
     {
-        //LOG(WARNING) << __func__;
+        // LOG(WARNING) << __func__;
 
         if (is_start)
             return assert(false);
@@ -58,7 +60,7 @@ public:
     /* 阻塞：等待线程结束 */
     void stop()
     {
-        //LOG(WARNING) << __func__;
+        // LOG(WARNING) << __func__;
 
         if (!is_start)
             return assert(false);
@@ -67,14 +69,20 @@ public:
         if (!thread_id)
             return assert(false);
 
-        moveToThread([this] { uv_stop(&thread_data->loop); });
+        moveToThread([this]
+                     { uv_stop(&thread_data->loop); });
         uv_thread_join(&thread_id);
         thread_id = nullptr;
     }
 
-    uv_loop_t* loop()
+    uv_loop_t *loop()
     {
         return &thread_data->loop;
+    }
+
+    bool thisIsLoop() 
+    {
+        return std::this_thread::get_id() == thread_data->id;
     }
 
     void moveToThread(std::function<void()> f)
@@ -87,36 +95,38 @@ public:
     }
 
 private:
-    static void run(void* arg)
+    static void run(void *arg)
     {
-        //LOG(WARNING) << __func__;
+        // LOG(WARNING) << __func__;
 
-        ThreadData* thread_data = (ThreadData*)arg;
+        ThreadData *thread_data = (ThreadData *)arg;
+        thread_data->id = std::this_thread::get_id();
 
         uv_loop_init(&thread_data->loop);
         thread_data->promise_loop.set_value(true);
 
         thread_data->async.data = thread_data;
-        uv_async_init(&thread_data->loop, &thread_data->async, [](uv_async_t* handle)
+        auto onInit = [](uv_async_t *handle)
+        {
+            ThreadData *thread_data = (ThreadData *)handle->data;
+            std::vector<std::function<void()>> async_cbk;
             {
-                ThreadData* thread_data = (ThreadData*)handle->data;
-        std::vector<std::function<void()>> async_cbk;
-        {
-            std::lock_guard<std::mutex> guard(thread_data->async_mutex);
-            async_cbk = thread_data->async_cbk;
-            thread_data->async_cbk.clear();
-        }
-        for (auto& f : async_cbk)
-        {
-            f();
-        }
-            });
+                std::lock_guard<std::mutex> guard(thread_data->async_mutex);
+                async_cbk = thread_data->async_cbk;
+                thread_data->async_cbk.clear();
+            }
+            for (auto &f : async_cbk)
+            {
+                f();
+            }
+        };
+        uv_async_init(&thread_data->loop, &thread_data->async, onInit);
 
-        //LOG(WARNING) << __func__ << " running!";
+        // LOG(WARNING) << __func__ << " running!";
         uv_run(&thread_data->loop, UV_RUN_DEFAULT); /* running */
 
-        //LOG(WARNING) << __func__ << " closing";
+        // LOG(WARNING) << __func__ << " closing";
         uv_loop_close(&thread_data->loop);
-        //LOG(WARNING) << __func__ << " closed!";
+        // LOG(WARNING) << __func__ << " closed!";
     }
 };

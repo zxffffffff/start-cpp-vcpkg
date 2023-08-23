@@ -22,7 +22,7 @@ using namespace std::chrono_literals;
 struct Data
 {
     std::mutex mutex; // std::lock_guard<std::mutex> guard(mutex);
-    std::vector<std::string> buffer;
+    std::vector<std::string> strs;
 };
 
 TEST(tcp, pingpong)
@@ -38,7 +38,7 @@ TEST(tcp, pingpong)
         // [2] -> pingpong ->
         {
             std::lock_guard<std::mutex> guard(server_recv->mutex);
-            server_recv->buffer.push_back(std::string(buffer->data(), buffer->size()));
+            server_recv->strs.push_back(std::string(buffer->data(), buffer->size()));
         }
         server->Write(connId, buffer);
     };
@@ -58,7 +58,7 @@ TEST(tcp, pingpong)
         {
             // [3] -> pong
             std::lock_guard<std::mutex> guard(client_recv->mutex);
-            client_recv->buffer.push_back(std::string(buffer->data(), buffer->size()));
+            client_recv->strs.push_back(std::string(buffer->data(), buffer->size()));
         };
         client->SetHandleRead(clientRead);
         ASSERT_EQ(client->GetState(), ConnectionStates::Closed);
@@ -76,17 +76,16 @@ TEST(tcp, pingpong)
 
     std::this_thread::sleep_for(200ms + cnt * 10ms);
 
-    EXPECT_EQ(server_recv->buffer.size(), cnt);
-    std::sort(server_recv->buffer.begin(), server_recv->buffer.end());
-    std::sort(client_recv->buffer.begin(), client_recv->buffer.end());
-    EXPECT_EQ(server_recv->buffer, client_recv->buffer);
+    EXPECT_EQ(server_recv->strs.size(), cnt);
+    std::sort(server_recv->strs.begin(), server_recv->strs.end());
+    std::sort(client_recv->strs.begin(), client_recv->strs.end());
+    EXPECT_EQ(server_recv->strs, client_recv->strs);
 
-    std::vector<std::future<Error>> closeFuture;
     for (int i = 0; i < cnt; ++i)
     {
         auto client = &(*clients)[i];
         EXPECT_EQ(client->GetState(), ConnectionStates::Connected);
-        closeFuture.push_back(client->Close());
+        client->Close();
     }
     EXPECT_EQ(server->GetState(), ServerStates::Listening);
     server->CloseSync();
@@ -94,8 +93,7 @@ TEST(tcp, pingpong)
     for (int i = 0; i < cnt; ++i)
     {
         auto client = &(*clients)[i];
-        auto& future = closeFuture[i];
-        future.wait();
+        client->WaitForState(ConnectionStates::Closed, 1);
         EXPECT_EQ(client->GetState(), ConnectionStates::Closed);
     }
 }
@@ -113,7 +111,7 @@ TEST(tcp, monkeytest)
         // [2] -> pingpong ->
         {
             std::lock_guard<std::mutex> guard(server_recv->mutex);
-            server_recv->buffer.push_back(buffer->data());
+            server_recv->strs.push_back(std::string(buffer->data(), buffer->size()));
         }
         server->Write(connId, buffer);
     };
@@ -130,9 +128,9 @@ TEST(tcp, monkeytest)
         auto clientRead = [&, i](Buffer buffer)
         {
             // [3] -> pong
-            auto& data = (*client_recv)[i];
+            auto &data = (*client_recv)[i];
             std::lock_guard<std::mutex> guard(data.mutex);
-            data.buffer.push_back(buffer->data());
+            data.strs.push_back(std::string(buffer->data(), buffer->size()));
         };
         client->SetHandleRead(clientRead);
     }
@@ -154,11 +152,13 @@ TEST(tcp, monkeytest)
     };
 
     static std::atomic_bool thread_run = true;
-    auto test = [&] (int index)
+    auto test = [&](int index)
     {
         std::vector<std::function<void(int)>> client_cmd;
-        for (int i = 0; i < 2; ++i) client_cmd.push_back(ClientConnectClose);
-        for (int i = 0; i < 8; ++i) client_cmd.push_back(ClientWrite);
+        for (int i = 0; i < 2; ++i)
+            client_cmd.push_back(ClientConnectClose);
+        for (int i = 0; i < 8; ++i)
+            client_cmd.push_back(ClientWrite);
 
         std::srand(std::time(nullptr));
         while (thread_run)
@@ -177,29 +177,27 @@ TEST(tcp, monkeytest)
     for (int i = 0; i < client_cnt; ++i)
         threads[i].join();
 
-    EXPECT_TRUE(server_recv->buffer.size() > 0);
+    EXPECT_TRUE(server_recv->strs.size() > 0);
 
     int client_size = 0;
     for (int i = 0; i < client_cnt; ++i)
     {
         auto recv = &(*client_recv)[i];
-        client_size += recv->buffer.size();
+        client_size += recv->strs.size();
     }
     EXPECT_TRUE(client_size > 0);
 
-    std::vector<std::future<Error>> closeFuture;
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        closeFuture.push_back(client->Close());
+        client->Close();
     }
     server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerStates::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        auto& future = closeFuture[i];
-        future.wait();
+        client->WaitForState(ConnectionStates::Closed, 1);
         EXPECT_EQ(client->GetState(), ConnectionStates::Closed);
     }
 }
@@ -216,7 +214,7 @@ TEST(tcp, monkeytest2)
     {
         // [3] -> pong
         std::lock_guard<std::mutex> guard(server_recv->mutex);
-        server_recv->buffer.push_back(buffer->data());
+        server_recv->strs.push_back(std::string(buffer->data(), buffer->size()));
     };
     server->SetHandleConnRead(serverRead);
     server->ListenSync();
@@ -245,15 +243,14 @@ TEST(tcp, monkeytest2)
         auto clientRead = [&, i](Buffer buffer)
         {
             // [2] -> pingpong ->
-            auto& data = (*client_recv)[i];
+            auto &data = (*client_recv)[i];
             {
                 std::lock_guard<std::mutex> guard(data.mutex);
-                data.buffer.push_back(buffer->data());
+                data.strs.push_back(std::string(buffer->data(), buffer->size()));
             }
             client->Write(buffer);
         };
         client->SetHandleRead(clientRead);
-        client->SetRetryConnect(true);
         client->Connect();
     }
 
@@ -261,8 +258,10 @@ TEST(tcp, monkeytest2)
     auto test = [&]
     {
         std::vector<std::function<void()>> server_cmd;
-        for (int i = 0; i < 2; ++i) server_cmd.push_back(ServerListenClose);
-        for (int i = 0; i < 8; ++i) server_cmd.push_back(ServerWrite);
+        for (int i = 0; i < 2; ++i)
+            server_cmd.push_back(ServerListenClose);
+        for (int i = 0; i < 8; ++i)
+            server_cmd.push_back(ServerWrite);
 
         std::srand(std::time(nullptr));
         while (thread_run)
@@ -278,30 +277,27 @@ TEST(tcp, monkeytest2)
     thread_run = false;
     thread.join();
 
-    EXPECT_TRUE(server_recv->buffer.size() > 0);
+    EXPECT_TRUE(server_recv->strs.size() > 0);
 
     int client_size = 0;
     for (int i = 0; i < client_cnt; ++i)
     {
         auto recv = &(*client_recv)[i];
-        client_size += recv->buffer.size();
+        client_size += recv->strs.size();
     }
     EXPECT_TRUE(client_size > 0);
 
-    std::vector<std::future<Error>> closeFuture;
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        client->SetRetryConnect(false);
-        closeFuture.push_back(client->Close());
+        client->Close();
     }
     server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerStates::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        auto& future = closeFuture[i];
-        future.wait();
+        client->WaitForState(ConnectionStates::Closed, 1);
         EXPECT_EQ(client->GetState(), ConnectionStates::Closed);
     }
 }

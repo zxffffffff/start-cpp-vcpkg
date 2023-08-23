@@ -33,7 +33,7 @@ enum class ConnectionStates : int
     // Inited,      /* success */
     // InitFailed,  /* err */
 
-    NetError,       /* 读写异常、心跳超时 -> Closing */
+    Shutdown,       /* 读写异常、心跳超时 -> Closing */
 };
 
 inline bool CheckIsRunning(ServerStates state)
@@ -61,7 +61,7 @@ inline bool CheckIsRunning(ConnectionStates state)
     // case ConnectionStates::InitRequest: return true;
     // case ConnectionStates::Inited:      return true;
     // case ConnectionStates::InitFailed:  return false;
-    case ConnectionStates::NetError:       return false;
+    case ConnectionStates::Shutdown:       return false;
     default:                               return false;
     }
 }
@@ -91,7 +91,7 @@ inline const char* ToString(ConnectionStates state)
     // case ConnectionStates::InitRequest: return "InitRequest";
     // case ConnectionStates::Inited:      return "Inited";
     // case ConnectionStates::InitFailed:  return "InitFailed";
-    case ConnectionStates::NetError:       return "NetError";
+    case ConnectionStates::Shutdown:       return "Shutdown";
     default:                               return "???";
     }
 }
