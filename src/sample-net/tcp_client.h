@@ -102,30 +102,33 @@ public:
 
 public:
     /* 异步，线程安全，可重入 */
-    void Connect()
+    bool Connect()
     {
         if (IsRunning())
-            return;
+            return false;
 
         SetState(ConnectionStates::Connecting);
         client->Connect(GetAddr(), GetPort());
+        return true;
     }
 
-    void Close()
+    bool Close()
     {
         if (GetState() <= ConnectionStates::Closing)
-            return;
+            return false;
 
         SetState(ConnectionStates::Closing);
         client->Close();
+        return true;
     }
 
-    void Write(Buffer buffer)
+    bool Write(Buffer buffer)
     {
         if (!IsRunning())
-            return;
+            return false;
 
         client->Write(buffer);
+        return true;
     }
 
     /* 阻塞等待 */

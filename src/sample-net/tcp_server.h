@@ -145,40 +145,44 @@ public:
 
 public:
     /* 异步，线程安全，可重入 */
-    void Listen()
+    bool Listen()
     {
         if (IsRunning())
-            return;
+            return false;
 
         SetState(ServerStates::Listen);
         server->Listen(GetAddr(), GetPort());
+        return true;
     }
 
-    void Close()
+    bool Close()
     {
         if (GetState() <= ServerStates::Closing)
-            return;
+            return false;
 
         SetState(ServerStates::Closing);
         server->Close();
+        return true;
     }
 
-    void Write(ConnId connId, Buffer buffer)
+    bool Write(ConnId connId, Buffer buffer)
     {
         if (!IsRunning())
-            return;
+            return false;
 
         server->Write(connId, buffer);
+        return true;
     }
 
-    void Write(Buffer buffer)
+    bool Write(Buffer buffer)
     {
         if (!IsRunning())
-            return;
+            return false;
 
         std::vector<ConnId> connIds = GetConns(ConnectionStates::Connected);
         for (auto connId : connIds)
             server->Write(connId, buffer);
+        return true;
     }
 
     /* 阻塞等待 */
@@ -215,12 +219,7 @@ protected:
 
     virtual void OnNewConn(ConnId connId, Error err)
     {
-        if (err->first)
-        {
-            // error
-            return;
-        }
-        SetConnState(connId, ConnectionStates::Connected);
+        SetConnState(connId, ConnectionStates::Connected, err);
     }
 
     virtual void OnCloseConn(ConnId connId, Error err)
