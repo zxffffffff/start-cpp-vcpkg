@@ -25,8 +25,9 @@ TEST(HttpServerTest, GetPost)
         google::InitGoogleLogging("test");
 
     auto server = std::make_shared<TestHttpServer>("127.0.0.1", 12333);
-    auto handler = [](ConnId, const HttpRequest& req, ServerResponseCbk cbk)
+    auto handler = [](ConnId, Error err, const HttpRequest& req, ServerResponseCbk cbk)
     {
+        EXPECT_EQ(err->first, 0);
         std::stringstream ss;
         ss << "res";
         ss << " method=" << req.method;
@@ -38,7 +39,8 @@ TEST(HttpServerTest, GetPost)
         cbk(ss.str());
     };
     server->SetHandleServerRequest(handler);
-    server->ListenSync();
+    bool ok = server->ListenSync();
+    ASSERT_TRUE(ok);
 
     auto response = TestHttpClient::Singleton().Get("http://127.0.0.1:12333", {}, 3).get();
     EXPECT_EQ(response.errCode, 0) << response.errMsg;

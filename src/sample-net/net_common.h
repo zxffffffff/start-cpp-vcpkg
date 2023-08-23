@@ -27,6 +27,11 @@ inline Error MakeError(int state, const std::string& msg)
     return std::make_shared<std::pair<int, std::string>>(state, msg);
 }
 
+inline Error MakeError(bool state, const std::string& msg)
+{
+    return MakeError(-1, msg);
+}
+
 inline Error MakeSuccess()
 {
     return MakeError(0, "");

@@ -11,7 +11,7 @@ message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# 引入zlib库
+# 引入 zlib
 find_package(ZLIB REQUIRED)
 message(STATUS "[${PROJECT_NAME}] ZLIB_VERSION_STRING : ${ZLIB_VERSION_STRING}")
 message(STATUS "[${PROJECT_NAME}] ZLIB_INCLUDE_DIRS : ${ZLIB_INCLUDE_DIRS}")
@@ -29,8 +29,9 @@ find_package(unofficial-sqlite3 CONFIG REQUIRED)
 # 引入 cryptopp
 find_package(cryptopp CONFIG REQUIRED)
 
-# 引入 jsoncpp
-find_package(jsoncpp CONFIG REQUIRED)
+# 引入 rapidjson & nlohmann-json
+find_package(RapidJSON CONFIG REQUIRED)
+find_package(nlohmann_json CONFIG REQUIRED)
 
 # Public 头文件
 file(GLOB_RECURSE include_headers
@@ -54,7 +55,8 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC ZLIB::ZLIB
     PUBLIC unofficial::sqlite3::sqlite3
     PUBLIC cryptopp::cryptopp
-    PUBLIC JsonCpp::JsonCpp
+    PUBLIC rapidjson
+    PUBLIC nlohmann_json::nlohmann_json
 )
 
 target_include_directories(${PROJECT_NAME}

@@ -12,8 +12,6 @@
 #include "gflags/gflags.h"
 #include "sqlite3.h"
 #include "cryptopp/cryptlib.h"
-#include "json/version.h"
-#include "json/json.h"
 #include <boost/algorithm/string.hpp>
 
 SampleTools::SampleTools()
@@ -53,29 +51,6 @@ SampleTools::SampleTools()
     std::cout << "cryptopp version: " << CryptoPP::HeaderVersion() << std::endl;
     {
         assert(CryptoPP::LibraryVersion() == CryptoPP::HeaderVersion());
-    }
-
-    std::cout << "jsoncpp version: " << JSONCPP_VERSION_STRING;
-    {
-        const std::string rawJson = R"({"Age": 28, "Name": "zxffffffff"})";
-        const auto rawJsonLength = static_cast<int>(rawJson.length());
-        constexpr bool shouldUseOldWay = false;
-        JSONCPP_STRING err;
-        Json::Value root;
-
-        Json::CharReaderBuilder builder;
-        const std::unique_ptr<Json::CharReader> reader(builder.newCharReader());
-        if (reader->parse(rawJson.c_str(), rawJson.c_str() + rawJsonLength, &root, &err))
-        {
-            const std::string name = root["Name"].asString();
-            const int age = root["Age"].asInt();
-            assert(name == "zxffffffff");
-            assert(age == 28);
-        }
-        else
-        {
-            assert(false);
-        }
     }
 }
 

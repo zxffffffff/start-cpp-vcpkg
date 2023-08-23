@@ -14,7 +14,8 @@
 - protobuf: Google 数据序列化库。
 - sqlite3: 最流行的嵌入式关系数据库。
 - cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
-- jsoncpp: json 序列化库。
+- rapidjson: 腾讯高性能 JSON 解析/生成器，灵感来自 RapidXml。
+- nlohmann-json：现代的 JSON 解析/生成器，语法糖非常方便，性能弱于 rapidjson。
 - mysql-connector-cpp: 连接 MySQL 数据库。
 - mongo-cxx-driver: 连接 MongoDB 数据库。
 - hiredis: 连接 Redis 数据库。

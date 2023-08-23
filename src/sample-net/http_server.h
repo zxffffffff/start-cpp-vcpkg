@@ -11,11 +11,12 @@
 
 /* 线程异步回调，注意线程安全 */
 using ServerResponseCbk = std::function<void(std::string)>;
-using HandleServerRequest = std::function<void(ConnId, const HttpRequest&, ServerResponseCbk)>;
+using HandleServerRequest = std::function<void(ConnId, Error, const HttpRequest &, ServerResponseCbk)>;
 
 template <class IHttpParserImpl, class ITcpServerImpl, class IThreadPoolImpl>
 class HttpServer : public TcpServer<ITcpServerImpl, IThreadPoolImpl>
 {
+protected:
     using Super = TcpServer<ITcpServerImpl, IThreadPoolImpl>;
 
 private:
@@ -28,7 +29,6 @@ private:
         mutable std::shared_mutex connMutex;
     };
     std::map<ConnId, std::shared_ptr<Connection>> conns;
-    mutable std::shared_mutex connsMutex;
 
 public:
     HttpServer(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "HttpServer")
@@ -44,58 +44,68 @@ public:
     void SetHandleServerRequest(HandleServerRequest f) { handleServerRequest = f; }
 
 private:
-    /* 同步，线程安全，可重入 */
-    virtual void OnNewConnSync(ConnId connId) override
+    /* 单线程同步，不可重入 */
+    virtual void OnNewConn(ConnId connId, Error err) override
     {
-        Super::OnNewConnSync(connId);
-
-        {
-            std::shared_lock readLock(connsMutex);
+        if (err->first == 0)
             conns[connId] = std::make_shared<Connection>();
-        }
+
+        Super::OnNewConn(connId, err);
     }
 
-    virtual void OnCloseConnSync(ConnId connId) override
+    virtual void OnCloseConn(ConnId connId, Error err) override
     {
-        {
-            std::unique_lock writeLock(connsMutex);
+        Super::OnCloseConn(connId, err);
+
+        if (err->first == 0)
             conns.erase(conns.find(connId));
-        }
-
-        Super::OnCloseConnSync(connId);
     }
 
-    virtual Error OnConnReadSync(ConnId connId, Error err, Buffer buffer) override
+    virtual void OnConnRead(ConnId connId, Error err, Buffer buffer) override
     {
-        if (handleServerRequest && !err->first)
+        if (handleServerRequest)
         {
-            std::shared_ptr<Connection> conn;
-            {
-                std::shared_lock readLock(connsMutex);
-                auto ite = conns.find(connId);
-                if (ite == conns.end())
-                    return err;
-                conn = ite->second;
-            }
-            {
-                std::unique_lock writeLock(conn->connMutex);
-                if (conn->recv == nullptr)
-                    conn->recv = buffer;
-                else
-                    conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
-            }
-            HttpRequest req;
-            auto parseErr = conn->parser->ParseReq(buffer, req);
-            if (!parseErr->first)
-            {
-                auto cbk = [=](std::string resBody)
-                {
-                    std::string res = conn->parser->MakeRes(resBody);
-                    Super::Write(connId, MakeBuffer(res));
-                };
-                handleServerRequest(connId, req, cbk);
-            }
+            std::shared_ptr<Connection> conn = conns[connId];
+            Super::threadPool->MoveToThread([=]
+                                            { OnConnRequest(connId, conn, err, buffer); });
         }
-        return Super::OnConnReadSync(connId, err, buffer);
+
+        Super::OnConnRead(connId, err, buffer);
+    }
+
+    /* 线程异步处理 http request */
+    void OnConnRequest(ConnId connId, std::shared_ptr<Connection> conn, Error err, Buffer buffer)
+    {
+        HttpRequest req;
+        auto cbkWrite = [=](std::string resBody)
+        {
+            std::string res = conn->parser->MakeRes(resBody);
+            Super::Write(connId, MakeBuffer(res));
+        };
+
+        if (err->first)
+        {
+            // error
+            if (err->first == 1)
+            {
+                // EOF
+            }
+            else
+            {
+                handleServerRequest(connId, err, req, cbkWrite);
+            }
+            return;
+        }
+
+        Error parseErr;
+        {
+            std::unique_lock writeLock(conn->connMutex);
+            if (conn->recv == nullptr)
+                conn->recv = buffer;
+            else
+                conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
+            parseErr = conn->parser->ParseReq(conn->recv, req);
+        }
+        handleServerRequest(connId, parseErr, req, cbkWrite);
     }
 };
