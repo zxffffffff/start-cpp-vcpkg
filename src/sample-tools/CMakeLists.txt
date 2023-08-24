@@ -33,6 +33,9 @@ find_package(cryptopp CONFIG REQUIRED)
 find_package(RapidJSON CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
 
+# 引入 tinyxml
+find_package(tinyxml2 CONFIG REQUIRED)
+
 # Public 头文件
 file(GLOB_RECURSE include_headers
     SampleTools.h
@@ -58,6 +61,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC cryptopp::cryptopp
     PUBLIC rapidjson
     PUBLIC nlohmann_json::nlohmann_json
+    PUBLIC tinyxml2::tinyxml2
 )
 
 target_include_directories(${PROJECT_NAME}

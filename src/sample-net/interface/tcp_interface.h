@@ -66,6 +66,6 @@ public:
     HandleSocket handleClose;      // 0
     HandleConn handleNewConn;      // 0, -101, -102
     HandleConn handleCloseConn;    // 0
-    HandleConn handleConnWrite;    // 0, -300, -301
+    HandleConn handleConnWrite;    // 0, -300, -301, -302
     HandleConnRead handleConnRead; // 0, 1, -200
 };

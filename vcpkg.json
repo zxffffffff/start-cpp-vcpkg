@@ -17,6 +17,7 @@
     "cryptopp",
     "rapidjson",
     "nlohmann-json",
+    "tinyxml2",
     "sqlite3",
     "mysql-connector-cpp",
     "mongo-cxx-driver",
