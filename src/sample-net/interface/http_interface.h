@@ -46,9 +46,9 @@ struct HttpResponse
     }
 };
 
-/* HTTP 抽象接口
- * 可以使用 curl、boost::beast::http 等第三方实现
- * 工作线程运行，非线程安全
+/* HTTP 鎶借薄鎺ュ彛
+ * 鍙互浣跨敤 curl銆乥oost::beast::http 绛夌涓夋柟瀹炵幇
+ * 宸ヤ綔绾跨▼杩愯锛岄潪绾跨▼瀹夊叏
  */
 class IHttpClient
 {
@@ -62,9 +62,9 @@ public:
     virtual HttpResponse Post(const std::string &url, const std::string &body, int timeout_sec) = 0;
 };
 
-/* HTTP (Server) Parser 抽象接口
- * 可以使用 llhttp、boost::beast::http 等第三方实现
- * 工作线程运行，非线程安全
+/* HTTP (Server) Parser 鎶借薄鎺ュ彛
+ * 鍙互浣跨敤 llhttp銆乥oost::beast::http 绛夌涓夋柟瀹炵幇
+ * 宸ヤ綔绾跨▼杩愯锛岄潪绾跨▼瀹夊叏
  */
 class IHttpParser
 {
