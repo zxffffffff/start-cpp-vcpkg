@@ -139,7 +139,7 @@ private:
             };
             uv_close((uv_handle_t *)connection, onClose);
 
-            server->handleNewConn(0, MakeStatusError(-102, status2));
+            server->handleNewConn((ConnId)connection, MakeStatusError(-102, status2));
             return;
         }
 
@@ -206,6 +206,13 @@ private:
     };
     void WriteOnEvent(ConnId connId, Buffer buffer)
     {
+        if (connections.find(connId) == connections.end())
+        {
+            /* connId 已断开，多线程问题 */
+            handleConnWrite(connId, MakeError(-302, "connection no found"));
+            return;
+        }
+
         auto req = new WriteReq(this, connId, buffer);
         auto bufs = uv_buf_init(buffer->data(), buffer->size());
         int status = ::uv_write(req, (uv_stream_t *)connId, &bufs, 1, onWrite);
