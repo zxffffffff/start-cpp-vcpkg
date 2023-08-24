@@ -200,7 +200,7 @@ public:
         StringSource encryptor(str_in, true, new StreamTransformationFilter(encryption, new StringSink(str_out)));
         return str_out;
     }
-    static std::string decryptAES(const std::string &str_in, const std::string &key) /* ecb模式 没有iv */
+    static std::string decryptAES(const std::string &str_in, const std::string &key) /* ecb妯″紡 娌℃湁iv */
     {
         using namespace CryptoPP;
 
