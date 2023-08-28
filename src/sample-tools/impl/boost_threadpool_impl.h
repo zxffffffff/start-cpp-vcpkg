@@ -31,8 +31,12 @@ public:
     {
         auto promise = std::make_shared<std::promise<void>>();
         auto future = promise->get_future();
-        boost::asio::post(pool, [=]
-                          { f(); promise->set_value(); });
+        auto task = [=]
+        {
+            f();
+            promise->set_value();
+        };
+        boost::asio::post(pool, task);
         return future;
     }
 };
