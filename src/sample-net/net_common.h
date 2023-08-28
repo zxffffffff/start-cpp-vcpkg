@@ -29,7 +29,7 @@ inline Error MakeError(int state, const std::string &msg)
 
 inline Error MakeError(bool state, const std::string &msg)
 {
-    return MakeError(-1, msg);
+    return MakeError(state ? 0 : -1, msg);
 }
 
 inline Error MakeSuccess()
