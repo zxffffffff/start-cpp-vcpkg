@@ -137,8 +137,12 @@ public:
     {
         auto promise = std::make_shared<std::promise<void>>();
         auto future = promise->get_future();
-        threadPool.MoveToThread([=]
-                                { f(); promise->set_value(); });
+        auto task = [=]
+        {
+            f();
+            promise->set_value();
+        };
+        threadPool.MoveToThread(task);
         return future;
     }
 };
