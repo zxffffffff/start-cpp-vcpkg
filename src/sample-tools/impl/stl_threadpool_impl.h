@@ -8,129 +8,144 @@
 #pragma once
 #include "../interface/threadpool_interface.h"
 #include <queue>
+#include <list>
 #include <atomic>
 #include <mutex>
 #include <thread>
 #include <future>
+#include <memory>
 
 /* 兼容 windows */
 #undef min
 #undef max
 
-/* 线程池最大容量,应尽量设小一点 */
-template <int maxCount>
+/* 线程池容量，不弹性扩容 */
 class ThreadPool
 {
-    std::vector<std::thread> pool;                    /* 线程池 */
-    std::queue<std::packaged_task<void()>> taskQueue; /* 任务队列 */
-    std::mutex mutex;                                 /* 同步 */
-    std::condition_variable cv;                       /* 条件阻塞 */
-    std::atomic_bool running{true};                   /* 线程池是否执行 */
-    std::atomic_int idlCount{0};                      /* 空闲线程数量 */
+    std::vector<std::thread> threads;
+    std::queue<std::function<void()>> tasks;
+
+    std::mutex queueMutex;
+    std::condition_variable condition;
+
+    std::atomic<bool> stop{false};
+    std::atomic<int> idleThreads{0};
+
+private:
+    void workerThread()
+    {
+        while (true)
+        {
+            std::function<void()> task;
+            ++idleThreads;
+            {
+                std::unique_lock<std::mutex> lock(queueMutex);
+                condition.wait(lock, [this]
+                               { return stop || !tasks.empty(); });
+                if (stop && tasks.empty())
+                    return;
+
+                task = std::move(tasks.front());
+                tasks.pop();
+            }
+            --idleThreads;
+            task();
+        }
+    }
 
 public:
-    ThreadPool()
+    ThreadPool(int threadCount)
     {
-        AddThread(2);
-
-        // LOG(INFO) << __func__
-        //     << " MaxCount=" << MaxCount()
-        //     << " TotCount=" << TotCount()
-        //     << " IdlCount=" << IdlCount();
-    }
-
-    virtual ~ThreadPool()
-    {
-        // LOG(INFO) << __func__
-        //     << " MaxCount=" << MaxCount()
-        //     << " TotCount=" << TotCount()
-        //     << " IdlCount=" << IdlCount();
-
-        running = false;
-        cv.notify_all(); /* 唤醒所有线程执行 */
-        for (std::thread &thread : pool)
+        for (int i = 0; i < threadCount; ++i)
         {
-            // thread.detach(); /* 让线程“自生自灭” */
-            if (thread.joinable())
-                thread.join(); /* 等待任务结束， 前提：线程一定会执行完 */
+            threads.emplace_back(&ThreadPool::workerThread, this);
         }
     }
 
-    /* 最大线程数量 */
-    int MaxCount() const { return maxCount; }
-
-    /* 线程数量 */
-    int TotCount() const { return pool.size(); }
-
-    /* 空闲线程数量 */
-    int IdlCount() const { return idlCount; }
-
-    /* [1] 添加指定数量的线程（构造时默认添加_idlThrNum） */
-    void AddThread(unsigned short size)
+    ~ThreadPool()
     {
-        // LOG(INFO) << __func__
-        //     << " MaxCount=" << MaxCount()
-        //     << " TotCount=" << TotCount()
-        //     << " IdlCount=" << IdlCount()
-        //     << " addSize=" << size;
-
-        for (; size > 0; --size)
         {
-            auto worker = [this]
-            {
-                ++idlCount;
-                while (running)
-                {
-                    std::packaged_task<void()> task;
-                    {
-                        std::unique_lock<std::mutex> lock{mutex};
-                        cv.wait(lock, [this]
-                                { return !running || !taskQueue.empty(); }); /* 等待任务队列不为空 */
-                        if (!running && taskQueue.empty())
-                            return;
-                        task = std::move(taskQueue.front()); /* 取出队列中的任务 */
-                        taskQueue.pop();
-                    }
-                    --idlCount;
-                    task(); /* 执行任务 */
-                    ++idlCount;
+            std::unique_lock<std::mutex> lock(queueMutex);
+            stop = true;
+        }
 
-                    if (pool.size() > maxCount) /* 临时的线程 */
-                        break;
-                }
-                --idlCount;
-            };
-            pool.emplace_back(worker);
+        condition.notify_all();
+
+        for (std::thread &thread : threads)
+        {
+            thread.join();
         }
     }
 
-    /* [2] 添加任务 */
-    template <class F, class... Args>
-    std::future<void> MoveToThread(F &&f, Args &&...args)
+    void MoveToThread(std::function<void()> task)
     {
-        if (!running) // stoped ?
-            throw std::runtime_error(__func__ + std::string(" error: is stopped!"));
-
-        std::packaged_task<void()> task(std::bind(std::forward<F>(f), std::forward<Args>(args)...));
-        std::future<void> future = task.get_future();
-
+        assert(!stop);
         {
-            /* 添加任务到队列 */
-            std::lock_guard<std::mutex> lock{mutex};
-            taskQueue.push(std::move(task));
-            if (idlCount < 1)
-                AddThread(1);
+            std::unique_lock<std::mutex> lock(queueMutex);
+            tasks.push(std::move(task));
         }
-        cv.notify_one(); /* 唤醒一个线程执行 */
+        condition.notify_one();
+    }
 
-        return future;
+    int GetIdleThreadCount() const
+    {
+        return idleThreads.load();
+    }
+};
+
+/* 临时线程管理 */
+class ThreadMgr
+{
+    std::mutex mutex;
+    std::list<std::thread> threads;
+
+    std::atomic<bool> stop{false};
+
+private:
+    void workerThread(std::function<void()> task)
+    {
+        task();
+
+        std::unique_lock<std::mutex> lock(mutex);
+        auto it = std::find_if(threads.begin(), threads.end(), [](const std::thread& t) {
+            return t.get_id() == std::this_thread::get_id();
+        });
+        if (it != threads.end()) {
+            it->detach();
+            threads.erase(it);
+        }
+    }
+
+public:
+    ~ThreadMgr()
+    {
+        stop = true;
+
+        std::list<std::thread> threads2;
+        {
+            std::unique_lock<std::mutex> lock(mutex);
+            threads2.swap(threads);
+        }
+
+        for (std::thread &thread : threads2)
+        {
+            thread.join();
+        }
+    }
+
+    void MoveToThread(std::function<void()> task)
+    {
+        assert(!stop);
+        std::unique_lock<std::mutex> lock(mutex);
+        threads.emplace_back(&ThreadMgr::workerThread, this, std::move(task));
     }
 };
 
 template <int count>
 class ThreadPoolImpl : public IThreadPool
 {
-    ThreadPool<count> threadPool;
+    std::unique_ptr<ThreadPool> threadPool = std::make_unique<ThreadPool>(count);
+    std::unique_ptr<ThreadMgr> threadMgr = std::make_unique<ThreadMgr>();
 
 public:
     virtual std::future<void> MoveToThread(std::function<void()> f) override
@@ -142,7 +157,11 @@ public:
             f();
             promise->set_value();
         };
-        threadPool.MoveToThread(task);
+        
+        if (threadPool->GetIdleThreadCount() > 0)
+            threadPool->MoveToThread(task);
+        else
+            threadMgr->MoveToThread(task);
         return future;
     }
 };
