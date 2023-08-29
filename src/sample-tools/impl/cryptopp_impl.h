@@ -7,6 +7,8 @@
 ****************************************************************************/
 #pragma once
 #include "../interface/crypto_interface.h"
+#include <sstream>
+#include <cassert>
 
 #include "cryptopp/base64.h"
 #include "cryptopp/aes.h"
@@ -71,7 +73,7 @@ class RSA_PKCS1v15_Impl : public I_RSA_PKCS1v15
     }
 
 public:
-    virtual void SetPublicKey(const std::string &content) override
+    virtual bool SetPublicKey(const std::string &content) override
     {
         using namespace CryptoPP;
         try
@@ -79,16 +81,18 @@ public:
             std::string pemPublicKey = crypto_PemToOneline(content);
             StringSource strSource(pemPublicKey, true, new Base64Decoder);
             publicKey.Load(strSource);
+            return true;
         }
         catch (const std::exception &e)
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
             assert(false);
+            return false;
         }
     }
 
-    virtual void SetPrivateKey(const std::string &content) override
+    virtual bool SetPrivateKey(const std::string &content) override
     {
         using namespace CryptoPP;
         try
@@ -96,12 +100,14 @@ public:
             std::string pemPublicKey = crypto_PemToOneline(content);
             StringSource strSource(pemPublicKey, true, new Base64Decoder);
             privateKey.Load(strSource);
+            return true;
         }
         catch (const std::exception &e)
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
             assert(false);
+            return false;
         }
     }
 
