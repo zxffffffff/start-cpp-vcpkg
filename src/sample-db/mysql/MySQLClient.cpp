@@ -5,7 +5,6 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #include "MySQLClient.h"
 #include "MySQLClient_p.h"
 

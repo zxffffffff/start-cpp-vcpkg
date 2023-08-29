@@ -5,13 +5,14 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-#include "SampleTools.h"
-#include "gtest/gtest.h"
+#include "tcp_client.h"
+#include "impl/libuv_tcp_client_impl.h"
 
-TEST(SampleTools, Test1) {
-  EXPECT_EQ(SampleTools::to_lower("ABC_123_abc"), "abc_123_abc");
-}
+#include "tcp_server.h"
+#include "impl/libuv_tcp_server_impl.h"
 
-TEST(SampleTools, Test2) {
-  ASSERT_EQ(123, 123);
-}
+#include "http_server.h"
+#include "impl/boost_http_parser.h"
+
+#include "http_client.h"
+#include "impl/curl_http_client.h"

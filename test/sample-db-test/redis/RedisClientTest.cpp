@@ -5,7 +5,6 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-
 #include "redis/RedisClient.h"
 #include "gtest/gtest.h"
 

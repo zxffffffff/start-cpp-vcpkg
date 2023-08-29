@@ -1,25 +1,33 @@
 # start-cpp-vcpkg
-- 不是所有的库都支持vcpkg的
-- 不是所有支持vcpkg的库都能编译过的
-- 该手动引入third-party的库还得手动来
 
 ## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- gflags: Google 命令行标志库。
-- glog: Google 日志库。
-- googletest: Google 测试框架。
-- boost: 标准库，可以按需单独安装某个库。
-- zlib: 最流行的数据压缩库。
-- libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
-- libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
-- protobuf: Google 数据序列化库。
-- sqlite3: 最流行的嵌入式关系数据库。
-- cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密。
-- rapidjson: 腾讯高性能 JSON 解析/生成器，灵感来自 RapidXml。
-- nlohmann-json：现代的 JSON 解析/生成器，语法糖非常方便，性能弱于 rapidjson。
-- tinyxml：轻量的 XML 解析库。
-- mysql-connector-cpp: 连接 MySQL 数据库。
-- mongo-cxx-driver: 连接 MongoDB 数据库。
-- hiredis: 连接 Redis 数据库。
+- sample-db
+  - mysql-connector-cpp: 连接 MySQL 数据库。
+  - mongo-cxx-driver: 连接 MongoDB 数据库。
+  - hiredis: 连接 Redis 数据库。
+- sample-pb
+  - protobuf: Google 数据序列化库。
+- sample-net (tcp, http)
+  - libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
+  - libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
+- sample-tools (crypto, threadpool)
+  - gflags: Google 命令行标志库。
+  - glog: Google 日志库。
+  - boost: 标准库，可以按需单独安装某个库。
+  - zlib: 最流行的数据压缩库。
+  - sqlite3: 最流行的嵌入式关系数据库。
+  - cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密算法。
+  - rapidjson: 腾讯出品，高性能 JSON 解析/生成器，灵感来自 RapidXml。
+  - nlohmann-json：现代的 JSON 解析/生成器，语法糖非常方便。
+  - tinyxml：轻量的 XML 解析库。
+- sample-test
+  - googletest: Google 测试框架。
+
+### 温馨提示：
+- 不是所有的库都支持vcpkg的！
+- 不是所有支持vcpkg的库都能编译过的！
+- 该手动引入third-party的库还得手动来！
+- 遇到问题提个Issue，微软会很快处理！
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
@@ -33,9 +41,12 @@
   - Visual Studio 2022 - Windows
   - VS Code - 全平台
 
-### 已知 macOS 问题
-- "protobuf" 和 "mysql-connector-cpp" 存在冲突，等待官方解决，暂时移除pb依赖
-- https://github.com/microsoft/vcpkg/issues/27873
+### 已知问题
+- macOS
+  - "protobuf" 和 "mysql-connector-cpp" 存在冲突，注意避免同时引用
+  - https://github.com/microsoft/vcpkg/issues/27873
+- Windows
+  - "min" "max" 等宏定义冲突，报错可以 #undef 解决
 
 
 ## vcpkg 
