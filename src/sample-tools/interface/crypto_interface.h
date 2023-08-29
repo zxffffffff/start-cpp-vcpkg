@@ -23,8 +23,8 @@ public:
 class I_RSA_PKCS1v15
 {
 public:
-    virtual void SetPublicKey(const std::string &content) = 0;  /* for Encrypt */
-    virtual void SetPrivateKey(const std::string &content) = 0; /* for Decrypt & Sign */
+    virtual bool SetPublicKey(const std::string &content) = 0;  /* for Encrypt */
+    virtual bool SetPrivateKey(const std::string &content) = 0; /* for Decrypt & Sign */
 
     virtual std::string Encrypt(const std::string &msg) = 0;
     virtual std::string EncryptHex(const std::string &msg) = 0;
