@@ -52,6 +52,16 @@ public:
         return ss.str();
     }
 
+    std::string URLEncode(const std::string &msg) const
+    {
+        return client->URLEncode(msg);
+    }
+
+    std::string URLDecode(const std::string &msg) const
+    {
+        return client->URLDecode(msg);
+    }
+
     /* 异步请求 future/cbk  */
     std::future<HttpResponse> Get(
         const std::string &url,

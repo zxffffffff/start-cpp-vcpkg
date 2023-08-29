@@ -30,3 +30,14 @@ TEST(HttpClientTest, TestBaidu)
     EXPECT_EQ(response3.errCode, 0) << response.errMsg;
     EXPECT_NE(response3.data.size(), 0);
 }
+
+TEST(HttpClientTest, URLEncode)
+{
+    std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
+    
+    std::string encode = TestHttpClient::Singleton().URLEncode(raw);
+    EXPECT_EQ(encode, "abc123%21%40%23%24%25%5E%26%2A%28%29_-%2B%3D%2A%2F%5C%27%22%3F%E4%BD%A0%E5%A5%BD");
+
+    std::string decode = TestHttpClient::Singleton().URLDecode(encode);
+    EXPECT_EQ(decode, raw);
+}
