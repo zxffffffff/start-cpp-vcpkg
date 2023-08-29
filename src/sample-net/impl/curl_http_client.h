@@ -22,6 +22,41 @@ public:
         curl_global_cleanup();
     }
 
+    virtual std::string URLEncode(const std::string &msg) const override
+    {
+        std::string ret;
+        CURL *curl = curl_easy_init();
+        if (curl)
+        {
+            char *output = curl_easy_escape(curl, msg.c_str(), msg.size());
+            if (output)
+            {
+                ret = output;
+                curl_free(output);
+            }
+            curl_easy_cleanup(curl);
+        }
+        return ret;
+    }
+
+    virtual std::string URLDecode(const std::string &msg) const override
+    {
+        std::string ret;
+        CURL *curl = curl_easy_init();
+        if (curl)
+        {
+            int outlength;
+            char *output = curl_easy_unescape(curl, msg.c_str(), msg.size(), &outlength);
+            if (output)
+            {
+                ret = std::string(output, outlength);
+                curl_free(output);
+            }
+            curl_easy_cleanup(curl);
+        }
+        return ret;
+    }
+
     static size_t write_data(void *ptr, size_t size, size_t nmemb, void *stream)
     {
         std::stringstream &res = *((std::stringstream *)stream);
