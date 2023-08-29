@@ -5,16 +5,9 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-#pragma once
-#include <iostream>
-#include <string.h>
-#include <cassert>
-#include <thread>
+#include "impl/cryptopp_impl.h"
 
-class SampleTools
-{
-public:
-    SampleTools();
-    
-    static std::string to_lower(const std::string& str);
-};
+#include "impl/stl_threadpool_impl.h"
+#include "impl/boost_threadpool_impl.h"
+
+#include "impl/stl_threadtimer_impl.h"

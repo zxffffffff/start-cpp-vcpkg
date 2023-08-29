@@ -38,7 +38,7 @@ find_package(tinyxml2 CONFIG REQUIRED)
 
 # Public 头文件
 file(GLOB_RECURSE include_headers
-    SampleTools.h
+    chrono.h
     interface/crypto_interface.h
     interface/threadpool_interface.h
     interface/threadtimer_interface.h
@@ -49,7 +49,7 @@ file(GLOB_RECURSE include_headers
 )
 
 add_library(${PROJECT_NAME} STATIC
-    SampleTools.cpp
+    sample/sample_tools.cpp
     ${include_headers}
 )
 

@@ -46,7 +46,7 @@ file(GLOB_RECURSE include_headers
 
 # 至少要有一个cpp，否则部分平台无法编译通过
 add_library(${PROJECT_NAME} STATIC
-    sample/SampleNet.cpp
+    sample/sample_net.cpp
     ${include_headers}
 )
 
