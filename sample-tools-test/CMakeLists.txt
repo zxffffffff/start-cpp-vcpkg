@@ -21,6 +21,7 @@ add_executable (${PROJECT_NAME}
     threadpool_test.cpp
     boost_threadpool_test.cpp
     threadtimer_test.cpp
+    fmt_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
