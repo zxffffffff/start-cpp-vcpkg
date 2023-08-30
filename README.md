@@ -8,6 +8,7 @@
 - sample-pb
   - protobuf: Google 数据序列化库。
 - sample-net (tcp, http)
+  - ![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/sample-net/doc/states.png)
   - libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
   - libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
 - sample-tools (crypto, threadpool)

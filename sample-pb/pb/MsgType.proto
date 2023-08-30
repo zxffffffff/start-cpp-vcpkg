@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+enum PBMsgType {
+  InvalidMsgType = 0;
+
+  // socket连接心跳
+  HeartbeatMsgType = 1;
+
+  // 行情推送订阅
+  QuoteSubscribeTickMsgType = 2;
+  
+  // 行情推送取消订阅
+  QuoteUnsubscribeTickMsgType = 3;
+  
+  // 行情推送
+  QuotePushTickMsgType = 4;
+}

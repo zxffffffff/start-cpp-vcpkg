@@ -1,8 +1,0 @@
-syntax = "proto3";
-
-package Quote;
-import "common/Stock.proto";
-
-message UnsubscribeTickReq {
-  repeated Stock stockList = 1;
-}
