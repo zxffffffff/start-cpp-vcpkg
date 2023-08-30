@@ -7,7 +7,7 @@
 ****************************************************************************/
 #include "impl/cryptopp_impl.h"
 
-#include "impl/stl_threadpool_impl.h"
+//#include "impl/stl_threadpool_impl.h"
 #include "impl/boost_threadpool_impl.h"
 
 #include "impl/stl_threadtimer_impl.h"
