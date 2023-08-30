@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-message HeartbeatReq {
-  int64 reqIndex = 1;
-}

@@ -1,5 +1,0 @@
-syntax = "proto3";
-
-message HeartbeatRes {
-  int64 resIndex = 2;
-}
