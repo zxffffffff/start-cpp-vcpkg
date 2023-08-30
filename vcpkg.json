@@ -18,6 +18,7 @@
     "rapidjson",
     "nlohmann-json",
     "tinyxml2",
+    "fmt",
     "sqlite3",
     "mysql-connector-cpp",
     "mongo-cxx-driver",
