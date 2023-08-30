@@ -29,7 +29,7 @@ public:
         using namespace CryptoPP;
 
         std::string encode;
-        StringSource a(msg, true, new Base64Encoder(new StringSink(encode)));
+        StringSource a(msg, true, new Base64Encoder(new StringSink(encode), false));
         return encode;
     }
 
@@ -118,7 +118,7 @@ public:
         try
         {
             std::string result;
-            StringSource a(msg, true, new PK_EncryptorFilter(randPool, pub, new Base64Encoder(new StringSink(result))));
+            StringSource a(msg, true, new PK_EncryptorFilter(randPool, pub, new Base64Encoder(new StringSink(result), false)));
             return result;
         }
         catch (const std::exception &e)
@@ -249,7 +249,10 @@ public:
         {
             std::string str_out;
             ECB_Mode<AES>::Encryption encryption((unsigned char *)key.c_str(), key.length());
-            StringSource encryptor(msg, true, new StreamTransformationFilter(encryption, new StringSink(str_out)));
+            StringSource encryptor(msg, true,
+                                   new StreamTransformationFilter(encryption,
+                                                                  new StringSink(str_out),
+                                                                  BlockPaddingSchemeDef::PKCS_PADDING));
             return str_out;
         }
         catch (const std::exception &e)
@@ -268,7 +271,10 @@ public:
         {
             std::string str_out;
             ECB_Mode<AES>::Decryption decryption((unsigned char *)key.c_str(), key.length());
-            StringSource decryptor(msg, true, new StreamTransformationFilter(decryption, new StringSink(str_out)));
+            StringSource decryptor(msg, true,
+                                   new StreamTransformationFilter(decryption,
+                                                                  new StringSink(str_out),
+                                                                  BlockPaddingSchemeDef::PKCS_PADDING));
             return str_out;
         }
         catch (const std::exception &e)
