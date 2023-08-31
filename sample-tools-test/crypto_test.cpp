@@ -8,6 +8,14 @@
 #include "gtest/gtest.h"
 #include "impl/cryptopp_impl.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 TEST(CryptoTest, Base64_Impl)
 {
     std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?你好";

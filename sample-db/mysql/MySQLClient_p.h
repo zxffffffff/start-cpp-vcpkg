@@ -21,11 +21,19 @@
 #include <mysqlx/xdevapi.h>
 #include "Chrono.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvcå…¼å®¹utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 using namespace ::mysqlx;
 
 /* https://dev.mysql.com/doc/dev/connector-cpp/8.0/devapi_ref.html
- * Ö§³Ö×îĞÂµÄ X DevAPI£¨MySQL 5.7 ÒÔºóÄ¬ÈÏÔÚ 33060 ÆôÓÃ X Protocol£¬Ê¹ÓÃ protobuf ÓÅ»¯´«Êä£©
- * ¿ÉÒÔÓÃ Session Object£¨coll.execute£©£¬Ò²¿ÉÒÔÓÃ SQL£¨sess.sql£©
+ * æ”¯æŒæœ€æ–°çš„ X DevAPIï¼ˆMySQL 5.7 ä»¥åé»˜è®¤åœ¨ 33060 å¯ç”¨ X Protocolï¼Œä½¿ç”¨ protobuf ä¼˜åŒ–ä¼ è¾“ï¼‰
+ * å¯ä»¥ç”¨ Session Objectï¼ˆcoll.executeï¼‰ï¼Œä¹Ÿå¯ä»¥ç”¨ SQLï¼ˆsess.sqlï¼‰
  */
 class MySQLClientPrivate
 {

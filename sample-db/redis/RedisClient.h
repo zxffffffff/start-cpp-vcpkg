@@ -8,13 +8,21 @@
 #pragma once
 #include "RedisCommon.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvcå…¼å®¹utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 using namespace SampleRedis;
 
 class RedisClientPrivate;
 class RedisClient
 {
 public:
-    /* [×èÈû] ´´½¨Ò»¸ö Redis Á¬½Ó
+    /* [é˜»å¡ž] åˆ›å»ºä¸€ä¸ª Redis è¿žæŽ¥
      * host = "127.0.0.1"
      * port = 6379
      */

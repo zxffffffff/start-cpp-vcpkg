@@ -10,11 +10,18 @@
 #include <string>
 #include <functional>
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 /* 线程定时器抽象接口
  * 可以使用 QTimer、std::thread 等第三方实现
  * 线程安全
  */
-
 class IThreadTimer
 {
 public:

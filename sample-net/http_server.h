@@ -9,6 +9,14 @@
 #include "tcp_server.h"
 #include "interface/http_interface.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 /* 线程异步回调，注意线程安全 */
 using ServerResponseCbk = std::function<void(std::string)>;
 using HandleServerRequest = std::function<void(ConnId, Error, const HttpRequest &, ServerResponseCbk)>;
