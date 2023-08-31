@@ -8,9 +8,17 @@
 #include "mysql/MySQLClient.h"
 #include "gtest/gtest.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvcå…¼å®¹utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 namespace MySQLClientTest
 {
-    // Ìø¹ı²âÊÔ
+    // è·³è¿‡æµ‹è¯•
     constexpr bool skip_test = 1;
 
     const char* host = "localhost";
@@ -22,21 +30,21 @@ namespace MySQLClientTest
 }
 using namespace MySQLClientTest;
 
-// DDL£¨Data Definition Language£©Êı¾İ¿â¶¨ÒåÓïÑÔ
+// DDLï¼ˆData Definition Languageï¼‰æ•°æ®åº“å®šä¹‰è¯­è¨€
 TEST(MySQLClient, DDL) {
     if (skip_test) return;
 
     MySQLClient client(host, port, user, pwd);
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     client.RunSQL("drop database test_db");
 
-    // ´´½¨Êı¾İ¿â£¨schema£©create database ...
+    // åˆ›å»ºæ•°æ®åº“ï¼ˆschemaï¼‰create database ...
     ASSERT_TRUE(client.RunSQL("create database test_db"));
 
     ASSERT_TRUE(client.RunSQL("use test_db"));
 
-    // ´´½¨±í£¨collection£©create table ...
+    // åˆ›å»ºè¡¨ï¼ˆcollectionï¼‰create table ...
     std::string sql = R"(create table if not exists `test_table`(
             `id` int unsigned auto_increment,
             `title` varchar(100) not null,
@@ -46,20 +54,20 @@ TEST(MySQLClient, DDL) {
         )engine=innodb default charset=utf8;)";
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // É¾³ı±í drop table ...
+    // åˆ é™¤è¡¨ drop table ...
     ASSERT_TRUE(client.RunSQL("drop table test_table"));
 
-    // É¾³ıÊı¾İ¿â drop database ...
+    // åˆ é™¤æ•°æ®åº“ drop database ...
     ASSERT_TRUE(client.RunSQL("drop database test_db"));
 }
 
-// DML£¨Data Manipulation Language£©Êı¾İ²Ù×İÓïÑÔ
+// DMLï¼ˆData Manipulation Languageï¼‰æ•°æ®æ“çºµè¯­è¨€
 TEST(MySQLClient, DML) {
     if (skip_test) return;
 
     MySQLClient client(host, port, user, pwd);
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     client.RunSQL("drop database test_db");
     ASSERT_TRUE(client.RunSQL("create database test_db"));
     ASSERT_TRUE(client.RunSQL("use test_db"));
@@ -72,7 +80,7 @@ TEST(MySQLClient, DML) {
         )engine=innodb default charset=utf8;)";
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // Ôö insert into table ... values ...
+    // å¢ insert into table ... values ...
     std::stringstream ss;
     ss << "insert into test_table (title,author,submission_date) values";
     for (int i = 0; i < 10; ++i) {
@@ -87,13 +95,13 @@ TEST(MySQLClient, DML) {
     sql = ss.str();
     ASSERT_TRUE(client.RunSQL(sql));
 
-    // É¾ delete from table where ...
+    // åˆ  delete from table where ...
     ASSERT_TRUE(client.RunSQL("delete from test_table where (id<=3);"));
 
-    // ¸Ä update table set ... where ...
+    // æ”¹ update table set ... where ...
     ASSERT_TRUE(client.RunSQL("update test_table set title='updated' where (id>=6);"));
 
-    // ²é select ... from table where ...
+    // æŸ¥ select ... from table where ...
     std::vector<std::vector<std::string>> ret;
     ASSERT_TRUE(client.RunSQL("select id,title,submission_date from test_table where (id>2 && id<8);", ret));
     ASSERT_EQ(ret.size(), 4);
@@ -109,50 +117,50 @@ TEST(MySQLClient, DML) {
     ASSERT_EQ(ret[2][1], "updated");
     ASSERT_EQ(ret[3][1], "updated");
 
-    // date °´×Ö½Ú±£´æ£¬ÎŞ·¨Ö±½Ó¶ÁÈ¡ string
+    // date æŒ‰å­—èŠ‚ä¿å­˜ï¼Œæ— æ³•ç›´æ¥è¯»å– string
     //ASSERT_EQ(ret[0][2], "2023-02-21");
     //ASSERT_EQ(ret[1][2], "2023-02-21");
     //ASSERT_EQ(ret[2][2], "2023-02-21");
     //ASSERT_EQ(ret[3][2], "2023-02-21");
 
-    // ²åÈë»òÌæ»»£¨´æÔÚ¾ÍÉ¾³ı£© replace into ...
-    // ²åÈë»ò¸üĞÂ£¨´æÔÚ¾Í¸üĞÂ£© insert into ... on duplicate key update ...
-    // ²åÈë»òºöÂÔ£¨´æÔÚ¾ÍºöÂÔ£© insert ignore into ...
+    // æ’å…¥æˆ–æ›¿æ¢ï¼ˆå­˜åœ¨å°±åˆ é™¤ï¼‰ replace into ...
+    // æ’å…¥æˆ–æ›´æ–°ï¼ˆå­˜åœ¨å°±æ›´æ–°ï¼‰ insert into ... on duplicate key update ...
+    // æ’å…¥æˆ–å¿½ç•¥ï¼ˆå­˜åœ¨å°±å¿½ç•¥ï¼‰ insert ignore into ...
     // todo ...
 
 
-    // É¾³ıÊı¾İ¿â
+    // åˆ é™¤æ•°æ®åº“
     ASSERT_TRUE(client.RunSQL("drop database test_db"));
 }
 
-// DCL£¨Data Control Language£©Êı¾İ¿â¿ØÖÆÓïÑÔ  ÊÚÈ¨£¬½ÇÉ«¿ØÖÆµÈ
+// DCLï¼ˆData Control Languageï¼‰æ•°æ®åº“æ§åˆ¶è¯­è¨€  æˆæƒï¼Œè§’è‰²æ§åˆ¶ç­‰
 TEST(MySQLClient, DCL) {
     if (skip_test) return;
 
     MySQLClient client(host, port, user, pwd);
 
-    /* ´´½¨ÓÃ»§ create user ... identified by ...
-     * ´´½¨ÓÃ»§'user_foo'£¬Ö»ÊÇ´´½¨ÓÃ»§²¢Ã»ÓĞÈ¨ÏŞ
-     * 'localhost'±íÊ¾Ö»ÄÜÔÚ±¾µØµÇÂ¼£¬'%'Í¨Åä·û±íÊ¾¿ÉÒÔÔ¶³ÌÁ¬½Ó
-     * ÃÜÂëÊÇ'123456'
+    /* åˆ›å»ºç”¨æˆ· create user ... identified by ...
+     * åˆ›å»ºç”¨æˆ·'user_foo'ï¼Œåªæ˜¯åˆ›å»ºç”¨æˆ·å¹¶æ²¡æœ‰æƒé™
+     * 'localhost'è¡¨ç¤ºåªèƒ½åœ¨æœ¬åœ°ç™»å½•ï¼Œ'%'é€šé…ç¬¦è¡¨ç¤ºå¯ä»¥è¿œç¨‹è¿æ¥
+     * å¯†ç æ˜¯'123456'
      */
     ASSERT_TRUE(client.RunSQL(R"(create user 'user_foo'@'localhost' identified by '123456';)"));
 
-    // ÊÚÈ¨ grant ... on ... to
+    // æˆæƒ grant ... on ... to
     // todo ...
 
-    /* É¾³ıÓÃ»§ drop user ...
+    /* åˆ é™¤ç”¨æˆ· drop user ...
      */
     ASSERT_TRUE(client.RunSQL(R"(drop user 'user_foo'@'localhost';)"));
 }
 
-// TCL£¨Transaction Control Language£©ÊÂÎñ¿ØÖÆÓïÑÔ
+// TCLï¼ˆTransaction Control Languageï¼‰äº‹åŠ¡æ§åˆ¶è¯­è¨€
 TEST(MySQLClient, TCL) {
     if (skip_test) return;
 
     MySQLClient client(host, port, user, pwd);
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     client.RunSQL("drop database test_db");
     ASSERT_TRUE(client.RunSQL("create database test_db"));
     ASSERT_TRUE(client.RunSQL("use test_db"));
@@ -165,39 +173,39 @@ TEST(MySQLClient, TCL) {
         )engine=innodb default charset=utf8;)";
     ASSERT_TRUE(client.RunSQL(sql));
 
-    /* ACID£º
-     * Ô­×ÓĞÔ£¨Atomicity£©   ÊÂÎñ
-     * Ò»ÖÂĞÔ£¨Consistency£© binlog¼ÇÂ¼±í½á¹¹±ä¸ü£»ÈıÖÖ¸ñÊ½
-     * ¸ôÀëĞÔ£¨Isolation£©   ÊÂÎñËÄÖÖ¸ôÀë¼¶±ğ£º    Ôà¶Á  ²»¿ÉÖØ¶Á  »Ã¶Á
-     *                       - read uncommitted      1       1       1      ²»½¨Òé
-     *                       - read committed                1       1      ½¨Òé
-     *                       - repeatable read                       1      InnoDB Ä¬ÈÏÊ¹ÓÃ
+    /* ACIDï¼š
+     * åŸå­æ€§ï¼ˆAtomicityï¼‰   äº‹åŠ¡
+     * ä¸€è‡´æ€§ï¼ˆConsistencyï¼‰ binlogè®°å½•è¡¨ç»“æ„å˜æ›´ï¼›ä¸‰ç§æ ¼å¼
+     * éš”ç¦»æ€§ï¼ˆIsolationï¼‰   äº‹åŠ¡å››ç§éš”ç¦»çº§åˆ«ï¼š    è„è¯»  ä¸å¯é‡è¯»  å¹»è¯»
+     *                       - read uncommitted      1       1       1      ä¸å»ºè®®
+     *                       - read committed                1       1      å»ºè®®
+     *                       - repeatable read                       1      InnoDB é»˜è®¤ä½¿ç”¨
      *                       - serializable                                 
-     * ³Ö¾ÃĞÔ£¨Durability£©  ÊÂÎñÈÕÖ¾ redo log¡¢undo log
+     * æŒä¹…æ€§ï¼ˆDurabilityï¼‰  äº‹åŠ¡æ—¥å¿— redo logã€undo log
      */
     
-    // ¿ªÆôÒ»¸öÊÂÎñ begin¡¢start transaction
+    // å¼€å¯ä¸€ä¸ªäº‹åŠ¡ beginã€start transaction
     ASSERT_TRUE(client.RunSQL("begin;"));
     
-    // ÊÂÎï±£´æµã£¬Ö§³Ö¶à¸ö savepoint 
+    // äº‹ç‰©ä¿å­˜ç‚¹ï¼Œæ”¯æŒå¤šä¸ª savepoint 
     // ...
 
-    // Ä¬ÈÏ¿ªÆô×Ô¶¯Ìá½»£¬SET AUTOCOMMIT=0 ½ûÖ¹×Ô¶¯Ìá½»
+    // é»˜è®¤å¼€å¯è‡ªåŠ¨æäº¤ï¼ŒSET AUTOCOMMIT=0 ç¦æ­¢è‡ªåŠ¨æäº¤
     
-    // Ìá½»ÊÂÎñ commit
+    // æäº¤äº‹åŠ¡ commit
     ASSERT_TRUE(client.RunSQL("commit;"));
-    // »Ø¹öÊÂÎñ rollback
+    // å›æ»šäº‹åŠ¡ rollback
     ASSERT_TRUE(client.RunSQL("rollback;"));
     
-    // ¸ôÀë¼¶±ğ set session/global transaction isolation level ...
-    // Ö÷ÒªÍ¨¹ıËøÊµÏÖ¸ôÀë£¬²»Í¬¼¶±ğËøÕë¶Ô update(Ôà¶Á) ºÍ insert(»Ã¶Á) ËøµÄÁ£¶È²»Í¬
-    ASSERT_TRUE(client.RunSQL("set session transaction isolation level read uncommitted;")); // Ôà¶Á
+    // éš”ç¦»çº§åˆ« set session/global transaction isolation level ...
+    // ä¸»è¦é€šè¿‡é”å®ç°éš”ç¦»ï¼Œä¸åŒçº§åˆ«é”é’ˆå¯¹ update(è„è¯») å’Œ insert(å¹»è¯») é”çš„ç²’åº¦ä¸åŒ
+    ASSERT_TRUE(client.RunSQL("set session transaction isolation level read uncommitted;")); // è„è¯»
     
-    // Á½ÖÖ select ¶ÁËø
-    // lock in share mode   ¹²ÏíËø£¬¿ÉÒÔ¶à¸ö»á»°¶Á
-    // for update           ÅÅËûËø£¬ºÍ update ²Ù×÷Ò»Ñù¼¶±ğµÄËø£¬½ûÖ¹ÆäËû update
+    // ä¸¤ç§ select è¯»é”
+    // lock in share mode   å…±äº«é”ï¼Œå¯ä»¥å¤šä¸ªä¼šè¯è¯»
+    // for update           æ’ä»–é”ï¼Œå’Œ update æ“ä½œä¸€æ ·çº§åˆ«çš„é”ï¼Œç¦æ­¢å…¶ä»– update
     ASSERT_TRUE(client.RunSQL("select * from test_table where author='author_B' for update;"));
 
-    // É¾³ıÊı¾İ¿â
+    // åˆ é™¤æ•°æ®åº“
     ASSERT_TRUE(client.RunSQL("drop database test_db"));
 }

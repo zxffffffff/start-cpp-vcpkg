@@ -35,6 +35,7 @@
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
 - 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
 - Windows 优先使用静态库，UNIX 和 APPLE 优先使用动态库，可以减少很多编译烦恼（编译问题99%来自于链接，运行问题99%来自于空/野指针）
+- 跨平台 C++ 工程建议使用 UTF-8，这样仅需设置 Windows 编译环境（Windows 源码采用 GBK 编码，UNIX 源码采用 UTF-8 no BOM）
 - 已验证：
   - Windows 10 x64
   - Ubuntu 20.04 x64

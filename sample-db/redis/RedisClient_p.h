@@ -11,16 +11,24 @@
 #include "hiredis/hiredis.h"
 #include "Chrono.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvcå…¼å®¹utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 using namespace SampleRedis;
 
-/* Ö§³ÖÍ¬²½ºÍÒì²½»Øµ÷µÄ·½Ê½£¬ÎªÁË·½±ãÕâÀïÊ¹ÓÃÍ¬²½º¯Êý
- * ºËÐÄ3²½£ºredisConnect -> redisCommand -> freeReplyObject
- * Ö§³Ö libuv¡¢glib¡¢qt µÈ¶àÖÖ C ¿â¹²Í¬Ê¹ÓÃ
+/* æ”¯æŒåŒæ­¥å’Œå¼‚æ­¥å›žè°ƒçš„æ–¹å¼ï¼Œä¸ºäº†æ–¹ä¾¿è¿™é‡Œä½¿ç”¨åŒæ­¥å‡½æ•°
+ * æ ¸å¿ƒ3æ­¥ï¼šredisConnect -> redisCommand -> freeReplyObject
+ * æ”¯æŒ libuvã€glibã€qt ç­‰å¤šç§ C åº“å…±åŒä½¿ç”¨
  */
 class RedisClientPrivate
 {
 private:
-    /* Unix Ìá¹©ÁË¶îÍâµÄ½Ó¿Ú
+    /* Unix æä¾›äº†é¢å¤–çš„æŽ¥å£
      * redisConnect / redisConnectUnix
      */
     redisContext* ctx = NULL;
@@ -82,8 +90,8 @@ private:
             break;
         case REDIS_REPLY_ERROR:
         case REDIS_REPLY_STRING:
-        case REDIS_REPLY_VERB:      // Ö§³Ö char[4] ºÍ string 
-        case REDIS_REPLY_DOUBLE:    // Ö§³Ö double ºÍ string
+        case REDIS_REPLY_VERB:      // æ”¯æŒ char[4] å’Œ string 
+        case REDIS_REPLY_DOUBLE:    // æ”¯æŒ double å’Œ string
         case REDIS_REPLY_STATUS:
             p->str = std::string(reply->str);
             break;

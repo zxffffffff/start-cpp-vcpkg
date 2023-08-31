@@ -9,6 +9,14 @@
 #include "../interface/threadpool_interface.h"
 #include <boost/asio.hpp>
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 /* 数量不足时，会自动创建临时线程 */
 template <int count>
 class ThreadPoolImpl : public IThreadPool

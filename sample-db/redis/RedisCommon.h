@@ -18,6 +18,14 @@
 #include <sstream>
 #include <chrono>
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 namespace SampleRedis
 {
     using ReplyPtr = std::shared_ptr<struct Reply>;

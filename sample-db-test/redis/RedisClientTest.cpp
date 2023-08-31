@@ -8,9 +8,17 @@
 #include "redis/RedisClient.h"
 #include "gtest/gtest.h"
 
+#if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
+/* msvcå…¼å®¹utf-8: https://support.microsoft.com/en-us/kb/980263 */
+#if (_MSC_VER >= 1700)
+#pragma execution_character_set("utf-8")
+#endif
+#pragma warning(disable:4566)
+#endif
+
 namespace RedisClientTest
 {
-    // Ìø¹ý²âÊÔ
+    // è·³è¿‡æµ‹è¯•
     constexpr bool skip_test = 1;
 
     const char* host = "127.0.0.1";
@@ -36,7 +44,7 @@ TEST(RedisClient, cmd) {
     RedisClient client(host, port);
     ReplyPtr p;
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     ASSERT_TRUE(p = client.RunCmd("KEYS test-key-*"));
     for (auto sub : p->arr) {
         ReplyPtr p2;
@@ -44,7 +52,7 @@ TEST(RedisClient, cmd) {
         EXPECT_EQ(p2->str, "1");
     }
 
-    // Ôö SET
+    // å¢ž SET
     for (int i = 0; i < 5; ++i) {
         std::string k = "test-key-" + std::to_string(i);
         std::string v = "test-val-" + std::to_string(i);
@@ -54,21 +62,21 @@ TEST(RedisClient, cmd) {
         EXPECT_EQ(p->str, "OK");
     }
     
-    // É¾ DEL
+    // åˆ  DEL
     ASSERT_TRUE(p = client.RunCmd("DEL test-key-0"));
     EXPECT_EQ(p->str, "1");
     ASSERT_TRUE(p = client.RunCmd("DEL test-key-1"));
     EXPECT_EQ(p->str, "1");
 
-    // ¸Ä SET¡¢RENAME
+    // æ”¹ SETã€RENAME
     ASSERT_TRUE(p = client.RunCmd("RENAME test-key-2 test-key-renamed"));
     EXPECT_EQ(p->str, "OK");
 
     ASSERT_TRUE(p = client.RunCmd("SET test-key-3 test-val-changed"));
     EXPECT_EQ(p->str, "OK");
 
-    // ²é GET¡¢EXISTS¡¢KEYS¡¢SCAN
-    // ×¢Òâ£ºKEYS ¿ÉÄÜµ¼ÖÂ Redis ×èÈû£¬½¨ÒéÊ¹ÓÃ SCAN ÃüÁî½¥½øÊ½µÄ±éÀúËùÓÐ¼ü
+    // æŸ¥ GETã€EXISTSã€KEYSã€SCAN
+    // æ³¨æ„ï¼šKEYS å¯èƒ½å¯¼è‡´ Redis é˜»å¡žï¼Œå»ºè®®ä½¿ç”¨ SCAN å‘½ä»¤æ¸è¿›å¼çš„éåŽ†æ‰€æœ‰é”®
     ASSERT_TRUE(p = client.RunCmd("EXISTS test-key-0"));
     EXPECT_EQ(p->str, "0");
     ASSERT_TRUE(p = client.RunCmd("EXISTS test-key-1"));
@@ -99,7 +107,7 @@ TEST(RedisClient, TTL) {
     RedisClient client(host, port);
     ReplyPtr p;
 
-    // ³õÊ¼»¯
+    // åˆå§‹åŒ–
     ASSERT_TRUE(p = client.RunCmd("KEYS test-key-*"));
     for (auto sub : p->arr) {
         ReplyPtr p2;
@@ -116,7 +124,7 @@ TEST(RedisClient, TTL) {
         EXPECT_EQ(p->str, "OK");
     }
 
-    // ¹ýÆÚ EXPIRE¡¢PERSIST¡¢TTL
+    // è¿‡æœŸ EXPIREã€PERSISTã€TTL
     for (int i = 0; i < 10; ++i) {
         std::string k = "test-key-" + std::to_string(i);
         std::stringstream ss;
@@ -137,5 +145,5 @@ TEST(RedisClient, TTL) {
 TEST(RedisClient, dump_restore) {
     if (skip_test) return;
 
-    // ÐòÁÐ»¯ - ·´ÐòÁÐ»¯
+    // åºåˆ—åŒ– - ååºåˆ—åŒ–
 }
