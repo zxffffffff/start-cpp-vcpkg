@@ -17,14 +17,21 @@
 #pragma warning(disable:4566)
 #endif
 
-using namespace std;
+//#ifdef _WIN32
+//#include <Windows.h>
+//#endif // _WIN32
 
 int main(int argc, char *argv[])
 {
+//#ifdef _WIN32
+//    /* 命令行兼容utf-8 */
+//    SetConsoleOutputCP(CP_UTF8);
+//#endif // _WIN32
+
     gflags::ParseCommandLineFlags(&argc, &argv, true); 
     google::InitGoogleLogging(argv[0]);
 
-    cout << "你好 SampleMain." << endl;
+    std::cout << "你好 SampleMain." << std::endl;
 
     SampleDynamicLib sample_dynamic_lib;
     return 0;
