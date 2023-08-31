@@ -18,7 +18,7 @@
 
 SampleDynamicLib::SampleDynamicLib()
 {
-    std::cout << "Hello SampleDynamicLib." << std::endl;
+    std::cout << "你好 SampleDynamicLib." << std::endl;
 
     SampleDataCenter sample_datacenter;
 }
