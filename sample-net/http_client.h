@@ -48,14 +48,14 @@ public:
     const std::string &GetPrefix() const { return urlPrefix; }
 
     /* 拼接参数 */
-    static std::string ParseParam(const std::map<std::string, std::string> &params)
+    std::string ParseParam(const std::map<std::string, std::string> &params)
     {
         std::stringstream ss;
         for (auto ite = params.begin(); ite != params.end(); ++ite)
         {
             if (ite != params.begin())
                 ss << '&';
-            ss << ite->first << '=' << ite->second;
+            ss << ite->first << '=' << URLEncode(ite->second);
         }
         return ss.str();
     }

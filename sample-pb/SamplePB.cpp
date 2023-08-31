@@ -25,7 +25,7 @@
 
 SamplePB::SamplePB()
 {
-    std::cout << "Hello SamplePB." << std::endl;
+    std::cout << "你好 SamplePB." << std::endl;
 
 #ifndef __APPLE__
     std::cout << "protobuf version: " << google::protobuf::internal::VersionString(GOOGLE_PROTOBUF_VERSION) << std::endl;
