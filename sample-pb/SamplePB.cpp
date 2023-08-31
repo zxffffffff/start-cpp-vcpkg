@@ -28,7 +28,7 @@ SamplePB::SamplePB()
     std::cout << "你好 SamplePB." << std::endl;
 
 #ifndef __APPLE__
-    std::cout << "protobuf version: " << google::protobuf::internal::VersionString(GOOGLE_PROTOBUF_VERSION) << std::endl;
+    //std::cout << "protobuf version: " << google::protobuf::internal::VersionString(GOOGLE_PROTOBUF_VERSION) << std::endl;
     {
         PBReq req;
         req.set_reqid("abc");
