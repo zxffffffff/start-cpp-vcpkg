@@ -87,16 +87,16 @@ public:
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
-    bool WaitForState(ServerStates state, int timeout_sec)
+    bool WaitForState(ServerStates state, double timeout_sec)
     {
         return WaitForState({state}, timeout_sec);
     }
 
-    bool WaitForState(std::initializer_list<ServerStates> state_list, int timeout_sec)
+    bool WaitForState(std::initializer_list<ServerStates> state_list, double timeout_sec)
     {
         std::set<ServerStates> states(state_list);
         auto start = std::chrono::steady_clock::now();
-        std::chrono::milliseconds duration(timeout_sec * 1000);
+        std::chrono::milliseconds duration(int(timeout_sec * 1000));
         while (std::chrono::steady_clock::now() - start < duration)
         {
             if (states.find(GetState()) != states.end())
@@ -194,13 +194,13 @@ public:
     }
 
     /* 阻塞等待 */
-    bool ListenSync(int timeout_sec = 5)
+    bool ListenSync(double timeout_sec = 5)
     {
         Listen();
         return WaitForState({ServerStates::Listening, ServerStates::ListenFailed}, timeout_sec);
     }
 
-    bool CloseSync(int timeout_sec = 5)
+    bool CloseSync(double timeout_sec = 5)
     {
         Close();
         return WaitForState(ServerStates::Closed, timeout_sec);

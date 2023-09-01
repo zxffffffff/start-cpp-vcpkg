@@ -69,8 +69,8 @@ public:
     virtual std::string URLEncode(const std::string &msg) const = 0;
     virtual std::string URLDecode(const std::string &msg) const = 0;
 
-    virtual HttpResponse Get(const std::string &url, int timeout_sec) = 0;
-    virtual HttpResponse Post(const std::string &url, const std::string &body, int timeout_sec) = 0;
+    virtual HttpResponse Get(const std::string &url, double timeout_sec) = 0;
+    virtual HttpResponse Post(const std::string &url, const std::string &body, double timeout_sec) = 0;
 };
 
 /* HTTP (Server) Parser 抽象接口

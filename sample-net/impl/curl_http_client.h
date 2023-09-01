@@ -73,7 +73,7 @@ public:
     }
 
     // 同步请求
-    virtual HttpResponse Get(const std::string &url, int timeout_sec) override
+    virtual HttpResponse Get(const std::string &url, double timeout_sec) override
     {
         std::stringstream res;
 
@@ -84,7 +84,7 @@ public:
         headers = curl_slist_append(headers, "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
         headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout_sec);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout_sec * 1000);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &res);
         CURLcode r = curl_easy_perform(curl);
@@ -107,7 +107,7 @@ public:
     }
 
     // 同步请求
-    virtual HttpResponse Post(const std::string &url, const std::string &body, int timeout_sec) override
+    virtual HttpResponse Post(const std::string &url, const std::string &body, double timeout_sec) override
     {
         std::stringstream res;
 
@@ -119,7 +119,7 @@ public:
         headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT, timeout_sec);
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout_sec * 1000);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &res);
         CURLcode r = curl_easy_perform(curl);
