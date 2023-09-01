@@ -74,7 +74,7 @@ public:
     std::future<HttpResponse> Get(
         const std::string &url,
         const std::map<std::string, std::string> &params,
-        int timeout_sec = 10,
+        double timeout_sec = 10,
         std::function<void(HttpResponse)> cbk = nullptr)
     {
         auto onThread = [=]
@@ -91,7 +91,7 @@ public:
         const std::string &url,
         const std::map<std::string, std::string> &params,
         const std::string &body,
-        int timeout_sec = 10,
+        double timeout_sec = 10,
         std::function<void(HttpResponse)> cbk = nullptr)
     {
         auto onThread = [=]
@@ -108,7 +108,7 @@ public:
     HttpResponse GetSync(
         const std::string &url,
         const std::map<std::string, std::string> &params,
-        int timeout_sec = 10)
+        double timeout_sec = 10)
     {
         std::stringstream ss;
         if (urlPrefix.size())
@@ -123,7 +123,7 @@ public:
         const std::string &url,
         const std::map<std::string, std::string> &params,
         const std::string &body,
-        int timeout_sec = 10)
+        double timeout_sec = 10)
     {
         std::stringstream ss;
         if (urlPrefix.size())
