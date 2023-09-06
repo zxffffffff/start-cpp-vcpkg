@@ -31,34 +31,17 @@ public:
 class I_RSA_PKCS1v15
 {
 public:
-    /* for Encrypt */
-    virtual bool SetPublicKey(const std::string &content, std::string *err = nullptr) = 0;
+    virtual bool SetPublicKey(const std::string &content, std::string *err = nullptr) = 0;  /* for Encrypt */
+    virtual bool SetPrivateKey(const std::string &content, std::string *err = nullptr) = 0; /* for Decrypt & Sign */
 
-    /* for Decrypt & Sign */
-    virtual bool SetPrivateKey(const std::string &content, std::string *err = nullptr) = 0;
+    virtual std::string Encrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::string EncryptHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 
-    virtual std::string Encrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) = 0;
+    virtual std::string Decrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::string DecryptHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 
-    virtual std::string EncryptHex(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) = 0;
-
-    virtual std::string Decrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) = 0;
-
-    virtual std::string DecryptHex(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) = 0;
-
-    virtual std::string Sign(const std::string &msg) = 0;
-    virtual std::string SignHex(const std::string &msg) = 0;
+    virtual std::string Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 };
 
 /* 支持ECB（AES/ECB/PKCS5Padding） */
@@ -68,13 +51,6 @@ public:
     /* for Encrypt & Decrypt */
     virtual void SetKey(const std::string &content) = 0;
 
-    virtual std::string Encrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) = 0;
-
-    virtual std::string Decrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) = 0;
+    virtual std::string Encrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::string Decrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 };
