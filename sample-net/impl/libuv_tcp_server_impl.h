@@ -36,13 +36,13 @@ public:
 
     virtual ~ServerImpl()
     {
-        assert(connections.empty());
+        assert(connections.empty()); /* 不应该出现 */
         eventLoop.stop();
     }
 
     virtual void Listen(const std::string &ip, int port) override
     {
-        assert(handleListen);
+        assert(handleListen); /* 必须初始化 handler */
         assert(handleClose);
         assert(handleNewConn);
         assert(handleCloseConn);
