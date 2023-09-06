@@ -163,10 +163,10 @@ TEST(tcp, monkeytest)
     auto test = [&](int index)
     {
         std::vector<std::function<void(int)>> client_cmd;
-        for (int i = 0; i < 2; ++i)
-            client_cmd.push_back(ClientConnectClose);
-        for (int i = 0; i < 8; ++i)
-            client_cmd.push_back(ClientWrite);
+        for (int i = 0; i < 20; ++i)
+            client_cmd.push_back(ClientConnectClose); // 20%
+        for (int i = 0; i < 80; ++i)
+            client_cmd.push_back(ClientWrite); // 80%
 
         std::srand(std::time(nullptr));
         while (thread_run)
@@ -266,10 +266,8 @@ TEST(tcp, monkeytest2)
     auto test = [&]
     {
         std::vector<std::function<void()>> server_cmd;
-        for (int i = 0; i < 2; ++i)
-            server_cmd.push_back(ServerListenClose);
-        for (int i = 0; i < 8; ++i)
-            server_cmd.push_back(ServerWrite);
+        for (int i = 0; i < 50; ++i)
+            server_cmd.push_back(ServerWrite); // 100% -> 50%
 
         std::srand(std::time(nullptr));
         while (thread_run)
@@ -278,6 +276,9 @@ TEST(tcp, monkeytest2)
             auto f = server_cmd[random];
             f();
             std::this_thread::sleep_for(5ms);
+            
+            if (server_cmd.size() < 100)
+                server_cmd.push_back(ServerListenClose); // 0% -> 50%
         }
     };
     std::thread thread(test);

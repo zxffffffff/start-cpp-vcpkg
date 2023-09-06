@@ -87,7 +87,7 @@ public:
 
     void MoveToThread(std::function<void()> task)
     {
-        assert(!stop);
+        assert(!stop); /* 外部判断 */
         {
             std::unique_lock<std::mutex> lock(queueMutex);
             tasks.push(std::move(task));

@@ -96,7 +96,6 @@ public:
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
-            assert(false);
             return false;
         }
     }
@@ -115,7 +114,6 @@ public:
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
-            assert(false);
             return false;
         }
     }
@@ -134,7 +132,6 @@ public:
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
-            assert(false);
             return "";
         }
     }
@@ -173,7 +170,6 @@ public:
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
-            assert(false);
             return "";
         }
     }
@@ -199,7 +195,6 @@ public:
             {
                 // LOG(ERROR) << __func__
                 //            << " err=" << e.what();
-                assert(false);
                 return "";
             }
         }
@@ -229,7 +224,6 @@ public:
 
         size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
         signature.resize(szlength);
-        // return std::string((const char *)signature.data(), signature.size());
 
         std::stringstream ss;
         ss << std::hex << std::uppercase;
@@ -265,7 +259,6 @@ public:
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
-            assert(false);
             return "";
         }
     }
@@ -284,7 +277,6 @@ public:
         {
             // LOG(ERROR) << __func__
             //            << " err=" << e.what();
-            assert(false);
             return "";
         }
     }

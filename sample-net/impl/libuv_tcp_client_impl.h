@@ -43,7 +43,7 @@ public:
 
     virtual void Connect(const std::string &ip, int port) override
     {
-        assert(handleConnect);
+        assert(handleConnect); /* 必须初始化 handler */
         assert(handleClose);
         assert(handleWrite);
         assert(handleRead);

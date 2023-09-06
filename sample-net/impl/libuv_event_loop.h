@@ -53,7 +53,7 @@ public:
         // LOG(WARNING) << __func__;
 
         if (is_start)
-            return assert(false);
+            return assert(false); /* 必须按顺序调用 */
         is_start = true;
 
         if (thread_id)
@@ -71,7 +71,7 @@ public:
         // LOG(WARNING) << __func__;
 
         if (!is_start)
-            return assert(false);
+            return assert(false); /* 必须按顺序调用 */
         is_start = false;
 
         if (!thread_id)
