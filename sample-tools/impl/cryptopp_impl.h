@@ -27,7 +27,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class Base64_Impl : public I_Base64
@@ -82,7 +82,7 @@ class RSA_PKCS1v15_Impl : public I_RSA_PKCS1v15
     }
 
 public:
-    virtual bool SetPublicKey(const std::string &content) override
+    virtual bool SetPublicKey(const std::string &content, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -94,13 +94,13 @@ public:
         }
         catch (const std::exception &e)
         {
-            // LOG(ERROR) << __func__
-            //            << " err=" << e.what();
+            if (err)
+                *err = e.what();
             return false;
         }
     }
 
-    virtual bool SetPrivateKey(const std::string &content) override
+    virtual bool SetPrivateKey(const std::string &content, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -112,93 +112,127 @@ public:
         }
         catch (const std::exception &e)
         {
-            // LOG(ERROR) << __func__
-            //            << " err=" << e.what();
+            if (err)
+                *err = e.what();
             return false;
         }
     }
 
-    virtual std::string Encrypt(const std::string &msg) override
+    virtual std::string Encrypt(
+        const std::string &msg,
+        bool *ok = nullptr,
+        std::string *err = nullptr) override
     {
         using namespace CryptoPP;
-        RSAES_PKCS1v15_Encryptor pub(publicKey);
         try
         {
+            RSAES_PKCS1v15_Encryptor pub(publicKey);
             std::string result;
             StringSource a(msg, true, new PK_EncryptorFilter(randPool, pub, new Base64Encoder(new StringSink(result), false)));
+            if (ok)
+                *ok = true;
             return result;
         }
         catch (const std::exception &e)
         {
-            // LOG(ERROR) << __func__
-            //            << " err=" << e.what();
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
             return "";
         }
     }
 
-    virtual std::string EncryptHex(const std::string &msg) override
+    virtual std::string EncryptHex(
+        const std::string &msg,
+        bool *ok = nullptr,
+        std::string *err = nullptr) override
     {
         using namespace CryptoPP;
-        RSAES_PKCS1v15_Encryptor pub(publicKey);
-
-        size_t nLen = msg.length();
-        std::string result;
-        size_t fixedLen = pub.FixedMaxPlaintextLength();
-        for (int i = 0; i < nLen; i += fixedLen)
-        {
-            size_t len = fixedLen < (nLen - i) ? fixedLen : (nLen - i);
-            std::string sPlain = msg.substr(i, len);
-            std::string sOut;
-            StringSource(sPlain, true, new PK_EncryptorFilter(randPool, pub, new StringSink(sOut)));
-            result += sOut;
-        }
-        return result;
-    }
-
-    virtual std::string Decrypt(const std::string &msg) override
-    {
-        using namespace CryptoPP;
-        RSAES_PKCS1v15_Decryptor priv(privateKey);
-
         try
         {
+            RSAES_PKCS1v15_Encryptor pub(publicKey);
+            size_t nLen = msg.length();
             std::string result;
-            StringSource a(msg, true, new Base64Decoder(new PK_DecryptorFilter(randPool, priv, new StringSink(result))));
+            size_t fixedLen = pub.FixedMaxPlaintextLength();
+            for (int i = 0; i < nLen; i += fixedLen)
+            {
+                size_t len = fixedLen < (nLen - i) ? fixedLen : (nLen - i);
+                std::string sPlain = msg.substr(i, len);
+                std::string sOut;
+                StringSource(sPlain, true, new PK_EncryptorFilter(randPool, pub, new StringSink(sOut)));
+                result += sOut;
+            }
+            if (ok)
+                *ok = true;
             return result;
         }
         catch (const std::exception &e)
         {
-            // LOG(ERROR) << __func__
-            //            << " err=" << e.what();
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
             return "";
         }
     }
 
-    virtual std::string DecryptHex(const std::string &msg) override
+    virtual std::string Decrypt(
+        const std::string &msg,
+        bool *ok = nullptr,
+        std::string *err = nullptr) override
     {
         using namespace CryptoPP;
-        RSAES_PKCS1v15_Decryptor priv(privateKey);
-
-        size_t nLen = msg.length();
-        std::string result;
-        int fixedLen = priv.FixedCiphertextLength();
-        for (int i = 0; i < nLen; i += fixedLen)
+        try
         {
-            try
+            RSAES_PKCS1v15_Decryptor priv(privateKey);
+            std::string result;
+            StringSource a(msg, true, new Base64Decoder(new PK_DecryptorFilter(randPool, priv, new StringSink(result))));
+            if (ok)
+                *ok = true;
+            return result;
+        }
+        catch (const std::exception &e)
+        {
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
+            return "";
+        }
+    }
+
+    virtual std::string DecryptHex(
+        const std::string &msg,
+        bool *ok = nullptr,
+        std::string *err = nullptr) override
+    {
+        using namespace CryptoPP;
+        try
+        {
+            RSAES_PKCS1v15_Decryptor priv(privateKey);
+            size_t nLen = msg.length();
+            std::string result;
+            int fixedLen = priv.FixedCiphertextLength();
+            for (int i = 0; i < nLen; i += fixedLen)
             {
                 size_t len = fixedLen < (nLen - i) ? fixedLen : (nLen - i);
                 std::string sOut;
                 StringSource((byte *)(msg.c_str() + i), len, true, new PK_DecryptorFilter(randPool, priv, new StringSink(sOut)));
                 result += sOut;
             }
-            catch (const std::exception &e)
-            {
-                // LOG(ERROR) << __func__
-                //            << " err=" << e.what();
-                return "";
-            }
+            if (ok)
+                *ok = true;
+            return result;
         }
-        return result;
+        catch (const std::exception &e)
+        {
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
+            return "";
+        }
     }
 
     virtual std::string Sign(const std::string &msg) override
@@ -245,7 +279,10 @@ public:
         key = content;
     }
 
-    virtual std::string Encrypt(const std::string &msg) override
+    virtual std::string Encrypt(
+        const std::string &msg,
+        bool *ok = nullptr,
+        std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -253,17 +290,24 @@ public:
             std::string str_out;
             ECB_Mode<AES>::Encryption encryption((unsigned char *)key.c_str(), key.length());
             StringSource encryptor(msg, true, new StreamTransformationFilter(encryption, new StringSink(str_out), BlockPaddingSchemeDef::PKCS_PADDING));
+            if (ok)
+                *ok = true;
             return str_out;
         }
         catch (const std::exception &e)
         {
-            // LOG(ERROR) << __func__
-            //            << " err=" << e.what();
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
             return "";
         }
     }
 
-    virtual std::string Decrypt(const std::string &msg) override
+    virtual std::string Decrypt(
+        const std::string &msg,
+        bool *ok = nullptr,
+        std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -271,12 +315,16 @@ public:
             std::string str_out;
             ECB_Mode<AES>::Decryption decryption((unsigned char *)key.c_str(), key.length());
             StringSource decryptor(msg, true, new StreamTransformationFilter(decryption, new StringSink(str_out), BlockPaddingSchemeDef::PKCS_PADDING));
+            if (ok)
+                *ok = true;
             return str_out;
         }
         catch (const std::exception &e)
         {
-            // LOG(ERROR) << __func__
-            //            << " err=" << e.what();
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
             return "";
         }
     }
