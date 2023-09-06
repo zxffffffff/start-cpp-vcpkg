@@ -118,15 +118,13 @@ public:
         }
     }
 
-    virtual std::string Encrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) override
+    virtual std::string Encrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
             RSAES_PKCS1v15_Encryptor pub(publicKey);
+
             std::string result;
             StringSource a(msg, true, new PK_EncryptorFilter(randPool, pub, new Base64Encoder(new StringSink(result), false)));
             if (ok)
@@ -143,15 +141,13 @@ public:
         }
     }
 
-    virtual std::string EncryptHex(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) override
+    virtual std::string EncryptHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
             RSAES_PKCS1v15_Encryptor pub(publicKey);
+
             size_t nLen = msg.length();
             std::string result;
             size_t fixedLen = pub.FixedMaxPlaintextLength();
@@ -177,15 +173,13 @@ public:
         }
     }
 
-    virtual std::string Decrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) override
+    virtual std::string Decrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
             RSAES_PKCS1v15_Decryptor priv(privateKey);
+
             std::string result;
             StringSource a(msg, true, new Base64Decoder(new PK_DecryptorFilter(randPool, priv, new StringSink(result))));
             if (ok)
@@ -202,15 +196,13 @@ public:
         }
     }
 
-    virtual std::string DecryptHex(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) override
+    virtual std::string DecryptHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
             RSAES_PKCS1v15_Decryptor priv(privateKey);
+
             size_t nLen = msg.length();
             std::string result;
             int fixedLen = priv.FixedCiphertextLength();
@@ -235,37 +227,64 @@ public:
         }
     }
 
-    virtual std::string Sign(const std::string &msg) override
+    virtual std::string Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
-        RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
+        try
+        {
+            RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
 
-        size_t length = signer.MaxSignatureLength();
-        SecByteBlock signature(length);
+            size_t length = signer.MaxSignatureLength();
+            SecByteBlock signature(length);
 
-        size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
-        signature.resize(szlength);
-        return std::string((const char *)signature.data(), signature.size());
+            size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
+            signature.resize(szlength);
+            std::string result((const char *)signature.data(), signature.size());
+            if (ok)
+                *ok = true;
+            return result;
+        }
+        catch (const std::exception &e)
+        {
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
+            return "";
+        }
     }
 
-    virtual std::string SignHex(const std::string &msg) override
+    virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
-        RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
-
-        size_t length = signer.MaxSignatureLength();
-        SecByteBlock signature(length);
-
-        size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
-        signature.resize(szlength);
-
-        std::stringstream ss;
-        ss << std::hex << std::uppercase;
-        for (int i = 0; i < signature.size(); ++i)
+        try
         {
-            ss << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(signature[i]));
+            RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
+
+            size_t length = signer.MaxSignatureLength();
+            SecByteBlock signature(length);
+
+            size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
+            signature.resize(szlength);
+
+            std::stringstream ss;
+            ss << std::hex << std::uppercase;
+            for (int i = 0; i < signature.size(); ++i)
+            {
+                ss << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(signature[i]));
+            }
+            if (ok)
+                *ok = true;
+            return ss.str();
         }
-        return ss.str();
+        catch (const std::exception &e)
+        {
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
+            return "";
+        }
     }
 };
 
@@ -279,10 +298,7 @@ public:
         key = content;
     }
 
-    virtual std::string Encrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) override
+    virtual std::string Encrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -304,10 +320,7 @@ public:
         }
     }
 
-    virtual std::string Decrypt(
-        const std::string &msg,
-        bool *ok = nullptr,
-        std::string *err = nullptr) override
+    virtual std::string Decrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
