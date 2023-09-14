@@ -42,6 +42,9 @@ public:
 
     virtual std::string Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
     virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+
+    virtual bool Verify(const std::string &msg, const std::string &sign_msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual bool VerifyHex(const std::string &msg, const std::string &sign_msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 };
 
 /* 支持ECB（AES/ECB/PKCS5Padding） */
