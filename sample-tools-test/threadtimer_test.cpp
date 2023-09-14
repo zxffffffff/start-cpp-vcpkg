@@ -13,14 +13,22 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 TEST(ThreadTimerImpl, Test)
 {
     static std::atomic_int flag = 0;
-    ThreadTimerImpl timer(50, [] { ++flag; });
+    ThreadTimerImpl timer(50, []
+                          { ++flag; });
     timer.Start();
+
+    /* 确保timer启动 */
+    while (flag == 0)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    flag = 0;
 
     std::this_thread::sleep_for(std::chrono::milliseconds(75));
     EXPECT_EQ(flag, 1);
@@ -38,11 +46,13 @@ TEST(ThreadTimerImpl, Recursive)
 
     auto recursive = []
     {
-        auto timer = new ThreadTimerImpl(50, [] { ++flag; });
+        auto timer = new ThreadTimerImpl(50, []
+                                         { ++flag; });
         timer->Start();
     };
 
-    ThreadTimerImpl timer(50, [&] { ++flag; recursive(); });
+    ThreadTimerImpl timer(50, [&]
+                          { ++flag; recursive(); });
     timer.Start();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(75));
@@ -54,6 +64,6 @@ TEST(ThreadTimerImpl, Recursive)
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
     EXPECT_EQ(flag, 3 + 1 + 1 + 1 + 0);
 
-    //std::this_thread::sleep_for(std::chrono::milliseconds(50));
-    //EXPECT_EQ(flag, 6 + 1 + 1 + 1 + 1 + 0);
+    // std::this_thread::sleep_for(std::chrono::milliseconds(50));
+    // EXPECT_EQ(flag, 6 + 1 + 1 + 1 + 1 + 0);
 }
