@@ -286,6 +286,56 @@ public:
             return "";
         }
     }
+
+    virtual bool Verify(const std::string &msg, const std::string &sign_msg, bool *ok = nullptr, std::string *err = nullptr) override
+    {
+        using namespace CryptoPP;
+        try
+        {
+            RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
+            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign_msg.data(), sign_msg.size());
+            if (ok)
+                *ok = true;
+            return result;
+        }
+        catch (const std::exception &e)
+        {
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
+            return false;
+        }
+    }
+
+    virtual bool VerifyHex(const std::string &msg, const std::string &sign_msg_hex, bool *ok = nullptr, std::string *err = nullptr) override
+    {
+        using namespace CryptoPP;
+        try
+        {
+            std::string sign_msg;
+            for (int i = 0; i < sign_msg_hex.length(); i += 2)
+            {
+                std::string byteString = sign_msg_hex.substr(i, 2);
+                char byte = (char)strtol(byteString.c_str(), NULL, 16);
+                sign_msg.push_back(byte);
+            }
+
+            RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
+            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign_msg.data(), sign_msg.size());
+            if (ok)
+                *ok = true;
+            return result;
+        }
+        catch (const std::exception &e)
+        {
+            if (ok)
+                *ok = false;
+            if (err)
+                *err = e.what();
+            return false;
+        }
+    }
 };
 
 class AES_ECB_Impl : public I_AES_ECB

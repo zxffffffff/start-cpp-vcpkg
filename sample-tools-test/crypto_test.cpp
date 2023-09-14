@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 TEST(CryptoTest, Base64_Impl)
@@ -67,4 +67,16 @@ Wbi0yNLZmHjrTg==
 
     std::string decode = rsa.Decrypt(encode);
     ASSERT_EQ(raw, decode);
+
+    std::string sign = rsa.Sign(raw);
+    ASSERT_TRUE(sign.size() > 0);
+
+    bool verify = rsa.Verify(raw, sign);
+    ASSERT_TRUE(verify);
+
+    std::string signHex = rsa.SignHex(raw);
+    ASSERT_TRUE(signHex.size() > 0);
+
+    bool verify2 = rsa.VerifyHex(raw, signHex);
+    ASSERT_TRUE(verify2);
 }
