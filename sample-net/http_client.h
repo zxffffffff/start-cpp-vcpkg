@@ -37,6 +37,12 @@ private:
     /* url重复的部分作为前缀 */
     std::string urlPrefix;
 
+    std::vector<std::string> headers;
+    const std::vector<std::string> default_headers = {
+        "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36"
+        "Content-Type:application/x-www-form-urlencoded",
+    };
+
 public:
     static HttpClient &Singleton()
     {
@@ -46,6 +52,9 @@ public:
 
     void SetPrefix(const std::string &urlPrefix) { this->urlPrefix = urlPrefix; }
     const std::string &GetPrefix() const { return urlPrefix; }
+
+    void SetHeaders(const std::string &s) { headers.push_back(s); }
+    void ClearHeaders() { headers.clear(); }
 
     /* 拼接参数 */
     std::string ParseParam(const std::map<std::string, std::string> &params)
@@ -116,7 +125,10 @@ public:
         ss << url;
         if (params.size())
             ss << '?' << ParseParam(params);
-        return client->Get(ss.str(), timeout_sec);
+
+        return client->Get(ss.str(),
+                           headers.size() ? headers : default_headers,
+                           timeout_sec);
     }
 
     HttpResponse PostSync(
@@ -131,6 +143,10 @@ public:
         ss << url;
         if (params.size())
             ss << '?' << ParseParam(params);
-        return client->Post(ss.str(), body.c_str(), timeout_sec);
+
+        return client->Post(ss.str(),
+                            body.c_str(),
+                            headers.size() ? headers : default_headers,
+                            timeout_sec);
     }
 };

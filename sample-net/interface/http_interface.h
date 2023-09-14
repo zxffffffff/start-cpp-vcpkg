@@ -69,8 +69,16 @@ public:
     virtual std::string URLEncode(const std::string &msg) const = 0;
     virtual std::string URLDecode(const std::string &msg) const = 0;
 
-    virtual HttpResponse Get(const std::string &url, double timeout_sec) = 0;
-    virtual HttpResponse Post(const std::string &url, const std::string &body, double timeout_sec) = 0;
+    virtual HttpResponse Get(
+        const std::string &url,
+        const std::vector<std::string> &headers,
+        double timeout_sec) = 0;
+
+    virtual HttpResponse Post(
+        const std::string &url,
+        const std::string &body,
+        const std::vector<std::string> &headers,
+        double timeout_sec) = 0;
 };
 
 /* HTTP (Server) Parser 抽象接口
@@ -82,6 +90,6 @@ class IHttpParser
 public:
     virtual ~IHttpParser() {}
 
-    virtual Error ParseReq(Buffer buffer, HttpRequest& out_req) = 0;
+    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) = 0;
     virtual std::string MakeRes(std::string body) = 0;
 };

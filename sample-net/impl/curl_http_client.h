@@ -73,7 +73,10 @@ public:
     }
 
     // 同步请求
-    virtual HttpResponse Get(const std::string &url, double timeout_sec) override
+    virtual HttpResponse Get(
+        const std::string &url,
+        const std::vector<std::string> &_headers,
+        double timeout_sec) override
     {
         std::stringstream res;
 
@@ -81,8 +84,8 @@ public:
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
         struct curl_slist *headers = NULL;
-        headers = curl_slist_append(headers, "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
-        headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
+        for (auto &s : _headers)
+            headers = curl_slist_append(headers, s.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout_sec * 1000);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
@@ -107,7 +110,11 @@ public:
     }
 
     // 同步请求
-    virtual HttpResponse Post(const std::string &url, const std::string &body, double timeout_sec) override
+    virtual HttpResponse Post(
+        const std::string &url,
+        const std::string &body,
+        const std::vector<std::string> &_headers,
+        double timeout_sec) override
     {
         std::stringstream res;
 
@@ -115,8 +122,8 @@ public:
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         struct curl_slist *headers = NULL;
-        headers = curl_slist_append(headers, "User-Agent:Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36");
-        headers = curl_slist_append(headers, "Content-Type:application/x-www-form-urlencoded");
+        for (auto &s : _headers)
+            headers = curl_slist_append(headers, s.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
         curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout_sec * 1000);
