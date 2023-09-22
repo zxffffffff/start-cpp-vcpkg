@@ -20,13 +20,13 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class HttpParserImpl : public IHttpParser
 {
 public:
-    virtual Error ParseReq(Buffer buffer, HttpRequest& out_req) override
+    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) override
     {
         namespace beast = boost::beast;
         namespace http = boost::beast::http;
@@ -42,10 +42,11 @@ public:
         }
         // success
         http::request<http::string_body> request = parser.get();
-        boost::urls::url_view url(request.target());
 
+        std::string contentLength(request[boost::beast::http::field::content_length]);
         auto target = request.target();
-        auto body = request.body();
+        boost::urls::url_view url(target);
+        std::string body = request.body();
         auto query = url.query();
 
         out_req.method = request.method_string();
@@ -73,7 +74,19 @@ public:
             std::string data(buffer->data(), buffer->size());
             std::size_t bodyStart = data.find("\r\n\r\n") + 4;
             std::size_t bodyLength = data.size() - bodyStart;
-            out_req.post_body = data.substr(bodyStart, bodyLength);
+
+            if (contentLength.empty())
+            {
+                /* 未指定数据长度 */
+                out_req.post_body = data.substr(bodyStart, bodyLength);
+            }
+            else
+            {
+                int n_contentLength = std::atoi(contentLength.c_str());
+                if (bodyLength < n_contentLength)
+                    return MakeError(1, "bodyLength<contentLength");
+                out_req.post_body = data.substr(bodyStart, n_contentLength);
+            }
         }
         return MakeSuccess();
     }
