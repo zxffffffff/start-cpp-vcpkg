@@ -90,6 +90,7 @@ class IHttpParser
 public:
     virtual ~IHttpParser() {}
 
-    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) = 0;
+    virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) = 0; // 0, -1, 1:需要读取更多数据
+
     virtual std::string MakeRes(std::string body) = 0;
 };

@@ -14,7 +14,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 /* 线程异步回调，注意线程安全 */
@@ -113,6 +113,12 @@ private:
             else
                 conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
             parseErr = conn->parser->ParseReq(conn->recv, req);
+        }
+
+        if (parseErr->first == 1)
+        {
+            /* POST 请求 Header 和 Body 可以分别传输，需要读取两次 */
+            return;
         }
         handleServerRequest(connId, parseErr, req, cbkWrite);
     }
