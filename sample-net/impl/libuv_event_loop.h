@@ -36,6 +36,7 @@ private:
 
         uv_loop_t loop{0};
         std::promise<bool> promise_loop;
+        std::promise<bool> promise_close;
 
         uv_async_t async{0};
         std::mutex async_mutex;
@@ -66,7 +67,7 @@ public:
     }
 
     /* 阻塞：等待线程结束 */
-    void stop()
+    void stop(double timeout_sec = 0.1)
     {
         // LOG(WARNING) << __func__;
 
@@ -77,9 +78,13 @@ public:
         if (!thread_id)
             return assert(false);
 
-        moveToThread([this]
-                     { uv_stop(&thread_data->loop); });
-        uv_thread_join(&thread_id);
+        thread_data->promise_close = std::promise<bool>();
+        auto future = thread_data->promise_close.get_future();
+        moveToThread([this] { uv_stop(&thread_data->loop); });
+        /* uv_thread_join(&thread_id); 存在线程同步问题，改为future */
+        /* 注意：win单例对象析构时线程可能被杀，不要使用get导致卡死 */
+        using namespace std::chrono_literals;
+        future.wait_for(timeout_sec * 1000ms);
         thread_id = nullptr;
     }
 
@@ -136,5 +141,7 @@ private:
         // LOG(WARNING) << __func__ << " closing";
         uv_loop_close(&thread_data->loop);
         // LOG(WARNING) << __func__ << " closed!";
+
+        thread_data->promise_close.set_value(true);
     }
 };
