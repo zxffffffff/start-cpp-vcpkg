@@ -67,7 +67,7 @@ public:
     }
 
     /* 阻塞：等待线程结束 */
-    void stop(double timeout_sec = 0.1)
+    void stop()
     {
         // LOG(WARNING) << __func__;
 
@@ -81,10 +81,12 @@ public:
         thread_data->promise_close = std::promise<bool>();
         auto future = thread_data->promise_close.get_future();
         moveToThread([this] { uv_stop(&thread_data->loop); });
-        /* uv_thread_join(&thread_id); 存在线程同步问题，改为future */
-        /* 注意：win单例对象析构时线程可能被杀，不要使用get导致卡死 */
+        /* 存在线程同步问题 */
+        /* win单例对象析构时线程可能被杀，使用future判断 */
         using namespace std::chrono_literals;
-        future.wait_for(timeout_sec * 1000ms);
+        auto status = future.wait_for(100ms);
+        if (status != std::future_status::ready)
+            uv_thread_join(&thread_id);
         thread_id = nullptr;
     }
 
