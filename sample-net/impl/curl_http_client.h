@@ -81,6 +81,7 @@ public:
         std::stringstream res;
 
         CURL *curl = curl_easy_init();
+        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
@@ -88,8 +89,8 @@ public:
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, std::round(timeout_sec * 0.75));
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout_sec * 1000);
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT_MS, int(timeout_sec * 750));
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, int(timeout_sec * 1000));
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &res);
         CURLcode r = curl_easy_perform(curl);
@@ -121,6 +122,7 @@ public:
         std::stringstream res;
 
         CURL *curl = curl_easy_init();
+        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
@@ -129,8 +131,8 @@ public:
             headers = curl_slist_append(headers, s.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
         curl_easy_setopt(curl, CURLOPT_POSTFIELDS, body.c_str());
-        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT, std::round(timeout_sec * 0.75));
-        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, timeout_sec * 1000);
+        curl_easy_setopt(curl, CURLOPT_CONNECTTIMEOUT_MS, int(timeout_sec * 750));
+        curl_easy_setopt(curl, CURLOPT_TIMEOUT_MS, int(timeout_sec * 1000));
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, write_data);
         curl_easy_setopt(curl, CURLOPT_WRITEDATA, &res);
         CURLcode r = curl_easy_perform(curl);
