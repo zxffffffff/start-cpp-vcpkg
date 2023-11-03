@@ -41,6 +41,7 @@ find_package(fmt CONFIG REQUIRED)
 
 # Public 头文件
 file(GLOB_RECURSE include_headers
+    common.h
     platform.h
     chrono.h
     interface/crypto_interface.h
