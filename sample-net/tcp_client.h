@@ -39,7 +39,7 @@ private:
     std::string tips;
 
     ConnectionStates state = ConnectionStates::Closed;
-    mutable std::shared_mutex stateMutex;
+    mutable Mutex stateMutex;
     HandleClientStates handleStates;
     HandleClientRead handleRead;
 
@@ -68,13 +68,13 @@ public:
 
     ConnectionStates GetState() const
     {
-        std::shared_lock lock(stateMutex);
+        RLock lock(stateMutex);
         return state;
     }
     void SetState(ConnectionStates new_state, Error err = MakeSuccess())
     {
         {
-            std::unique_lock lock(stateMutex);
+            WLock lock(stateMutex);
             state = new_state;
         }
         if (handleStates)

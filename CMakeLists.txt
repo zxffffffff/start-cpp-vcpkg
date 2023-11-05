@@ -8,7 +8,7 @@
 
 message("[start-cpp-vcpkg] -------- start")
 cmake_minimum_required (VERSION 3.16)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 11)
 
 if (WIN32)
     # Windows 可选编译配置集（vcpkg built-in/community triplets）

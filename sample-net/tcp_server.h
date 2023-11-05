@@ -36,14 +36,14 @@ private:
     std::string tips;
 
     ServerStates state = ServerStates::Closed;
-    mutable std::shared_mutex stateMutex;
+    mutable Mutex stateMutex;
 
     HandleServerStates handleStates;
     HandleServerConnStates handleConnStates;
     HandleServerConnRead handleConnRead;
 
     std::map<ConnId, ConnectionStates> connStates;
-    mutable std::shared_mutex connStatesMutex;
+    mutable Mutex connStatesMutex;
 
 public:
     TcpServer(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "TcpServer")
@@ -72,13 +72,13 @@ public:
 
     ServerStates GetState() const
     {
-        std::shared_lock readLock(stateMutex);
+        RLock readLock(stateMutex);
         return state;
     }
     void SetState(ServerStates new_state, Error err = MakeSuccess())
     {
         {
-            std::unique_lock writeLock(stateMutex);
+            WLock writeLock(stateMutex);
             state = new_state;
         }
         if (handleStates)
@@ -108,7 +108,7 @@ public:
 
     ConnectionStates GetConnState(ConnId connId)
     {
-        std::shared_lock readLock(connStatesMutex);
+        RLock readLock(connStatesMutex);
         auto ite = connStates.find(connId);
         if (ite != connStates.end())
             return ite->second;
@@ -117,7 +117,7 @@ public:
     void SetConnState(ConnId connId, ConnectionStates new_state, Error err = MakeSuccess())
     {
         {
-            std::unique_lock writeLock(connStatesMutex);
+            WLock writeLock(connStatesMutex);
             if (new_state == ConnectionStates::Closed)
                 connStates.erase(connStates.find(connId));
             else
@@ -132,7 +132,7 @@ public:
     {
         std::vector<ConnId> ret;
         {
-            std::shared_lock readLock(connStatesMutex);
+            RLock readLock(connStatesMutex);
             for (auto ite = connStates.begin(); ite != connStates.end(); ++ite)
             {
                 if (ite->second == find_state)

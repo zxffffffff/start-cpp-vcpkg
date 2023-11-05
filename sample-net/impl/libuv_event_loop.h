@@ -83,8 +83,7 @@ public:
         moveToThread([this] { uv_stop(&thread_data->loop); });
         /* 存在线程同步问题 */
         /* win单例对象析构时线程可能被杀，使用future判断 */
-        using namespace std::chrono_literals;
-        auto status = future.wait_for(100ms);
+        auto status = future.wait_for(std::chrono::milliseconds(100));
         if (status != std::future_status::ready)
             uv_thread_join(&thread_id);
         thread_id = nullptr;

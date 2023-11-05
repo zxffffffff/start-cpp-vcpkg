@@ -34,7 +34,7 @@ private:
     {
         Buffer recv;
         std::unique_ptr<IHttpParser> parser = std::make_unique<IHttpParserImpl>();
-        mutable std::shared_mutex connMutex;
+        mutable Mutex connMutex;
     };
     std::map<ConnId, std::shared_ptr<Connection>> conns;
 
@@ -107,7 +107,7 @@ private:
 
         Error parseErr;
         {
-            std::unique_lock writeLock(conn->connMutex);
+            WLock writeLock(conn->connMutex);
             if (conn->recv == nullptr)
                 conn->recv = buffer;
             else
