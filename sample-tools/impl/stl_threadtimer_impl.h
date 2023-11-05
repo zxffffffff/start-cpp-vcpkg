@@ -7,6 +7,7 @@
 ****************************************************************************/
 #pragma once
 #include "../interface/threadtimer_interface.h"
+#include "cpp_version.h"
 #include <thread>
 #include <future>
 
@@ -102,7 +103,6 @@ private:
     static void run(ThreadData *thread_data)
     {
         using namespace std::chrono;
-        using namespace std::chrono_literals;
 
         size_t count = 0;
         while (thread_data->m_running)
@@ -111,7 +111,7 @@ private:
             milliseconds duration(thread_data->m_interval_ms);
             while (thread_data->m_running && duration_cast<milliseconds>(steady_clock::now() - start).count() < duration.count())
             {
-                std::this_thread::sleep_for(10ms); /* 最小精度 */
+                std::this_thread::sleep_for(milliseconds(10)); /* 最小精度 */
             }
 
             if (thread_data->m_running)

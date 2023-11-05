@@ -10,13 +10,19 @@
 #include <string>
 #include <functional>
 #include <memory>
-#include <shared_mutex>
 #include <future>
 #include <cassert>
 #include <sstream>
 #include <vector>
 #include <map>
 #include <set>
+#include "cpp_version.h"
+
+#if CPP_VERSION >= 2017
+#include <shared_mutex>
+#else /* C++11/14 */
+#include <mutex>
+#endif
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -24,6 +30,16 @@
 #pragma execution_character_set("utf-8")
 #endif
 #pragma warning(disable:4566)
+#endif
+
+#if CPP_VERSION >= 2017
+using Mutex = std::shared_mutex;
+using WLock = std::unique_lock<Mutex>;
+using RLock = std::shared_lock<Mutex>;
+#else /* C++11/14 */
+using Mutex = std::mutex;
+using WLock = std::lock_guard<Mutex>;
+using RLock = WLock;
 #endif
 
 /* 通用 alias */

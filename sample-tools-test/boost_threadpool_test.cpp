@@ -19,7 +19,7 @@
 TEST(BoostThreadPoolImpl, Test)
 {
     auto pool = std::make_shared<ThreadPoolImpl<4>>();
-    static std::atomic_int flag = 0;
+    static std::atomic<int> flag{0};
 
     for (int i = 0; i < 8; ++i) 
     {
@@ -41,7 +41,7 @@ TEST(BoostThreadPoolImpl, Test)
 TEST(BoostThreadPoolImpl, Recursive)
 {
     auto pool = std::make_shared<ThreadPoolImpl<4>>();
-    static std::atomic_int flag = 0;
+    static std::atomic<int> flag{0};
 
     for (int i = 0; i < 8; ++i)
     {

@@ -159,7 +159,7 @@ TEST(tcp, monkeytest)
         ++index;
     };
 
-    static std::atomic_bool thread_run = true;
+    static std::atomic<bool> thread_run{true};
     auto test = [&](int index)
     {
         std::vector<std::function<void(int)>> client_cmd;
@@ -262,7 +262,7 @@ TEST(tcp, monkeytest2)
         client->Connect();
     }
 
-    static std::atomic_bool thread_run = true;
+    static std::atomic<bool> thread_run{true};
     auto test = [&]
     {
         std::vector<std::function<void()>> server_cmd;
@@ -276,7 +276,7 @@ TEST(tcp, monkeytest2)
             auto f = server_cmd[random];
             f();
             std::this_thread::sleep_for(5ms);
-            
+
             if (server_cmd.size() < 100)
                 server_cmd.push_back(ServerListenClose); // 0% -> 50%
         }

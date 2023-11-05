@@ -18,7 +18,7 @@
 
 TEST(ThreadTimerImpl, Test)
 {
-    static std::atomic_int flag = 0;
+    static std::atomic<int> flag{0};
     ThreadTimerImpl timer(50, []
                           { ++flag; });
     timer.Start();
@@ -42,7 +42,7 @@ TEST(ThreadTimerImpl, Test)
 
 TEST(ThreadTimerImpl, Recursive)
 {
-    static std::atomic_int flag = 0;
+    static std::atomic<int> flag{0};
 
     auto recursive = []
     {
