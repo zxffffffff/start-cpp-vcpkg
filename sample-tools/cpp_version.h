@@ -8,12 +8,6 @@
 #pragma once
 #include <string>
 
-#ifdef _WIN32
-#include <windows.h>
-#undef min
-#undef max
-#endif
-
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
 #if (_MSC_VER >= 1700)
