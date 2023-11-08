@@ -23,10 +23,6 @@
 #pragma warning(disable:4566)
 #endif
 
-/* 兼容 windows */
-#undef min
-#undef max
-
 /* 线程池容量，不弹性扩容 */
 class ThreadPool
 {
