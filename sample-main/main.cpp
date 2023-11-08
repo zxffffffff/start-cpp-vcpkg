@@ -8,10 +8,7 @@
 #include "gflags/gflags.h"
 #include "glog/logging.h"
 #include "SampleDynamicLib.h"
-
-#ifdef _WIN32
-#include <Windows.h>
-#endif // _WIN32
+#include "platform.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */

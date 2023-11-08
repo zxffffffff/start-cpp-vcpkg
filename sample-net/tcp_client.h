@@ -18,10 +18,6 @@
 #pragma warning(disable:4566)
 #endif
 
-/* 兼容 windows */
-#undef min
-#undef max
-
 /* 线程异步回调，注意线程安全 */
 using HandleClientStates = std::function<void(ConnectionStates, Error)>;
 using HandleClientRead = std::function<void(Buffer)>;

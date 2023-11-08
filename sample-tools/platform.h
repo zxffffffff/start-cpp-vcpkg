@@ -12,6 +12,7 @@
 #include <windows.h>
 #undef min
 #undef max
+#undef ERROR /* 和glog冲突 */
 #endif
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
