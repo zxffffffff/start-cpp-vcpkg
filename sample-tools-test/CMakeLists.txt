@@ -16,6 +16,7 @@ enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
 add_executable (${PROJECT_NAME}
+    glog_test.cpp
     crypto_test.cpp
     json_test.cpp
     threadpool_test.cpp
