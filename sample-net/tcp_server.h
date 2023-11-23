@@ -7,7 +7,6 @@
 ****************************************************************************/
 #pragma once
 #include "interface/tcp_interface.h"
-#include "interface/threadpool_interface.h"
 #include "net_states.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
@@ -23,12 +22,11 @@ using HandleServerStates = std::function<void(ServerStates, Error)>;
 using HandleServerConnStates = std::function<void(ConnId, ConnectionStates, Error)>;
 using HandleServerConnRead = std::function<void(ConnId, Buffer)>;
 
-template <class ITcpServerImpl, class IThreadPoolImpl>
+template <class ITcpServerImpl>
 class TcpServer
 {
 protected:
     std::unique_ptr<IServer> server = std::make_unique<ITcpServerImpl>();
-    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
 
 private:
     std::string addr;
@@ -82,8 +80,7 @@ public:
             state = new_state;
         }
         if (handleStates)
-            threadPool->MoveToThread([=]
-                                     { handleStates(new_state, err); });
+            handleStates(new_state, err);
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
@@ -125,8 +122,7 @@ public:
         }
 
         if (handleConnStates)
-            threadPool->MoveToThread([=]
-                                     { handleConnStates(connId, new_state, err); });
+            handleConnStates(connId, new_state, err);
     }
     std::vector<ConnId> GetConns(ConnectionStates find_state)
     {
@@ -258,7 +254,6 @@ protected:
 
         // success
         if (handleConnRead)
-            threadPool->MoveToThread([=]
-                                     { handleConnRead(connId, buffer); });
+            handleConnRead(connId, buffer);
     }
 };

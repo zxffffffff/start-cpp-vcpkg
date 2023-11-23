@@ -21,11 +21,11 @@
 using ServerResponseCbk = std::function<void(std::string)>;
 using HandleServerRequest = std::function<void(ConnId, Error, const HttpRequest &, ServerResponseCbk)>;
 
-template <class IHttpParserImpl, class ITcpServerImpl, class IThreadPoolImpl>
-class HttpServer : public TcpServer<ITcpServerImpl, IThreadPoolImpl>
+template <class IHttpParserImpl, class ITcpServerImpl>
+class HttpServer : public TcpServer<ITcpServerImpl>
 {
 protected:
-    using Super = TcpServer<ITcpServerImpl, IThreadPoolImpl>;
+    using Super = TcpServer<ITcpServerImpl>;
 
 private:
     HandleServerRequest handleServerRequest;
@@ -74,8 +74,7 @@ private:
         if (handleServerRequest)
         {
             std::shared_ptr<Connection> conn = conns[connId];
-            Super::threadPool->MoveToThread([=]
-                                            { OnConnRequest(connId, conn, err, buffer); });
+            OnConnRequest(connId, conn, err, buffer);
         }
 
         Super::OnConnRead(connId, err, buffer);
