@@ -7,7 +7,6 @@
 ****************************************************************************/
 #pragma once
 #include "interface/tcp_interface.h"
-#include "interface/threadpool_interface.h"
 #include "net_states.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
@@ -22,12 +21,11 @@
 using HandleClientStates = std::function<void(ConnectionStates, Error)>;
 using HandleClientRead = std::function<void(Buffer)>;
 
-template <class ITcpClientImpl, class IThreadPoolImpl>
+template <class ITcpClientImpl>
 class TcpClient
 {
 protected:
     std::unique_ptr<IClient> client = std::make_unique<ITcpClientImpl>();
-    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
 
 private:
     std::string addr;
@@ -74,8 +72,7 @@ public:
             state = new_state;
         }
         if (handleStates)
-            threadPool->MoveToThread([=]
-                                     { handleStates(new_state, err); });
+            handleStates(new_state, err);
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
@@ -190,7 +187,6 @@ protected:
 
         // success
         if (handleRead)
-            threadPool->MoveToThread([=]
-                                     { handleRead(buffer); });
+            handleRead(buffer);
     }
 };

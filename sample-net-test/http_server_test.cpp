@@ -12,7 +12,7 @@
 #include "impl/boost_http_parser.h"
 #include "impl/libuv_tcp_server_impl.h"
 #include "impl/boost_threadpool_impl.h"
-using TestHttpServer = HttpServer<HttpParserImpl, ServerImpl, ThreadPoolImpl<8>>;
+using TestHttpServer = HttpServer<HttpParserImpl, ServerImpl>;
 
 #include "http_client.h"
 #include "impl/curl_http_client.h"

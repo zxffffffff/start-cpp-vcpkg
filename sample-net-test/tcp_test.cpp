@@ -14,8 +14,8 @@
 #include "impl/libuv_tcp_server_impl.h"
 #include "impl/libuv_tcp_client_impl.h"
 #include "impl/boost_threadpool_impl.h"
-using TestTcpServer = TcpServer<ServerImpl, ThreadPoolImpl<8>>;
-using TestTcpClient = TcpClient<ClientImpl, ThreadPoolImpl<8>>;
+using TestTcpServer = TcpServer<ServerImpl>;
+using TestTcpClient = TcpClient<ClientImpl>;
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
