@@ -30,6 +30,7 @@
 - 不是所有支持vcpkg的库都能编译过的！
 - 该手动引入third-party的库还得手动来！
 - 遇到问题提个Issue，微软会很快处理！
+- 默认使用最新的库，如果需要指定旧版库，会很麻烦！
 
 ### 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
@@ -50,6 +51,9 @@
   - https://github.com/microsoft/vcpkg/issues/27873
 - Windows
   - "min" "max" 等宏定义冲突，报错可以 #undef 解决
+- 可能无法指定第三方库版本
+  - 查看历史版本：`git blame -l versions/l-/libuv.json`
+  - 自动添加baseline：`.\vcpkg\vcpkg.exe x-update-baseline --add-initial-baseline`
 
 
 ## vcpkg 
