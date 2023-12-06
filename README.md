@@ -1,6 +1,13 @@
 # start-cpp-vcpkg
 
-## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
+## 温馨提示：
+- 不是所有的库都支持vcpkg的！
+- 不是所有支持vcpkg的库都能编译过的！
+- 该手动引入third-party的库还得手动来！
+- 遇到问题提个Issue，微软会很快处理！
+- 默认使用最新的库，如果需要指定旧版库，会很麻烦！
+
+# 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - sample-db
   - mysql-connector-cpp: 连接 MySQL 数据库。
   - mongo-cxx-driver: 连接 MongoDB 数据库。
@@ -25,14 +32,7 @@
 - sample-test
   - googletest: Google 测试框架。
 
-### 温馨提示：
-- 不是所有的库都支持vcpkg的！
-- 不是所有支持vcpkg的库都能编译过的！
-- 该手动引入third-party的库还得手动来！
-- 遇到问题提个Issue，微软会很快处理！
-- 默认使用最新的库，如果需要指定旧版库，会很麻烦！
-
-### 快速开始：
+## 快速开始：
 - 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
 - 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
 - Windows 优先使用静态库，UNIX 和 APPLE 优先使用动态库，可以减少很多编译烦恼（编译问题99%来自于链接，运行问题99%来自于空/野指针）
@@ -45,38 +45,39 @@
   - Visual Studio 2022 - Windows
   - VS Code - 全平台
 
-### 已知问题
+## 已知问题
 - macOS
   - "protobuf" 和 "mysql-connector-cpp" 存在冲突，注意避免同时引用
   - https://github.com/microsoft/vcpkg/issues/27873
 - Windows
   - "min" "max" 等宏定义冲突，报错可以 #undef 解决
-- 可能无法指定第三方库版本
+- 指定版本号
+  - 必须使用 `submodule` 引入 vcpkg，否则找不到 `.git` 文件
   - 查看历史版本：`git blame -l versions/l-/libuv.json`
   - 自动添加baseline：`.\vcpkg\vcpkg.exe x-update-baseline --add-initial-baseline`
 
 
-## vcpkg 
-- 安装 vcpkg 工具（已添加 subtree）
-- `git subtree add --prefix=vcpkg https://github.com/microsoft/vcpkg master --squash`
+# vcpkg 
+- 安装 vcpkg 工具（已添加 submodule）
+- 建议使用 submodule 引入`git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
 
-### 参考
+## 参考
 - https://github.com/microsoft/vcpkg
 - https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md
 
-### 查询 & 添加 & 查看
+## 查询 & 添加 & 查看
 ```Bash
 .\vcpkg\vcpkg.exe search xxx
 .\vcpkg\vcpkg.exe install xxx` or `vcpkg.json
 .\vcpkg\packages\xxx\CONTROL
 ```
 
-### Windows（已加入 build 脚本）
+## Windows（已加入 build 脚本）
 - Windows 7 或更新的版本
 - Visual Studio 2015 Update 3 或更新的版本（包含英文语言包）
 - 运行 `bootstrap-vcpkg.bat` 脚本
 
-### Unix（已加入 build 脚本）
+## Unix（已加入 build 脚本）
 - g++ >= 6
 - macOS:
   ```Bash
@@ -96,7 +97,7 @@
   ```
 - 运行 `bootstrap-vcpkg.sh` 脚本
 
-### Triplet 可选编译配置集
+## Triplet 可选编译配置集
 - https://learn.microsoft.com/en-us/vcpkg/users/triplets
 - 在经典模式下，您可以使用三元组名称限定包引用，例如 `zlib:x64-windows-static-md`
 - 在Manifest模式下，可以在命令行传递 `vcpkg install --triplet=<triplet>`
