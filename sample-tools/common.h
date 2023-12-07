@@ -1,17 +1,10 @@
-/****************************************************************************
-** MIT License
-**
-** Author	: xiaofeng.zhu
-** Support	: zxffffffff@outlook.com, 1337328542@qq.com
-**
-****************************************************************************/
 #include <string>
 #include <iostream>
 #include <stdio.h>
 
 #ifdef _WIN32
 #include <conio.h>
-#elif __APPLE__
+#else
 #include <termios.h>
 #include <unistd.h>
 #endif
@@ -29,7 +22,7 @@ char cli_get_char()
 {
     return getch();
 }
-#elif __APPLE__
+#else
 char cli_get_char()
 {
     struct termios oldt, newt;
