@@ -45,7 +45,7 @@ private:
     std::unique_ptr<ThreadData> thread_data = std::make_unique<ThreadData>();
 
     std::atomic_bool is_start{false};
-    uv_thread_t thread_id = nullptr;
+    uv_thread_t thread_id = NULL;
 
 public:
     /* 阻塞：等待线程运行 */
@@ -86,7 +86,7 @@ public:
         auto status = future.wait_for(std::chrono::milliseconds(100));
         if (status != std::future_status::ready)
             uv_thread_join(&thread_id);
-        thread_id = nullptr;
+        thread_id = NULL;
     }
 
     uv_loop_t *loop()
