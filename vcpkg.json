@@ -23,5 +23,13 @@
     "mysql-connector-cpp",
     "mongo-cxx-driver",
     "hiredis"
-  ]
+  ],
+  "overrides": [
+    {
+      "name": "libuv",
+      "version": "1.41.0",
+      "port-version": 1
+    }
+  ],
+  "builtin-baseline": "b051745c68faa6f65c493371d564c4eb8af34dad"
 }
