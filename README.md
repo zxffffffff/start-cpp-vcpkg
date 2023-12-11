@@ -43,7 +43,13 @@
   - macOS 13.1 Apple M1
 - 建议开发环境：
   - Visual Studio 2022 - Windows
-  - VS Code - 全平台
+  - Visual Studio Code - macOS、Linux
+- 建议编译器：
+  | 编译器        | 最低版本     |
+  | ------------- | ------------ |
+  | MSVC v143     | Windows 7    |
+  | Xcode 12      | macOS 10.15  |
+  | Clang 10      | Ubuntu 18.04 |
 
 ## 已知问题
 - macOS
