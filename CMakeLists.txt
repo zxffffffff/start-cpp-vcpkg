@@ -9,6 +9,7 @@
 message("[start-cpp-vcpkg] -------- start")
 cmake_minimum_required (VERSION 3.16)
 set(CMAKE_CXX_STANDARD 11)
+set(CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
     # Windows 可选编译配置集（vcpkg built-in/community triplets）
@@ -18,17 +19,22 @@ if (WIN32)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 else()
+    if (APPLE)
+        # 需要10.15支持C++17
+        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
+    endif()
     # APPLE 和 UNIX 编译动态库需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 endif()
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
-set(CMAKE_TOOLCHAIN_FILE "./vcpkg/scripts/buildsystems/vcpkg.cmake")
+set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 message(STATUS "[start-cpp-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")
 
 project ("start-cpp-vcpkg")
 
+message(STATUS "[start-cpp-vcpkg] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "[start-cpp-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # src
