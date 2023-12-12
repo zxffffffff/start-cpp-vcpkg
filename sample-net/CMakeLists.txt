@@ -52,7 +52,7 @@ add_library(${PROJECT_NAME} STATIC
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-tools
-    PRIVATE $<IF:$<TARGET_EXISTS:uv_a>,uv_a,uv>
+    PRIVATE $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>
     PRIVATE CURL::libcurl
     PRIVATE Boost::boost Boost::url
 )

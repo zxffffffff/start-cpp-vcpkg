@@ -18,14 +18,20 @@ if (WIN32)
     # 源码使用 utf-8 编码格式编译
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
-else()
-    if (APPLE)
-        # 需要10.15支持C++17
-        set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
-    endif()
-    # APPLE 和 UNIX 编译动态库需要设置-fPIC
+elseif (APPLE)
+    # 编译动态库需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+
+    # 需要 macOS 10.15 支持 C++17 filesystem
+    # set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
+else()
+    # 编译动态库需要设置-fPIC
+    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
+
+    # 静态链接 C++ 依赖库，不要使用 -static 静态链接 glibc
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 endif()
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
