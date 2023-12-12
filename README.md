@@ -1,71 +1,107 @@
 # start-cpp-vcpkg
 
 ## 温馨提示：
-- 不是所有的库都支持vcpkg的！
-- 不是所有支持vcpkg的库都能编译过的！
-- 该手动引入third-party的库还得手动来！
-- 遇到问题提个Issue，微软会很快处理！
+- 不是所有的库都支持 `vcpkg` 的！
+- 不是所有支持 `vcpkg` 的库都能编译过的！
+- 该手动引入 third-party 的库还得手动来！
+- 遇到问题提个 Issue，微软会很快处理！
 - 默认使用最新的库，如果需要指定旧版库，会很麻烦！
 
 # 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - sample-db
-  - mysql-connector-cpp: 连接 MySQL 数据库。
-  - mongo-cxx-driver: 连接 MongoDB 数据库。
-  - hiredis: 连接 Redis 数据库。
+  - `mysql-connector-cpp`: 连接 MySQL 数据库。
+  - `mongo-cxx-driver`: 连接 MongoDB 数据库。
+  - `hiredis`: 连接 Redis 数据库。
 - sample-pb
-  - protobuf: Google 数据序列化库。
+  - `protobuf`: Google 数据序列化库。
 - sample-net (tcp, http)
   - ![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/sample-net/doc/states.png)
-  - libcurl: 最流行的多协议文件传输库，支持 HTTP 请求。
-  - libuv: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
+  - `libcurl`: 最流行的多协议文件传输库，支持 HTTP 请求。
+  - `libuv`: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
 - sample-tools (crypto, threadpool)
-  - gflags: Google 命令行标志库。
-  - glog: Google 日志库。
-  - boost: 标准库，可以按需单独安装某个库。
-  - zlib: 最流行的数据压缩库。
-  - sqlite3: 最流行的嵌入式关系数据库。
-  - cryptopp: 密码学库，支持 base64/RSA/AES 等常用加密算法。
-  - rapidjson: 腾讯出品，高性能 JSON 解析/生成器，灵感来自 RapidXml。
-  - nlohmann-json: 现代的 JSON 解析/生成器，语法糖非常方便。
-  - tinyxml: 轻量的 XML 解析库。
-  - fmt: 格式化库，实现 C++20 std::format，完美取代 iostreams 和 printf。
+  - `gflags`: Google 命令行标志库。
+  - `glog`: Google 日志库。
+  - `boost`: 标准库，可以按需单独安装某个库。
+  - `zlib`: 最流行的数据压缩库。
+  - `sqlite3`: 最流行的嵌入式关系数据库。
+  - `cryptopp`: 密码学库，支持 base64/RSA/AES 等常用加密算法。
+  - `rapidjson`: 腾讯出品，高性能 JSON 解析/生成器，灵感来自 RapidXml。
+  - `nlohmann-json`: 现代的 JSON 解析/生成器，语法糖非常方便。
+  - `tinyxml`: 轻量的 XML 解析库。
+  - `fmt`: 格式化库，实现 C++20 std::format，完美取代 iostreams 和 printf。
 - sample-test
-  - googletest: Google 测试框架。
+  - `googletest`: Google 测试框架。
 
 ## 快速开始：
-- 运行 build-platform.xxx 在线安装第三方库，需要能够访问外网（github）
-- 网络异常导致的错误，可以尝试重新运行脚本（下载较多，可能需要反复重试）
-- Windows 优先使用静态库，UNIX 和 APPLE 优先使用动态库，可以减少很多编译烦恼（编译问题99%来自于链接，运行问题99%来自于空/野指针）
-- 跨平台 C++ 工程建议使用 UTF-8，这样仅需设置 Windows 编译环境（Windows 源码采用 GBK 编码，UNIX 源码采用 UTF-8 no BOM）
-- 已验证：
-  - Windows 10 x64
-  - Ubuntu 20.04 x64
-  - macOS 13.1 Apple M1
-- 建议开发环境：
-  - Visual Studio 2022 - Windows
-  - Visual Studio Code - macOS、Linux
-- 建议编译器：
-  | 编译器        | 最低版本     |
-  | ------------- | ------------ |
-  | MSVC v143     | Windows 7    |
-  | Xcode 12      | macOS 10.15  |
-  | Clang 10      | Ubuntu 18.04 |
+- 运行 `build-platform.xxx` 在线安装第三方库，需要能够访问外网 (github) 
+- 网络异常导致的错误，可以尝试重新运行脚本(下载较多，可能需要反复重试) 
+- 优先使用静态库 (Linux默认静态编译，动态链接系统库) 
+- 跨平台 C++ 工程建议使用 UTF-8，这样仅需设置 Windows 编译环境 (Windows 默认使用 GBK 编码需要设置，Win7 特殊处理) 
+
+### 已验证：
+- Windows 10 x64 (VS 2022) 
+- Ubuntu 20.04 x64 (VS Code) 
+- macOS 13.1 Apple M1 (VS Code) 
+
+### 编译器最低版本建议：
+| C++ compiler  | Minimum OS version |
+| ------------- | ------------------ |
+| MSVC v143     | Windows 7          |
+| Xcode 12      | macOS 10.15        |
+| Clang 10      | Ubuntu 18.04       |
+
+### Apple C++ 版本参考
+| C++ Feature        | Minimum deployment target                     |
+| ------------------ | --------------------------------------------- |
+| C++ 17 Filesystem  | macOS 10.15, iOS 13.0, tvOS 13.0, watchOS 6.0 |
+
+### Linux Glibc 版本参考
+| Glibc | Ubuntu | CentOS | Debian |
+| ----- | ------ | ------ | ------ |
+| 2.34  | 22.04  | -      | -      |
+| 2.31  | 20.04  | -      | 11     |
+| 2.28  | -      | 8      | 10     |
+| 2.27  | 18.04  | -      | -      |
+| 2.24  | -      | -      | 9      |
+| 2.23  | 16.04  | -      | -      |
+| 2.19  | 14.04  | -      | 8      |
+| 2.17  | 13.04  | 7      | -      |
+| 2.15  | 12.04  | -      | -      |
+| 2.13  | -      | -      | 7      |
+| 2.12  | -      | 6      | -      |
 
 ## 已知问题
-- macOS
-  - "protobuf" 和 "mysql-connector-cpp" 存在冲突，注意避免同时引用
-  - https://github.com/microsoft/vcpkg/issues/27873
-- Windows
-  - "min" "max" 等宏定义冲突，报错可以 #undef 解决
-- 指定版本号
-  - 必须使用 `submodule` 引入 vcpkg，否则找不到 `.git` 文件
-  - 查看历史版本：`git blame -l versions/l-/libuv.json`
-  - 自动添加baseline：`.\vcpkg\vcpkg.exe x-update-baseline --add-initial-baseline`
 
+### macOS 三方库冲突
+- `protobuf` 和 `mysql-connector-cpp` 同时引用存在冲突，注意避免
+- 参考：https://github.com/microsoft/vcpkg/issues/27873
 
-# vcpkg 
-- 安装 vcpkg 工具（已添加 submodule）
-- 建议使用 submodule 引入`git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
+### Windows 宏定义冲突
+- `min` `max` 等冲突报错可以 `#undef` 解决
+
+### Linux 打包
+- 使用 `-static-libgcc -static-libstdc++` 静态编译 C++
+- 不能使用 `-static` 静态编译 C，需要注意开发环境使用低版本 `glibc` 编译动态链接
+
+### vcpkg 指定版本号(降级) 
+- 必须使用 `submodule` 引入 vcpkg，否则找不到 `.git` 文件
+- 查看历史版本：`git blame -l versions/l-/libuv.json`
+- 自动添加baseline：`.\vcpkg\vcpkg.exe x-update-baseline --add-initial-baseline`
+```json
+// libuv 1.41 是最后一个支持 win7 的版本
+"overrides": [
+  {
+    "name": "libuv",
+    "version": "1.41.0",
+    "port-version": 1
+  }
+],
+"builtin-baseline": "b051745c68faa6f65c493371d564c4eb8af34dad"
+```
+
+# Vcpkg 
+- 安装 `vcpkg` 工具 (已添加 `submodule`) 
+- 建议使用 `submodule` 引入`git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
 
 ## 参考
 - https://github.com/microsoft/vcpkg
@@ -78,12 +114,12 @@
 .\vcpkg\packages\xxx\CONTROL
 ```
 
-## Windows（已加入 build 脚本）
+## Windows (已加入 build 脚本) 
 - Windows 7 或更新的版本
-- Visual Studio 2015 Update 3 或更新的版本（包含英文语言包）
+- Visual Studio 2015 Update 3 或更新的版本 (包含英文语言包) 
 - 运行 `bootstrap-vcpkg.bat` 脚本
 
-## Unix（已加入 build 脚本）
+## Unix (已加入 build 脚本) 
 - g++ >= 6
 - macOS:
   ```Bash
@@ -110,7 +146,7 @@
 - 使用 CMake，您可以设置 `set(VCPKG_TARGET_TRIPLET <triplet>)`
 - 使用 MSBuild，您可以设置 `VcpkgTriplet`
 ```
-vcpkg built-in triplets:（官方提供 triplets）
+vcpkg built-in triplets: (官方提供 triplets) 
   x64-linux
   x64-windows
   x64-windows-static
@@ -119,7 +155,7 @@ vcpkg built-in triplets:（官方提供 triplets）
   x64-uwp
   x64-osx
   arm-uwp
-vcpkg community triplets:（社区提供 triplets 未经过持续集成测试可能不兼容）
+vcpkg community triplets: (社区提供 triplets 未经过持续集成测试可能不兼容) 
   wasm32-emscripten
   x64-xbox-scarlett-static
   ppc64le-linux
