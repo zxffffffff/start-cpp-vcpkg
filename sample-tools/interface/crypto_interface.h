@@ -40,11 +40,11 @@ public:
     virtual std::string Decrypt(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
     virtual std::string DecryptHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 
-    virtual std::string Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
-    virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::vector<char> Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::vector<char> SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 
-    virtual bool Verify(const std::string &msg, const std::string &sign_msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
-    virtual bool VerifyHex(const std::string &msg, const std::string &sign_msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual bool Verify(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual bool VerifyHex(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) = 0;
 };
 
 /* 支持ECB（AES/ECB/PKCS5Padding） */

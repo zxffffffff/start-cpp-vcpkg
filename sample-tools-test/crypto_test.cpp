@@ -18,14 +18,14 @@
 
 TEST(CryptoTest, Base64_Impl)
 {
-    std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
+    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
     Base64_Impl base64;
 
-    std::string encode = base64.Encode(raw);
-    ASSERT_NE(raw, encode);
+    std::string encode = base64.Encode(msg);
+    ASSERT_NE(msg, encode);
 
     std::string decode = base64.Decode(encode);
-    ASSERT_EQ(raw, decode);
+    ASSERT_EQ(msg, decode);
 }
 
 TEST(CryptoTest, RSA_PKCS1v15_Impl)
@@ -56,27 +56,27 @@ Wbi0yNLZmHjrTg==
 -----END PRIVATE KEY-----
 )";
 
-    std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
+    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
 
     RSA_PKCS1v15_Impl rsa;
     rsa.SetPublicKey(pubKey);
     rsa.SetPrivateKey(privKey);
 
-    std::string encode = rsa.Encrypt(raw);
-    ASSERT_NE(raw, encode);
+    std::string encode = rsa.Encrypt(msg);
+    ASSERT_NE(msg, encode);
 
     std::string decode = rsa.Decrypt(encode);
-    ASSERT_EQ(raw, decode);
+    ASSERT_EQ(msg, decode);
 
-    std::string sign = rsa.Sign(raw);
-    ASSERT_TRUE(sign.size() > 0);
+    std::vector<char> sign = rsa.Sign(msg);
+    ASSERT_TRUE(sign.size());
 
-    bool verify = rsa.Verify(raw, sign);
+    bool verify = rsa.Verify(msg, sign);
     ASSERT_TRUE(verify);
 
-    std::string signHex = rsa.SignHex(raw);
-    ASSERT_TRUE(signHex.size() > 0);
+    std::vector<char> signHex = rsa.SignHex(msg);
+    ASSERT_TRUE(signHex.size());
 
-    bool verify2 = rsa.VerifyHex(raw, signHex);
+    bool verify2 = rsa.VerifyHex(msg, signHex);
     ASSERT_TRUE(verify2);
 }
