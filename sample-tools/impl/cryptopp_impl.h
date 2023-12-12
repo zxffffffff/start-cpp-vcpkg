@@ -227,7 +227,7 @@ public:
         }
     }
 
-    virtual std::string Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
+    virtual std::vector<char> Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -238,8 +238,8 @@ public:
             SecByteBlock signature(length);
 
             size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
-            signature.resize(szlength);
-            std::string result((const char *)signature.data(), signature.size());
+            std::vector<char> result(szlength);
+            memccpy(result.data(), signature.data(), 0, szlength);
             if (ok)
                 *ok = true;
             return result;
@@ -250,11 +250,11 @@ public:
                 *ok = false;
             if (err)
                 *err = e.what();
-            return "";
+            return {};
         }
     }
 
-    virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
+    virtual std::vector<char> SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
@@ -265,17 +265,16 @@ public:
             SecByteBlock signature(length);
 
             size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
-            signature.resize(szlength);
-
             std::stringstream ss;
             ss << std::hex << std::uppercase;
-            for (int i = 0; i < signature.size(); ++i)
+            for (int i = 0; i < szlength; ++i)
             {
                 ss << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(signature[i]));
             }
             if (ok)
                 *ok = true;
-            return ss.str();
+            const std::string s = ss.str();
+            return std::vector<char>(s.begin(), s.end());
         }
         catch (const std::exception &e)
         {
@@ -283,17 +282,17 @@ public:
                 *ok = false;
             if (err)
                 *err = e.what();
-            return "";
+            return {};
         }
     }
 
-    virtual bool Verify(const std::string &msg, const std::string &sign_msg, bool *ok = nullptr, std::string *err = nullptr) override
+    virtual bool Verify(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
             RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
-            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign_msg.data(), sign_msg.size());
+            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign.data(), sign.size());
             if (ok)
                 *ok = true;
             return result;
@@ -308,21 +307,21 @@ public:
         }
     }
 
-    virtual bool VerifyHex(const std::string &msg, const std::string &sign_msg_hex, bool *ok = nullptr, std::string *err = nullptr) override
+    virtual bool VerifyHex(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
-            std::string sign_msg;
-            for (int i = 0; i < sign_msg_hex.length(); i += 2)
+            std::vector<char> sign_raw;
+            for (int i = 0; i + 1 < sign.size(); i += 2)
             {
-                std::string byteString = sign_msg_hex.substr(i, 2);
-                char byte = (char)strtol(byteString.c_str(), NULL, 16);
-                sign_msg.push_back(byte);
+                const std::string byteString((const char *)sign.data() + i, 2);
+                char byte = std::stoi(byteString, nullptr, 16);
+                sign_raw.push_back(byte);
             }
 
             RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
-            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign_msg.data(), sign_msg.size());
+            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign_raw.data(), sign_raw.size());
             if (ok)
                 *ok = true;
             return result;
