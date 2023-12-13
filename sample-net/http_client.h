@@ -51,7 +51,7 @@ public:
     }
 
     /* 不建议在生产环境禁用 SSL 验证 */
-    void SetSSLVerify(bool enable) { client->SetSSLVerify(enalge); }
+    void SetSSLVerify(bool enable) { client->SetSSLVerify(enable); }
 
     void SetPrefix(const std::string &urlPrefix) { this->urlPrefix = urlPrefix; }
     const std::string &GetPrefix() const { return urlPrefix; }
