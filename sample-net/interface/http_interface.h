@@ -66,6 +66,9 @@ public:
     virtual void InitOnce() {}
     virtual void CleanupOnce() {}
 
+    /* 不建议在生产环境禁用 SSL 验证 */
+    virtual void SetSSLVerify(bool enable) {}
+
     virtual std::string URLEncode(const std::string &msg) const = 0;
     virtual std::string URLDecode(const std::string &msg) const = 0;
 

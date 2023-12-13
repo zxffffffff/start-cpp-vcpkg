@@ -19,6 +19,8 @@
 
 class IHttpClientImpl : public IHttpClient
 {
+    long enableSSLVerify = 1;
+
 public:
     virtual void InitOnce() override
     {
@@ -28,6 +30,11 @@ public:
     virtual void CleanupOnce() override
     {
         curl_global_cleanup();
+    }
+
+    virtual void SetSSLVerify(bool enable) override
+    {
+        enableSSLVerify = enable ? 1 : 0;
     }
 
     virtual std::string URLEncode(const std::string &msg) const override
@@ -81,10 +88,11 @@ public:
         std::stringstream res;
 
         CURL *curl = curl_easy_init();
-        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, enableSSLVerify);
         struct curl_slist *headers = NULL;
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());
@@ -122,10 +130,11 @@ public:
         std::stringstream res;
 
         CURL *curl = curl_easy_init();
-        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
+        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, enableSSLVerify);
         struct curl_slist *headers = NULL;
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());
