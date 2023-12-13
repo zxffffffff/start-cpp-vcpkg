@@ -254,27 +254,27 @@ public:
         }
     }
 
-    virtual std::vector<char> SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
+    virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
             RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
-
             size_t length = signer.MaxSignatureLength();
             SecByteBlock signature(length);
 
             size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
+            signature.resize(szlength);
+
             std::stringstream ss;
             ss << std::hex << std::uppercase;
-            for (int i = 0; i < szlength; ++i)
+            for (int i = 0; i < signature.size(); ++i)
             {
                 ss << std::setw(2) << std::setfill('0') << static_cast<int>(static_cast<unsigned char>(signature[i]));
             }
             if (ok)
                 *ok = true;
-            const std::string s = ss.str();
-            return std::vector<char>(s.begin(), s.end());
+            return ss.str();
         }
         catch (const std::exception &e)
         {
@@ -282,7 +282,7 @@ public:
                 *ok = false;
             if (err)
                 *err = e.what();
-            return {};
+            return "";
         }
     }
 
@@ -307,21 +307,21 @@ public:
         }
     }
 
-    virtual bool VerifyHex(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) override
+    virtual bool VerifyHex(const std::string &msg, const std::string &sign_hex, bool *ok = nullptr, std::string *err = nullptr) override
     {
         using namespace CryptoPP;
         try
         {
-            std::vector<char> sign_raw;
-            for (int i = 0; i + 1 < sign.size(); i += 2)
+            std::string sign;
+            for (int i = 0; i < sign_hex.length(); i += 2)
             {
-                const std::string byteString((const char *)sign.data() + i, 2);
-                char byte = std::stoi(byteString, nullptr, 16);
-                sign_raw.push_back(byte);
+                std::string byteString = sign_hex.substr(i, 2);
+                char byte = (char)strtol(byteString.c_str(), NULL, 16);
+                sign.push_back(byte);
             }
 
             RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
-            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign_raw.data(), sign_raw.size());
+            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign.data(), sign.size());
             if (ok)
                 *ok = true;
             return result;

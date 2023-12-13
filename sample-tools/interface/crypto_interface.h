@@ -8,6 +8,7 @@
 #pragma once
 #include <algorithm>
 #include <string>
+#include <vector>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -41,10 +42,10 @@ public:
     virtual std::string DecryptHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 
     virtual std::vector<char> Sign(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
-    virtual std::vector<char> SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual std::string SignHex(const std::string &msg, bool *ok = nullptr, std::string *err = nullptr) = 0;
 
     virtual bool Verify(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) = 0;
-    virtual bool VerifyHex(const std::string &msg, const std::vector<char> &sign, bool *ok = nullptr, std::string *err = nullptr) = 0;
+    virtual bool VerifyHex(const std::string &msg, const std::string &sign, bool *ok = nullptr, std::string *err = nullptr) = 0;
 };
 
 /* 支持ECB（AES/ECB/PKCS5Padding） */

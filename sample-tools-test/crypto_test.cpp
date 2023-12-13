@@ -74,7 +74,7 @@ Wbi0yNLZmHjrTg==
     bool verify = rsa.Verify(msg, sign);
     ASSERT_TRUE(verify);
 
-    std::vector<char> signHex = rsa.SignHex(msg);
+    std::string signHex = rsa.SignHex(msg);
     ASSERT_TRUE(signHex.size());
 
     bool verify2 = rsa.VerifyHex(msg, signHex);
