@@ -260,6 +260,7 @@ public:
         try
         {
             RSASSA_PKCS1v15_SHA_Signer signer(privateKey);
+            
             size_t length = signer.MaxSignatureLength();
             SecByteBlock signature(length);
 
