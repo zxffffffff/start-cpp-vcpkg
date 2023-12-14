@@ -15,7 +15,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 int main(int argc, char *argv[])
@@ -29,6 +29,9 @@ int main(int argc, char *argv[])
     google::InitGoogleLogging(argv[0]);
 
     std::cout << "你好 SampleMain." << std::endl;
+
+    std::cout << "系统版本: " << Platform::GetOSType() << " " << Platform::GetOSVersion() << std::endl;
+    std::cout << "Mac地址: " << Platform::GetMacAddr() << std::endl;
 
     SampleDynamicLib sample_dynamic_lib;
     return 0;

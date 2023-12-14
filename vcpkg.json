@@ -10,6 +10,7 @@
     "boost-asio",
     "boost-beast",
     "boost-url",
+    "boost-uuid",
     "libuv",
     "curl",
     "zlib",
