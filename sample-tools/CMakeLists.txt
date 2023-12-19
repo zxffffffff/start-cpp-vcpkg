@@ -44,6 +44,7 @@ file(GLOB_RECURSE include_headers
     cpp_version.h
     common.h
     platform.h
+    hardware.h
     chrono.h
     interface/crypto_interface.h
     interface/threadpool_interface.h
@@ -68,8 +69,16 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC rapidjson
     PUBLIC nlohmann_json::nlohmann_json
     PUBLIC tinyxml2::tinyxml2
-    PUBLIC fmt::fmt
+    PUBLIC fmt::fmt-header-only
 )
+
+if (APPLE)
+# hardware 依赖系统库
+target_link_libraries(${PROJECT_NAME}
+    PUBLIC "-framework CoreFoundation"
+    PUBLIC "-framework IOKit"
+)
+endif()
 
 target_include_directories(${PROJECT_NAME}
     PUBLIC ${PROJECT_SOURCE_DIR}

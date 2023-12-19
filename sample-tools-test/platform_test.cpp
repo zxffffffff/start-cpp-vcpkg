@@ -25,19 +25,6 @@ TEST(utf8, test)
     EXPECT_EQ(msg, utf8);
 }
 
-TEST(macAddr, test)
-{
-    std::string mac = Platform::GetMacAddr();
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::string mac2 = Platform::GetMacAddr();
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    std::string mac3 = Platform::GetMacAddr();
-
-    EXPECT_TRUE(mac.size());
-    EXPECT_EQ(mac, mac2);
-    EXPECT_EQ(mac, mac3);
-}
-
 TEST(os, test)
 {
     std::string type = Platform::GetOSType();
