@@ -12,7 +12,7 @@ message("[${PROJECT_NAME}] -------- start")
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
 # MySQL
-find_package(unofficial-mysql-connector-cpp CONFIG REQUIRED)
+# find_package(unofficial-mysql-connector-cpp CONFIG REQUIRED)
 
 # Redis
 find_package(hiredis CONFIG REQUIRED)
@@ -24,21 +24,21 @@ find_package(hiredis CONFIG REQUIRED)
 # Public 头文件
 file(GLOB_RECURSE include_headers
     SampleDB.h
-    "mysql/MySQLClient.h"
+    # "mysql/MySQLClient.h"
     "redis/RedisCommon.h"
     "redis/RedisClient.h"
 )
 
 add_library(${PROJECT_NAME} STATIC
     SampleDB.cpp
-    "mysql/MySQLClient.cpp"
+    # "mysql/MySQLClient.cpp"
     "redis/RedisClient.cpp"
     ${include_headers}
 )
 
 target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-tools
-    PRIVATE unofficial::mysql-connector-cpp::connector
+    # PRIVATE unofficial::mysql-connector-cpp::connector
     PRIVATE hiredis::hiredis
     # PRIVATE mongo::bsoncxx_shared
     # PRIVATE mongo::mongocxx_shared
