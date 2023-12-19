@@ -1,23 +1,11 @@
 # start-cpp-vcpkg
 
 ## 温馨提示：
-- 不是所有的库都支持 `vcpkg` 的！
-- 不是所有支持 `vcpkg` 的库都能编译过的！
-- 该手动引入 third-party 的库还得手动来！
-- 遇到问题提个 Issue，微软会很快处理！
-- 默认使用最新的库，如果需要指定旧版库，会很麻烦！
+- 不是所有的库都支持，不是所有支持的库都能编译过（提 Issue 微软处理的很快）
+- 该手动引入 third-party 的库还得手动来（大陆下载网络不是很稳定）
+- vcpkg 默认使用最新的库，如果需要指定旧版库，会很麻烦（配置 baseline）
 
 # 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
-- sample-db
-  - `mysql-connector-cpp`: 连接 MySQL 数据库。
-  - `mongo-cxx-driver`: 连接 MongoDB 数据库。
-  - `hiredis`: 连接 Redis 数据库。
-- sample-pb
-  - `protobuf`: Google 数据序列化库。
-- sample-net (tcp, http)
-  - ![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/sample-net/doc/states.png)
-  - `libcurl`: 最流行的多协议文件传输库，支持 HTTP 请求。
-  - `libuv`: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
 - sample-tools (crypto, threadpool)
   - `gflags`: Google 命令行标志库。
   - `glog`: Google 日志库。
@@ -29,6 +17,16 @@
   - `nlohmann-json`: 现代的 JSON 解析/生成器，语法糖非常方便。
   - `tinyxml`: 轻量的 XML 解析库。
   - `fmt`: 格式化库，实现 C++20 std::format，完美取代 iostreams 和 printf。
+- sample-db
+  - `mysql-connector-cpp`: 连接 MySQL 数据库。
+  - `mongo-cxx-driver`: 连接 MongoDB 数据库。
+  - `hiredis`: 连接 Redis 数据库。
+- sample-pb
+  - `protobuf`: Google 数据序列化库。
+- sample-net (tcp, http)
+  - `libcurl`: 最流行的多协议文件传输库，支持 HTTP 请求。
+  - `libuv`: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
+  > ![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/sample-net/doc/states.png)
 - sample-test
   - `googletest`: Google 测试框架。
 
