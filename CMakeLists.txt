@@ -24,7 +24,7 @@ elseif (APPLE)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
     # 需要 macOS 10.15 支持 C++17 filesystem
-    # set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
+    set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
 else()
     # 编译动态库需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")

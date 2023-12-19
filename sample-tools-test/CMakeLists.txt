@@ -24,6 +24,7 @@ add_executable (${PROJECT_NAME}
     threadtimer_test.cpp
     fmt_test.cpp
     platform_test.cpp
+    hardware_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}
