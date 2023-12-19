@@ -73,8 +73,8 @@
 ## 已知问题
 
 ### macOS 三方库冲突
-- `protobuf` 和 `mysql-connector-cpp` 同时引用存在冲突，注意避免
-- 参考：https://github.com/microsoft/vcpkg/issues/27873
+- `mysql-connector-cpp` 和 `protobuf` 同时引用bug，注意避免（https://github.com/microsoft/vcpkg/issues/27873）
+- `mysql-connector-cpp` 构建错误bug，注意避免（https://github.com/microsoft/vcpkg/issues/32878）
 
 ### Windows 宏定义冲突
 - `min` `max` 等冲突报错可以 `#undef` 解决
