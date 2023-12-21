@@ -40,6 +40,8 @@ message(STATUS "[start-cpp-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}
 
 project ("start-cpp-vcpkg")
 
+message(STATUS "[start-cpp-vcpkg] CMAKE_SYSTEM_NAME: ${CMAKE_SYSTEM_NAME}")
+message(STATUS "[start-cpp-vcpkg] CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message(STATUS "[start-cpp-vcpkg] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "[start-cpp-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
