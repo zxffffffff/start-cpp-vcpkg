@@ -239,7 +239,7 @@ public:
 
             size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
             std::vector<char> result(szlength);
-            memccpy(result.data(), signature.data(), 0, szlength);
+            memcpy(result.data(), signature.data(), szlength);
             if (ok)
                 *ok = true;
             return result;
