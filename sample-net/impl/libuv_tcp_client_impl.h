@@ -92,7 +92,34 @@ private:
         uv_tcp_init(eventLoop.loop(), &socket);
         socket.data = this;
 
-        uv_ip4_addr(ip.c_str(), port, &dest);
+        int addr_status = uv_ip4_addr(ip.c_str(), port, &dest);
+        if (addr_status)
+        {
+            // EINVAL
+            // std::string addr_err = uv_err_name(addr_status);
+
+            /* 支持 DNS 解析域名 */
+            struct addrinfo hints;
+            hints.ai_family = PF_INET;
+            hints.ai_socktype = SOCK_STREAM;
+            hints.ai_protocol = IPPROTO_TCP;
+            hints.ai_flags = 0;
+
+            uv_getaddrinfo_t resolver;
+            int r = uv_getaddrinfo(eventLoop.loop(), &resolver, NULL, ip.c_str(), NULL, &hints);
+            if (r)
+            {
+                // err
+                handleConnect(MakeStatusError(-102, r));
+                return;
+            }
+
+            struct addrinfo *res = resolver.addrinfo;
+            char dns_ip[17] = {'\0'};
+            uv_ip4_name((struct sockaddr_in *)res->ai_addr, dns_ip, 16);
+            addr_status = uv_ip4_addr(dns_ip, port, &dest);
+            uv_freeaddrinfo(res);
+        }
 
         uv_connect_t *connection = new uv_connect_t{0};
         connection->data = this;

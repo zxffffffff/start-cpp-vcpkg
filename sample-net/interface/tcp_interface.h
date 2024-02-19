@@ -47,7 +47,7 @@ public:
     virtual void SetHandleWrite(HandleSocket f) { handleWrite = f; }
     virtual void SetHandleRead(HandleRead f) { handleRead = f; }
 
-    HandleSocket handleConnect; // 0, -100, -101
+    HandleSocket handleConnect; // 0, -100, -101, -102
     HandleSocket handleClose;   // 0
     HandleSocket handleWrite;   // 0, -300, -301
     HandleRead handleRead;      // 0, 1, -200
