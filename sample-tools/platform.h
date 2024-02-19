@@ -14,6 +14,7 @@
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
+#include <fmt/format.h>
 
 #ifdef _WIN32
 #include <windows.h>
@@ -105,15 +106,17 @@ public:
         ULONG major = *(ULONG *)(sharedUserData + 0x26c);
         ULONG minor = *(ULONG *)(sharedUserData + 0x270);
         ULONG build = *(ULONG *)(sharedUserData + 0x260);
-        return std::to_string(major) + "." + std::to_string(minor) + "." + std::to_string(build);
+        // 10.0.19041
+        return fmt::format("{}.{}.{}", major, minor, build);
 #elif __APPLE__
-        size_t size = 0;
-        sysctlbyname("kern.osrelease", nullptr, &size, nullptr, 0);
-        char *sysctlResult = new char[size];
-        sysctlbyname("kern.osrelease", sysctlResult, &size, nullptr, 0);
-        std::string version(sysctlResult);
-        delete[] sysctlResult;
-        return version;
+        char osproductversion[64]{0};
+        size_t osproductversion_size = 64;
+        sysctlbyname("kern.osproductversion", osproductversion, &osproductversion_size, nullptr, 0);
+        char osversion[64]{0};
+        size_t osversion_size = 64;
+        sysctlbyname("kern.osversion", osversion, &osversion_size, nullptr, 0);
+        // 14.2.1(23C71)
+        return fmt::format("{}({})", osproductversion, osversion);
 #elif __linux__
         struct utsname uts;
         uname(&uts);
