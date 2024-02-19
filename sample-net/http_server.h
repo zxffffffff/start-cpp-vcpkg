@@ -112,6 +112,10 @@ private:
             else
                 conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
             parseErr = conn->parser->ParseReq(conn->recv, req);
+
+            // 兼容 postman，一个 TCP 连接发送多个 HTTP 请求
+            if (!parseErr->first)
+                conn->recv->clear();
         }
 
         if (parseErr->first == 1)
