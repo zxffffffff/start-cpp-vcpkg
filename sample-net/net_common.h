@@ -63,6 +63,8 @@ inline Error MakeSuccess()
 
 inline std::string ToString(Error err)
 {
+    if (err->first == -1)
+        return err->second;
     if (err->first)
         return std::to_string(err->first) + ":" + err->second;
     return "";
