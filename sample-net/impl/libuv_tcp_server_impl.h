@@ -253,6 +253,12 @@ private:
 
     void CloseOnEvent(ConnId connId)
     {
+        if (connections.find(connId) == connections.end())
+        {
+            /* connId 已断开，多线程问题 */
+            return;
+        }
+
         uv_handle_t *connection = (uv_handle_t *)connId;
         if (uv_is_active((uv_handle_t *)connection))
         {
