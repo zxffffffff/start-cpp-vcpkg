@@ -26,11 +26,12 @@ TEST(ThreadTimerImpl, Test)
     /* 确保timer启动 */
     while (flag == 0)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
     flag = 0;
+    std::this_thread::sleep_for(std::chrono::milliseconds(25));
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(75));
+    std::this_thread::sleep_for(std::chrono::milliseconds(50));
     EXPECT_EQ(flag, 1);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(50));
