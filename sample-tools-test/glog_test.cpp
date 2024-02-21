@@ -44,7 +44,7 @@ TEST(glog, init)
     google::InitGoogleLogging(argv[0]);
     {
         const std::string filename = google::ProgramInvocationShortName();
-        LOG(ERROR) << "google::ProgramInvocationShortName() = " << filename;
+        // LOG(ERROR) << "google::ProgramInvocationShortName() = " << filename;
     }
     google::ShutdownGoogleLogging();
 }

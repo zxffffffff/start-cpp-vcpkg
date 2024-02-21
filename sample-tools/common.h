@@ -5,71 +5,43 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-#include <string>
 #include <iostream>
-#include <stdio.h>
-
-#ifdef _WIN32
-#include <conio.h>
-#else
-#include <termios.h>
-#include <unistd.h>
-#endif
+#include <string>
+#include <sstream>
+#include <iomanip>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
-#ifdef _WIN32
-char cli_get_char()
+std::string stringToHex(const std::string &input)
 {
-    return getch();
-}
-#else
-char cli_get_char()
-{
-    struct termios oldt, newt;
-    char c;
-    tcgetattr(STDIN_FILENO, &oldt);
-    newt = oldt;
-    newt.c_lflag &= ~(ICANON | ECHO);
-    tcsetattr(STDIN_FILENO, TCSANOW, &newt);
-    c = getchar();
-    tcsetattr(STDIN_FILENO, TCSANOW, &oldt);
-    return c;
-}
-#endif
+    std::stringstream ss;
+    ss << std::hex << std::setfill('0');
 
-/* 请输入密码 */
-std::string inputPassword()
-{
-    std::string password;
-    while (true)
+    for (unsigned char c : input)
     {
-        char c = cli_get_char();
-        if (c == 8 || c == 127)
-        {
-            /* backspace */
-            if (password.empty())
-                continue;
-            std::cout << "\b \b";
-            password.pop_back();
-        }
-        else if (c == '\r' || c == '\n')
-        {
-            /* 回车 */
-            std::cout << std::endl;
-            return password;
-        }
-        else if (c >= 32 && c <= 126)
-        {
-            /* 合法字符（可打印字符） */
-            std::cout << '*';
-            password.push_back(c);
-        }
+        ss << std::setw(2) << static_cast<unsigned int>(c);
     }
-};
+
+    return ss.str();
+}
+
+std::string hexToString(const std::string &input)
+{
+    std::string output;
+
+    for (size_t i = 0; i < input.length(); i += 2)
+    {
+        std::istringstream iss(input.substr(i, 2));
+        int hexValue;
+        iss >> std::hex >> hexValue;
+        output += static_cast<char>(hexValue);
+    }
+
+    return output;
+}

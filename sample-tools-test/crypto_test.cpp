@@ -7,6 +7,7 @@
 ****************************************************************************/
 #include "gtest/gtest.h"
 #include "impl/cryptopp_impl.h"
+#include "common.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -18,14 +19,20 @@
 
 TEST(CryptoTest, Base64_Impl)
 {
-    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
     Base64_Impl base64;
 
-    std::string encode = base64.Encode(msg);
-    ASSERT_NE(msg, encode);
+    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
+    for (int i = 0; i < 4 * 1024; ++i)
+    {
+        std::string encode = base64.Encode(msg);
+        ASSERT_NE(msg, encode);
 
-    std::string decode = base64.Decode(encode);
-    ASSERT_EQ(msg, decode);
+        std::string decode = base64.Decode(encode);
+        ASSERT_EQ(msg, decode);
+
+        msg.insert(msg.begin(), i);
+        msg.push_back(i);
+    }
 }
 
 TEST(CryptoTest, RSA_PKCS1v15_Impl)
@@ -56,27 +63,79 @@ Wbi0yNLZmHjrTg==
 -----END PRIVATE KEY-----
 )";
 
-    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
-
     RSA_PKCS1v15_Impl rsa;
     rsa.SetPublicKey(pubKey);
     rsa.SetPrivateKey(privKey);
 
-    std::string encode = rsa.Encrypt(msg);
-    ASSERT_NE(msg, encode);
+    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
+    bool ok;
+    std::string err;
+    for (int i = 0; i < 600; ++i)
+    {
+        // RSA/EME-PKCS1-v1_5: message length of 118 exceeds the maximum of 117 for this public key
+        if (msg.size() <= 117)
+        {
+            std::string encode = rsa.Encrypt(msg, &ok, &err);
+            ASSERT_TRUE(ok) << err;
+            ASSERT_NE(msg, encode);
 
-    std::string decode = rsa.Decrypt(encode);
-    ASSERT_EQ(msg, decode);
+            std::string decode = rsa.Decrypt(encode, &ok, &err);
+            ASSERT_TRUE(ok) << err;
+            ASSERT_EQ(msg, decode);
+        }
 
-    std::vector<char> sign = rsa.Sign(msg);
-    ASSERT_TRUE(sign.size());
+        std::string encode = rsa.EncryptHex(msg, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_NE(msg, encode);
 
-    bool verify = rsa.Verify(msg, sign);
-    ASSERT_TRUE(verify);
+        std::string decode = rsa.DecryptHex(encode, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_EQ(msg, decode);
 
-    std::string signHex = rsa.SignHex(msg);
-    ASSERT_TRUE(signHex.size());
+        std::vector<char> sign = rsa.Sign(msg, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_TRUE(sign.size());
 
-    bool verify2 = rsa.VerifyHex(msg, signHex);
-    ASSERT_TRUE(verify2);
+        bool verify = rsa.Verify(msg, sign, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_TRUE(verify);
+
+        std::string signHex = rsa.SignHex(msg, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_TRUE(signHex.size());
+
+        bool verify2 = rsa.VerifyHex(msg, signHex, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_TRUE(verify2);
+
+        msg.insert(msg.begin(), i);
+        msg.push_back(i);
+    }
+}
+
+TEST(CryptoTest, AES_ECB_Impl)
+{
+    Base64_Impl base64;
+    std::string keyBase64 = "m+qS04/2CH1OweCnmXZ3TDZkCQS+hBzY";
+    std::string key = base64.Decode(keyBase64);
+
+    AES_ECB_Impl aes;
+    aes.SetKey(key);
+
+    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
+    bool ok;
+    std::string err;
+    for (int i = 0; i < 4 * 1024; ++i)
+    {
+        std::string encrypt = aes.Encrypt(msg, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_NE(msg, encrypt);
+
+        std::string decrypt = aes.Decrypt(encrypt, &ok, &err);
+        ASSERT_TRUE(ok) << err;
+        ASSERT_EQ(msg, decrypt);
+
+        msg.insert(msg.begin(), i);
+        msg.push_back(i);
+    }
 }
