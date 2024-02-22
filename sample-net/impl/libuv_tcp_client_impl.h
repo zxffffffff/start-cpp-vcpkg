@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class ClientImpl : public IClient
@@ -55,7 +55,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { ConnectOnEvent(ip, port); });
+                                   { ConnectOnEvent(ip, port); },
+                                   0);
         }
     }
 
@@ -68,7 +69,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { CloseOnEvent(); });
+                                   { CloseOnEvent(); },
+                                   0);
         }
     }
 
@@ -81,7 +83,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { WriteOnEvent(buffer); });
+                                   { WriteOnEvent(buffer); },
+                                   1);
         }
     }
 
