@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class ServerImpl : public IServer
@@ -56,7 +56,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { ListenOnEvent(ip, port); });
+                                   { ListenOnEvent(ip, port); },
+                                   0);
         }
     }
 
@@ -69,7 +70,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { CloseOnEvent(); });
+                                   { CloseOnEvent(); },
+                                   0);
         }
     }
 
@@ -82,7 +84,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { CloseOnEvent(connId); });
+                                   { CloseOnEvent(connId); },
+                                   0);
         }
     }
 
@@ -95,7 +98,8 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { WriteOnEvent(connId, buffer); });
+                                   { WriteOnEvent(connId, buffer); },
+                                   1);
         }
     }
 

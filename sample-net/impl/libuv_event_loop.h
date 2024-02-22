@@ -10,6 +10,7 @@
 #include <uv.h>
 #include <mutex>
 #include <future>
+#include <list>
 #include <cassert>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
@@ -17,7 +18,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 inline Error MakeStatusError(int state, int uv_status)
@@ -40,7 +41,7 @@ private:
 
         uv_async_t async{0};
         std::mutex async_mutex;
-        std::vector<std::function<void()>> async_cbk;
+        std::list<std::function<void()>> async_cbk;
     };
     std::unique_ptr<ThreadData> thread_data = std::make_unique<ThreadData>();
 
@@ -80,7 +81,9 @@ public:
 
         thread_data->promise_close = std::promise<bool>();
         auto future = thread_data->promise_close.get_future();
-        moveToThread([this] { uv_stop(&thread_data->loop); });
+        moveToThread([this]
+                     { uv_stop(&thread_data->loop); },
+                     0);
         /* 存在线程同步问题 */
         /* win单例对象析构时线程可能被杀，使用future判断 */
         auto status = future.wait_for(std::chrono::milliseconds(100));
@@ -94,16 +97,19 @@ public:
         return &thread_data->loop;
     }
 
-    bool thisIsLoop() 
+    bool thisIsLoop()
     {
         return std::this_thread::get_id() == thread_data->id;
     }
 
-    void moveToThread(std::function<void()> f)
+    void moveToThread(std::function<void()> f, int push_back)
     {
         {
             std::lock_guard<std::mutex> guard(thread_data->async_mutex);
-            thread_data->async_cbk.push_back(f);
+            if (push_back)
+                thread_data->async_cbk.push_back(f);
+            else
+                thread_data->async_cbk.push_front(f);
         }
         uv_async_send(&thread_data->async);
     }
@@ -123,7 +129,7 @@ private:
         auto onInit = [](uv_async_t *handle)
         {
             ThreadData *thread_data = (ThreadData *)handle->data;
-            std::vector<std::function<void()>> async_cbk;
+            std::list<std::function<void()>> async_cbk;
             {
                 std::lock_guard<std::mutex> guard(thread_data->async_mutex);
                 async_cbk = thread_data->async_cbk;
