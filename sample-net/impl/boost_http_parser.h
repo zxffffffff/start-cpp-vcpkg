@@ -8,10 +8,12 @@
 #pragma once
 #include "../interface/http_interface.h"
 
+#include <boost/beast/version.hpp>
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/url/url_view.hpp>
 #include <boost/algorithm/string.hpp>
+#include <boost/lexical_cast.hpp>
 
 #include <iostream>
 
@@ -91,29 +93,31 @@ public:
         return MakeSuccess();
     }
 
-    virtual std::string MakeRes(std::string body) override
+    virtual std::string MakeRes(const std::string& body) override
     {
+#if 1
         namespace beast = boost::beast;
         namespace http = boost::beast::http;
 
         http::response<http::string_body> response;
         response.version(11); // HTTP/1.1
         response.result(http::status::ok);
-        response.set(http::field::server, "zxf-server");
-        response.set(http::field::content_type, "text/plain");
-        response.body() = std::move(body);
+        response.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+        response.set(http::field::content_type, "application/JSON;charset=UTF-8");
+        response.set(http::field::cache_control, "no-cache");
+        response.body() = body;
         response.prepare_payload(); /* 准备响应体 */
-
+        std::string base = boost::lexical_cast<std::string>(response.base());
+        return base + response.body();
+#else
         /* 手动构建 HTTP 响应字符串 */
         std::stringstream ss;
-        ss << "HTTP/1.1 " << response.result_int() << " " << response.reason() << "\r\n";
-        ss << "Server: " << response[http::field::server] << "\r\n";
-        ss << "Content-Length: " << response.body().size() << "\r\n";
+        ss << "HTTP/1.1 200 OK" << "\r\n";
+        ss << "Content-Type: " << "application/JSON;charset=UTF-8" << "\r\n";
+        ss << "Content-Length: " << body.size() << "\r\n";
         ss << "\r\n";
-        ss << response.body() << "\r\n";
-
-        /* 也可以使用序列化器 */
-        // http::serializer<false, http::string_body> serializer(response);
+        ss << body;
         return ss.str();
+#endif
     }
 };

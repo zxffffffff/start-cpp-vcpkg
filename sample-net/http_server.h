@@ -19,7 +19,7 @@
 
 /* 线程异步回调，注意线程安全 */
 using ServerResponseCbk = std::function<void(std::string)>;
-using HandleServerRequest = std::function<void(ConnId, Error, const HttpRequest &, ServerResponseCbk)>;
+using HandleServerRequest = std::function<void(ConnId, Error, std::shared_ptr<HttpRequest>, ServerResponseCbk)>;
 
 template <class IHttpParserImpl, class ITcpServerImpl>
 class HttpServer : public TcpServer<ITcpServerImpl>
@@ -83,7 +83,7 @@ private:
     /* 线程异步处理 http request */
     void OnConnRequest(ConnId connId, std::shared_ptr<Connection> conn, Error err, Buffer buffer)
     {
-        HttpRequest req;
+        auto req = std::make_shared<HttpRequest>();
         auto cbkWrite = [=](std::string resBody)
         {
             std::string res = conn->parser->MakeRes(resBody);
@@ -111,7 +111,7 @@ private:
                 conn->recv = buffer;
             else
                 conn->recv->insert(conn->recv->end(), buffer->begin(), buffer->end());
-            parseErr = conn->parser->ParseReq(conn->recv, req);
+            parseErr = conn->parser->ParseReq(conn->recv, *req);
 
             // 兼容 postman，一个 TCP 连接发送多个 HTTP 请求
             if (!parseErr->first)

@@ -33,17 +33,17 @@ TEST(HttpServerTest, GetPost)
         google::InitGoogleLogging("test");
 
     auto server = std::make_shared<TestHttpServer>("127.0.0.1", 12333);
-    auto handler = [](ConnId, Error err, const HttpRequest& req, ServerResponseCbk cbk)
+    auto handler = [](ConnId, Error err, std::shared_ptr<HttpRequest> req, ServerResponseCbk cbk)
     {
         EXPECT_EQ(err->first, 0);
         std::stringstream ss;
         ss << "res";
-        ss << " method=" << req.method;
-        ss << " path=" << req.path;
-        for (auto ite = req.parameters.begin(); ite != req.parameters.end(); ++ite)
+        ss << " method=" << req->method;
+        ss << " path=" << req->path;
+        for (auto ite = req->parameters.begin(); ite != req->parameters.end(); ++ite)
             ss << " " << ite->first << "=" << ite->second;
-        if (req.post_body.size())
-            ss << " post_body=" << req.post_body;
+        if (req->post_body.size())
+            ss << " post_body=" << req->post_body;
         cbk(ss.str());
     };
     server->SetHandleServerRequest(handler);

@@ -45,6 +45,7 @@ using RLock = WLock;
 /* 通用 alias */
 using Error = std::shared_ptr<std::pair<int, std::string>>;
 using Buffer = std::shared_ptr<std::vector<char>>;
+using ConnId = std::string; /* 可以用内存地址，需增加uid */
 
 inline Error MakeError(int state, const std::string &msg)
 {
@@ -96,5 +97,3 @@ inline std::future<T> MakeFuture(const T &value)
     promise.set_value(value);
     return future;
 }
-
-using ConnId = size_t; /* 可以用内存地址 */
