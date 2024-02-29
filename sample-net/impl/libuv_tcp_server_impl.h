@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable : 4566)
+#pragma warning(disable:4566)
 #endif
 
 class ServerImpl : public IServer
@@ -25,8 +25,27 @@ public:
     /* socket */
     uv_tcp_t socket{0};
     sockaddr_in addr{0};
-    const int listen_backlog = 128;
-    std::set<ConnId> connections; /* uv_tcp_t* */
+    const int listen_backlog = 256;
+    std::map<void*, ConnId> connections; /* uv_tcp_t* */
+
+    uv_tcp_t* findConnection(const ConnId& connId)
+    {
+        for (auto ite = connections.begin(); ite != connections.end(); ++ite)
+        {
+            if (ite->second == connId)
+                return (uv_tcp_t*)ite->first;
+        }
+        return nullptr;
+    }
+
+    /* 生成唯一ConnId */
+    static ConnId makeConnId(uv_tcp_t* connection)
+    {
+        static uint64_t g_uid = 0;
+        uint64_t uid = ++g_uid;
+        ConnId connId = std::to_string(size_t(connection)) + "_" + std::to_string(uid);
+        return connId;
+    }
 
 public:
     ServerImpl()
@@ -36,7 +55,6 @@ public:
 
     virtual ~ServerImpl()
     {
-        assert(connections.empty()); /* 不应该出现 */
         eventLoop.stop();
     }
 
@@ -141,6 +159,9 @@ private:
         uv_tcp_init(server->eventLoop.loop(), connection);
         connection->data = server;
 
+        /* 生成唯一ConnId */
+        ConnId connId = makeConnId(connection);
+
         int status2 = uv_accept(socket, (uv_stream_t *)connection);
         if (status2)
         {
@@ -151,7 +172,7 @@ private:
             };
             uv_close((uv_handle_t *)connection, onClose);
 
-            server->handleNewConn((ConnId)connection, MakeStatusError(-102, status2));
+            server->handleNewConn(connId, MakeStatusError(-102, status2));
             return;
         }
 
@@ -159,10 +180,10 @@ private:
         uv_tcp_nodelay(connection, 1); /* 禁用Nagle算法，减少数据传输的延迟 */
         uv_read_start((uv_stream_t *)connection, onReadAlloc, onRead);
 
-        assert(server->connections.find((ConnId)connection) == server->connections.end());
-        server->connections.insert((ConnId)connection);
+        assert(server->connections.find(connection) == server->connections.end());
+        server->connections[connection] = connId;
 
-        server->handleNewConn((ConnId)connection, MakeSuccess());
+        server->handleNewConn(connId, MakeSuccess());
     }
 
     static void onReadAlloc(uv_handle_t *connection, size_t suggested_size, uv_buf_t *buf)
@@ -174,12 +195,14 @@ private:
     static void onRead(uv_stream_t *connection, ssize_t nread, const uv_buf_t *buf)
     {
         ServerImpl *server = (ServerImpl *)connection->data;
-        assert(server->connections.find((ConnId)connection) != server->connections.end());
+        auto ite = server->connections.find(connection);
+        assert(ite != server->connections.end());
+        ConnId connId = ite->second;
 
         if (nread > 0)
         {
             // success
-            server->handleConnRead((ConnId)connection, MakeSuccess(), MakeBuffer(buf->base, nread));
+            server->handleConnRead(connId, MakeSuccess(), MakeBuffer(buf->base, nread));
         }
         else if (nread == UV_EOF)
         {
@@ -189,18 +212,21 @@ private:
             {
                 uv_tcp_t *connection = (uv_tcp_t *)shutdown->data;
                 ServerImpl *server = (ServerImpl *)connection->data;
-                assert(connection && server);
+                auto ite = server->connections.find(connection);
+                assert(ite != server->connections.end());
+                ConnId connId = ite->second;
+
                 delete shutdown;
 
                 // EOF
-                server->handleConnRead((ConnId)connection, MakeStatusError(1, UV_EOF), MakeBuffer());
+                server->handleConnRead(connId, MakeStatusError(1, UV_EOF), MakeBuffer());
             };
             uv_shutdown(shutdown, (uv_stream_t *)connection, onShutdown);
         }
         else if (nread < 0)
         {
             // error
-            server->handleConnRead((ConnId)connection, MakeStatusError(-200, nread), MakeBuffer());
+            server->handleConnRead(connId, MakeStatusError(-200, nread), MakeBuffer());
         }
         delete[] buf->base;
     }
@@ -218,7 +244,8 @@ private:
     };
     void WriteOnEvent(ConnId connId, Buffer buffer)
     {
-        if (connections.find(connId) == connections.end())
+        uv_tcp_t* connection = findConnection(connId);
+        if (!connection)
         {
             /* connId 已断开，多线程问题 */
             handleConnWrite(connId, MakeError(-302, "connection no found"));
@@ -227,7 +254,7 @@ private:
 
         auto req = new WriteReq(this, connId, buffer);
         auto bufs = uv_buf_init(buffer->data(), buffer->size());
-        int status = ::uv_write(req, (uv_stream_t *)connId, &bufs, 1, onWrite);
+        int status = ::uv_write(req, (uv_stream_t *)connection, &bufs, 1, onWrite);
         if (status)
         {
             // err
@@ -257,13 +284,13 @@ private:
 
     void CloseOnEvent(ConnId connId)
     {
-        if (connections.find(connId) == connections.end())
+        uv_tcp_t* connection = findConnection(connId);
+        if (!connection)
         {
             /* connId 已断开，多线程问题 */
             return;
         }
 
-        uv_handle_t *connection = (uv_handle_t *)connId;
         if (uv_is_active((uv_handle_t *)connection))
         {
             uv_read_stop((uv_stream_t *)connection);
@@ -273,10 +300,13 @@ private:
             auto onClose = [](uv_handle_t *connection)
             {
                 ServerImpl *server = (ServerImpl *)connection->data;
-                assert(server);
-                server->connections.erase((ConnId)connection);
+                auto ite = server->connections.find(connection);
+                assert(ite != server->connections.end());
+                ConnId connId = ite->second;
 
-                server->handleCloseConn((ConnId)connection, MakeSuccess());
+                server->connections.erase(ite);
+
+                server->handleCloseConn(connId, MakeSuccess());
                 delete connection;
             };
             uv_close((uv_handle_t *)connection, onClose);
