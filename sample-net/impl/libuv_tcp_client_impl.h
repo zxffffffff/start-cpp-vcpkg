@@ -55,8 +55,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { ConnectOnEvent(ip, port); },
-                                   0);
+                                   { ConnectOnEvent(ip, port); });
         }
     }
 
@@ -69,8 +68,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { CloseOnEvent(); },
-                                   0);
+                                   { CloseOnEvent(); });
         }
     }
 
@@ -83,8 +81,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { WriteOnEvent(buffer); },
-                                   1);
+                                   { WriteOnEvent(buffer); });
         }
     }
 

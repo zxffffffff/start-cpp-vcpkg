@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class ServerImpl : public IServer
@@ -26,20 +26,20 @@ public:
     uv_tcp_t socket{0};
     sockaddr_in addr{0};
     const int listen_backlog = 256;
-    std::map<void*, ConnId> connections; /* uv_tcp_t* */
+    std::map<void *, ConnId> connections; /* uv_tcp_t* */
 
-    uv_tcp_t* findConnection(const ConnId& connId)
+    uv_tcp_t *findConnection(const ConnId &connId)
     {
         for (auto ite = connections.begin(); ite != connections.end(); ++ite)
         {
             if (ite->second == connId)
-                return (uv_tcp_t*)ite->first;
+                return (uv_tcp_t *)ite->first;
         }
         return nullptr;
     }
 
     /* 生成唯一ConnId */
-    static ConnId makeConnId(uv_tcp_t* connection)
+    static ConnId makeConnId(uv_tcp_t *connection)
     {
         static uint64_t g_uid = 0;
         uint64_t uid = ++g_uid;
@@ -74,8 +74,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { ListenOnEvent(ip, port); },
-                                   0);
+                                   { ListenOnEvent(ip, port); });
         }
     }
 
@@ -88,8 +87,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { CloseOnEvent(); },
-                                   0);
+                                   { CloseOnEvent(); });
         }
     }
 
@@ -102,8 +100,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { CloseOnEvent(connId); },
-                                   0);
+                                   { CloseOnEvent(connId); });
         }
     }
 
@@ -116,8 +113,7 @@ public:
         else
         {
             eventLoop.moveToThread([=]
-                                   { WriteOnEvent(connId, buffer); },
-                                   1);
+                                   { WriteOnEvent(connId, buffer); });
         }
     }
 
@@ -244,7 +240,7 @@ private:
     };
     void WriteOnEvent(ConnId connId, Buffer buffer)
     {
-        uv_tcp_t* connection = findConnection(connId);
+        uv_tcp_t *connection = findConnection(connId);
         if (!connection)
         {
             /* connId 已断开，多线程问题 */
@@ -284,7 +280,7 @@ private:
 
     void CloseOnEvent(ConnId connId)
     {
-        uv_tcp_t* connection = findConnection(connId);
+        uv_tcp_t *connection = findConnection(connId);
         if (!connection)
         {
             /* connId 已断开，多线程问题 */

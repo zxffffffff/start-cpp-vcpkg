@@ -82,8 +82,7 @@ public:
         thread_data->promise_close = std::promise<bool>();
         auto future = thread_data->promise_close.get_future();
         moveToThread([this]
-                     { uv_stop(&thread_data->loop); },
-                     0);
+                     { uv_stop(&thread_data->loop); });
         /* 存在线程同步问题 */
         /* win单例对象析构时线程可能被杀，使用future判断 */
         auto status = future.wait_for(std::chrono::milliseconds(100));
@@ -102,14 +101,11 @@ public:
         return std::this_thread::get_id() == thread_data->id;
     }
 
-    void moveToThread(std::function<void()> f, int push_back)
+    void moveToThread(std::function<void()> f)
     {
         {
             std::lock_guard<std::mutex> guard(thread_data->async_mutex);
-            if (push_back)
-                thread_data->async_cbk.push_back(f);
-            else
-                thread_data->async_cbk.push_front(f);
+            thread_data->async_cbk.push_back(f);
         }
         uv_async_send(&thread_data->async);
     }
