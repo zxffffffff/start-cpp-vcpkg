@@ -7,14 +7,14 @@
 ****************************************************************************/
 #pragma once
 #include <string>
-#include <set>
 #include <sstream>
+#include <iostream>
 #include <iomanip>
+#include <fmt/format.h>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
 #include <boost/algorithm/string.hpp>
-#include <fmt/format.h>
 
 // for system
 #ifdef _WIN32
@@ -135,12 +135,12 @@ public:
     }
 
 #ifdef _WIN32
-    char GetInputChar()
+    static char GetInputChar()
     {
         return getch();
     }
 #else
-    char GetInputChar()
+    static char GetInputChar()
     {
         struct termios oldt, newt;
         char c;
@@ -155,7 +155,7 @@ public:
 #endif
 
     /* 请输入密码 */
-    std::string GetInputPassword()
+    static std::string GetInputPassword()
     {
         std::string password;
         while (true)
