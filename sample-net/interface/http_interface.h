@@ -45,11 +45,16 @@ struct HttpResponse
     std::string to_string() const
     {
         std::stringstream ss;
-        ss << errCode;
-        if (errMsg.size())
-            ss << " " << errMsg;
-        if (data.size())
-            ss << " " << data;
+        if (errCode)
+        {
+            ss << "err=" << errCode << ":" << errMsg;
+            if (data.size())
+                ss << " data=" << data;
+        }
+        else
+        {
+            ss << data;
+        }
         return ss.str();
     }
 };
