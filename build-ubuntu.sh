@@ -18,7 +18,7 @@ if [ ! -x ${vcpkg_exe} ]; then
 fi
 
 # cmake (Debug/Release)
-config=Debug
+config=Release
 install_path=install/${config}
 vcpkg_cmake=${vcpkg_path}/scripts/buildsystems/vcpkg.cmake
 echo config: ${config}

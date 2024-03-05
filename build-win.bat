@@ -16,7 +16,7 @@ if not exist %vcpkg_exe% (
 )
 
 :: cmake (Debug/Release)
-set config=Debug
+set config=Release
 set install_path=install\%config%
 set vcpkg_cmake=%vcpkg_path%\scripts\buildsystems\vcpkg.cmake
 echo config: %config%
