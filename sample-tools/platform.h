@@ -11,10 +11,6 @@
 #include <iostream>
 #include <iomanip>
 #include <fmt/format.h>
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/algorithm/string.hpp>
 
 // for system
 #ifdef _WIN32
@@ -107,7 +103,7 @@ public:
         ULONG major = *(ULONG *)(sharedUserData + 0x26c);
         ULONG minor = *(ULONG *)(sharedUserData + 0x270);
         ULONG build = *(ULONG *)(sharedUserData + 0x260);
-        // 10.0.19041
+        // win10 = 10.0.19041
         return fmt::format("{}.{}.{}", major, minor, build);
 #elif __APPLE__
         char osproductversion[64]{0};
@@ -116,12 +112,12 @@ public:
         char osversion[64]{0};
         size_t osversion_size = 64;
         sysctlbyname("kern.osversion", osversion, &osversion_size, nullptr, 0);
-        // 14.2.1(23C71)
+        // macos = 14.2.1(23C71)
         return fmt::format("{}({})", osproductversion, osversion);
 #elif __linux__
         struct utsname uts;
         uname(&uts);
-        // CentOS 7 "3.10.0-1160.102.1.el7.x86_64"
+        // CentOS7 = 3.10.0-1160.102.1.el7.x86_64
         return uts.release;
 #endif
     }
@@ -175,11 +171,4 @@ public:
             }
         }
     };
-
-    /* 随机guid (00000000-0000-0000-0000-000000000000) */
-    static std::string GenGuid()
-    {
-        boost::uuids::random_generator gen;
-        return boost::uuids::to_string(gen());
-    }
 };
