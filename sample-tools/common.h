@@ -22,19 +22,16 @@ std::string stringToHex(const std::string &input)
 {
     std::stringstream ss;
     ss << std::hex << std::setfill('0');
-
     for (unsigned char c : input)
     {
         ss << std::setw(2) << static_cast<unsigned int>(c);
     }
-
     return ss.str();
 }
 
 std::string hexToString(const std::string &input)
 {
     std::string output;
-
     for (size_t i = 0; i < input.length(); i += 2)
     {
         std::istringstream iss(input.substr(i, 2));
@@ -42,6 +39,5 @@ std::string hexToString(const std::string &input)
         iss >> std::hex >> hexValue;
         output += static_cast<char>(hexValue);
     }
-
     return output;
 }
