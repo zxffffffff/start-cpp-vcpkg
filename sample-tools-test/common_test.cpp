@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #include <gtest/gtest.h>
-#include "platform.h"
+#include "common.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -16,20 +16,13 @@
 #pragma warning(disable : 4566)
 #endif
 
-TEST(utf8, test)
+TEST(guid, test)
 {
-    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
-    std::string local = Platform::utf8_to_local(msg);
-    std::string utf8 = Platform::local_to_utf8(local);
-
-    EXPECT_EQ(msg, utf8);
-}
-
-TEST(os, test)
-{
-    std::string type = Platform::GetOSType();
-    std::string ver = Platform::GetOSVersion();
-
-    EXPECT_TRUE(type.size());
-    EXPECT_TRUE(ver.size());
+    std::set<std::string> guids;
+    const int cnt = 1000;
+    for (int i = 0; i < cnt; ++i)
+    {
+        guids.insert(Common::GenGuid());
+    }
+    ASSERT_EQ(guids.size(), cnt);
 }

@@ -23,6 +23,7 @@ add_executable (${PROJECT_NAME}
     boost_threadpool_test.cpp
     threadtimer_test.cpp
     fmt_test.cpp
+    common_test.cpp
     platform_test.cpp
     hardware_test.cpp
 )
