@@ -5,10 +5,10 @@
 ** Support	: zxffffffff@outlook.com, 1337328542@qq.com
 **
 ****************************************************************************/
-#include <iostream>
 #include <string>
+#include <iostream>
 #include <sstream>
-#include <iomanip>
+#include <boost/algorithm/hex.hpp>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -18,26 +18,48 @@
 #pragma warning(disable : 4566)
 #endif
 
-std::string stringToHex(const std::string &input)
+class Common
 {
-    std::stringstream ss;
-    ss << std::hex << std::setfill('0');
-    for (unsigned char c : input)
+public:
+    static std::string stringToHex(const std::vector<char> &input)
     {
-        ss << std::setw(2) << static_cast<unsigned int>(c);
+        std::string out;
+        boost::algorithm::hex(input.begin(), input.end(), std::back_inserter(out));
+        return out;
     }
-    return ss.str();
-}
 
-std::string hexToString(const std::string &input)
-{
-    std::string output;
-    for (size_t i = 0; i < input.length(); i += 2)
+    static std::string stringToHex(const std::string &input)
     {
-        std::istringstream iss(input.substr(i, 2));
-        int hexValue;
-        iss >> std::hex >> hexValue;
-        output += static_cast<char>(hexValue);
+        std::string out;
+        boost::algorithm::hex(input.begin(), input.end(), std::back_inserter(out));
+        return out;
     }
-    return output;
-}
+
+    static std::string stringToHex(const char *input)
+    {
+        std::string out;
+        boost::algorithm::hex(input, std::back_inserter(out));
+        return out;
+    }
+
+    static std::string hexToString(const std::vector<char> &input)
+    {
+        std::string out;
+        boost::algorithm::unhex(input.begin(), input.end(), std::back_inserter(out));
+        return out;
+    }
+
+    static std::string hexToString(const std::string &input)
+    {
+        std::string out;
+        boost::algorithm::unhex(input.begin(), input.end(), std::back_inserter(out));
+        return out;
+    }
+
+    static std::string hexToString(const char *input)
+    {
+        std::string out;
+        boost::algorithm::unhex(input, std::back_inserter(out));
+        return out;
+    }
+};
