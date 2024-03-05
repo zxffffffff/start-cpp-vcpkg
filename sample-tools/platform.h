@@ -103,7 +103,7 @@ public:
         ULONG major = *(ULONG *)(sharedUserData + 0x26c);
         ULONG minor = *(ULONG *)(sharedUserData + 0x270);
         ULONG build = *(ULONG *)(sharedUserData + 0x260);
-        // win10 = 10.0.19041
+        // Windows-10 = 10.0.19041
         return fmt::format("{}.{}.{}", major, minor, build);
 #elif __APPLE__
         char osproductversion[64]{0};
@@ -112,12 +112,12 @@ public:
         char osversion[64]{0};
         size_t osversion_size = 64;
         sysctlbyname("kern.osversion", osversion, &osversion_size, nullptr, 0);
-        // macos = 14.2.1(23C71)
+        // macOS = 14.2.1(23C71)
         return fmt::format("{}({})", osproductversion, osversion);
 #elif __linux__
         struct utsname uts;
         uname(&uts);
-        // CentOS7 = 3.10.0-1160.102.1.el7.x86_64
+        // CentOS-7 = 3.10.0-1160.102.1.el7.x86_64
         return uts.release;
 #endif
     }
