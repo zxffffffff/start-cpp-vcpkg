@@ -55,16 +55,12 @@ public:
 #ifdef _WIN32
         if (str.empty())
             return str;
-
         int size = MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, nullptr, 0);
         std::wstring wstr(size, L'\0');
         MultiByteToWideChar(CP_UTF8, 0, str.c_str(), -1, &wstr[0], size);
         size = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::string result(size, '\0');
         WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
-
-        while (result.size() && result.back() == '\0')
-            result.pop_back();
         return result;
 #else
         return str;
@@ -77,16 +73,12 @@ public:
 #ifdef _WIN32
         if (str.empty())
             return str;
-
         int size = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, nullptr, 0);
         std::wstring wstr(size, L'\0');
         MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, &wstr[0], size);
         size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::string result(size, '\0');
         WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
-
-        while (result.size() && result.back() == '\0')
-            result.pop_back();
         return result;
 #else
         return str;

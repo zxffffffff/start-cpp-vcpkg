@@ -38,7 +38,7 @@ public:
         using namespace CryptoPP;
 
         std::string encode;
-        StringSource a(msg, true, new Base64Encoder(new StringSink(encode)));
+        StringSource a(msg, true, new Base64Encoder(new StringSink(encode), false));
         return encode;
     }
 
@@ -126,7 +126,7 @@ public:
             RSAES_PKCS1v15_Encryptor pub(publicKey);
 
             std::string result;
-            StringSource a((byte *)msg.c_str(), msg.length(), true, new PK_EncryptorFilter(randPool, pub, new Base64Encoder(new StringSink(result), false)));
+            StringSource a(msg, true, new PK_EncryptorFilter(randPool, pub, new Base64Encoder(new StringSink(result), false)));
             if (ok)
                 *ok = true;
             return result;
@@ -156,7 +156,7 @@ public:
                 size_t len = fixedLen < (nLen - i) ? fixedLen : (nLen - i);
                 std::string sPlain = msg.substr(i, len);
                 std::string sOut;
-                StringSource((byte *)sPlain.c_str(), sPlain.length(), true, new PK_EncryptorFilter(randPool, pub, new StringSink(sOut)));
+                StringSource(sPlain, true, new PK_EncryptorFilter(randPool, pub, new StringSink(sOut)));
                 result += sOut;
             }
             if (ok)
@@ -181,7 +181,7 @@ public:
             RSAES_PKCS1v15_Decryptor priv(privateKey);
 
             std::string result;
-            StringSource a((byte *)msg.c_str(), msg.length(), true, new Base64Decoder(new PK_DecryptorFilter(randPool, priv, new StringSink(result))));
+            StringSource a(msg, true, new Base64Decoder(new PK_DecryptorFilter(randPool, priv, new StringSink(result))));
             if (ok)
                 *ok = true;
             return result;
@@ -355,7 +355,7 @@ public:
         {
             std::string str_out;
             ECB_Mode<AES>::Encryption encryption((unsigned char *)key.c_str(), key.length());
-            StringSource encryptor((byte *)msg.c_str(), msg.length(), true, new StreamTransformationFilter(encryption, new StringSink(str_out), BlockPaddingSchemeDef::PKCS_PADDING));
+            StringSource encryptor(msg, true, new StreamTransformationFilter(encryption, new StringSink(str_out), BlockPaddingSchemeDef::PKCS_PADDING));
             if (ok)
                 *ok = true;
             return str_out;
@@ -377,7 +377,7 @@ public:
         {
             std::string str_out;
             ECB_Mode<AES>::Decryption decryption((unsigned char *)key.c_str(), key.length());
-            StringSource decryptor((byte *)msg.c_str(), msg.length(), true, new StreamTransformationFilter(decryption, new StringSink(str_out), BlockPaddingSchemeDef::PKCS_PADDING));
+            StringSource decryptor(msg, true, new StreamTransformationFilter(decryption, new StringSink(str_out), BlockPaddingSchemeDef::PKCS_PADDING));
             if (ok)
                 *ok = true;
             return str_out;
