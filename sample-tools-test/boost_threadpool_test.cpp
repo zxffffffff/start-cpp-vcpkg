@@ -13,34 +13,32 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
-TEST(BoostThreadPoolImpl, Test)
+TEST(boost_threadpool_impl, Test)
 {
-    auto pool = std::make_shared<ThreadPoolImpl<4>>();
+    auto pool = std::make_shared<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
-    for (int i = 0; i < 8; ++i) 
+    for (int i = 0; i < 4 * 10; ++i)
     {
         auto test = [pool, i]
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10 * i));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;
             return true;
         };
         pool->MoveToThread(test);
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    ASSERT_GT(flag, 4);
-
-    pool = nullptr;
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 + 50));
+    EXPECT_EQ(flag, 4 * 10);
 }
 
-TEST(BoostThreadPoolImpl, Recursive)
+TEST(boost_threadpool_impl, Recursive)
 {
-    auto pool = std::make_shared<ThreadPoolImpl<4>>();
+    auto pool = std::make_shared<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
     for (int i = 0; i < 8; ++i)
@@ -65,5 +63,5 @@ TEST(BoostThreadPoolImpl, Recursive)
     }
 
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    ASSERT_GT(flag, 8);
+    EXPECT_GT(flag, 8);
 }

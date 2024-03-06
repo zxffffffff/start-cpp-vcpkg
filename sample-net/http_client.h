@@ -14,25 +14,14 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 template <class IHttpClientImpl, class IThreadPoolImpl>
 class HttpClient
 {
-    std::unique_ptr<IHttpClient> client = std::make_unique<IHttpClientImpl>();
-    std::unique_ptr<IThreadPool> threadPool = std::make_unique<IThreadPoolImpl>();
-
-private:
-    HttpClient()
-    {
-        client->InitOnce();
-    }
-
-    ~HttpClient()
-    {
-        client->CleanupOnce();
-    }
+    std::unique_ptr<IHttpClient> client;
+    std::unique_ptr<IThreadPool> threadPool;
 
     /* url重复的部分作为前缀 */
     std::string urlPrefix;
@@ -44,10 +33,15 @@ private:
     };
 
 public:
-    static HttpClient &Singleton()
+    HttpClient(int threadPoolSize)
+        : client(std::make_unique<IHttpClientImpl>()), threadPool(std::make_unique<IThreadPoolImpl>(threadPoolSize))
     {
-        static HttpClient ins;
-        return ins;
+        client->InitOnce();
+    }
+
+    ~HttpClient()
+    {
+        client->CleanupOnce();
     }
 
     /* 不建议在生产环境禁用 SSL 验证 */

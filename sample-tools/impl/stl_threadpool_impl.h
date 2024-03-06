@@ -20,10 +20,10 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
-/* 线程池容量，不弹性扩容 */
+/* [1]线程池，不支持弹性扩容 */
 class ThreadPool
 {
     std::vector<std::thread> threads;
@@ -77,7 +77,8 @@ public:
 
         for (std::thread &thread : threads)
         {
-            thread.join();
+            if (thread.joinable())
+                thread.join();
         }
     }
 
@@ -97,7 +98,7 @@ public:
     }
 };
 
-/* 临时线程管理 */
+/* [2]临时线程 */
 class ThreadMgr
 {
     std::mutex mutex;
@@ -111,10 +112,10 @@ private:
         task();
 
         std::unique_lock<std::mutex> lock(mutex);
-        auto it = std::find_if(threads.begin(), threads.end(), [](const std::thread& t) {
-            return t.get_id() == std::this_thread::get_id();
-        });
-        if (it != threads.end()) {
+        auto it = std::find_if(threads.begin(), threads.end(), [](const std::thread &t)
+                               { return t.get_id() == std::this_thread::get_id(); });
+        if (it != threads.end())
+        {
             it->detach();
             threads.erase(it);
         }
@@ -133,7 +134,8 @@ public:
 
         for (std::thread &thread : threads2)
         {
-            thread.join();
+            if (thread.joinable())
+                thread.join();
         }
     }
 
@@ -145,13 +147,18 @@ public:
     }
 };
 
-template <int count>
+/* [1]+[2]组合，支持弹性扩容 */
 class ThreadPoolImpl : public IThreadPool
 {
-    std::unique_ptr<ThreadPool> threadPool = std::make_unique<ThreadPool>(count);
-    std::unique_ptr<ThreadMgr> threadMgr = std::make_unique<ThreadMgr>();
+    std::unique_ptr<ThreadPool> threadPool;
+    std::unique_ptr<ThreadMgr> threadMgr;
 
 public:
+    ThreadPoolImpl(int count)
+        : IThreadPool(count), threadPool(std::make_unique<ThreadPool>(count)), threadMgr(std::make_unique<ThreadMgr>())
+    {
+    }
+
     virtual std::future<void> MoveToThread(std::function<void()> f) override
     {
         auto promise = std::make_shared<std::promise<void>>();
@@ -161,7 +168,7 @@ public:
             f();
             promise->set_value();
         };
-        
+
         if (threadPool->GetIdleThreadCount() > 0)
             threadPool->MoveToThread(task);
         else
