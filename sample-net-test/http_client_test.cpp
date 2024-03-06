@@ -27,6 +27,7 @@ TEST(HttpClientTest, TestBaidu)
         google::InitGoogleLogging("test");
 
     TestHttpClient http(4);
+    TestHttpClient http2(4);
 
     auto response = http.Get("https://www.baidu.com", {}).get();
     EXPECT_EQ(response.errCode, 0) << response.errMsg;
@@ -36,7 +37,7 @@ TEST(HttpClientTest, TestBaidu)
     EXPECT_EQ(response2.errCode, 0) << response.errMsg;
     EXPECT_NE(response2.data.size(), 0);
 
-    auto response3 = http.PostSync("https://www.baidu.com", {}, "{}");
+    auto response3 = http2.PostSync("https://www.baidu.com", {}, "{}");
     EXPECT_EQ(response3.errCode, 0) << response.errMsg;
     EXPECT_NE(response3.data.size(), 0);
 }
@@ -44,7 +45,7 @@ TEST(HttpClientTest, TestBaidu)
 TEST(HttpClientTest, URLEncode)
 {
     TestHttpClient http(4);
-    
+
     std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
 
     std::string encode = http.URLEncode(raw);
