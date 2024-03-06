@@ -17,6 +17,11 @@
 #pragma warning(disable : 4566)
 #endif
 
+namespace
+{
+    static std::atomic<int> g_client_cnt;
+}
+
 template <class IHttpClientImpl, class IThreadPoolImpl>
 class HttpClient
 {
@@ -36,12 +41,14 @@ public:
     HttpClient(int threadPoolSize)
         : client(std::make_unique<IHttpClientImpl>()), threadPool(std::make_unique<IThreadPoolImpl>(threadPoolSize))
     {
-        client->InitOnce();
+        if (g_client_cnt++ == 0)
+            client->InitOnce();
     }
 
     ~HttpClient()
     {
-        client->CleanupOnce();
+        if (--g_client_cnt == 0)
+            client->CleanupOnce();
     }
 
     /* 不建议在生产环境禁用 SSL 验证 */
