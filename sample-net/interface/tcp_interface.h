@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 /* 工作线程回调，单线程不重入 */
@@ -58,7 +58,7 @@ class IServer
 public:
     virtual ~IServer() {}
 
-    virtual void Listen(const std::string &addr, int port) = 0;
+    virtual void Listen(const std::string &addr, int port, int maxConn) = 0;
     virtual void Close() = 0;
     virtual void Close(ConnId connId) = 0;
     virtual void Write(ConnId connId, Buffer buffer) = 0;
