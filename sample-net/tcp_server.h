@@ -14,7 +14,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 /* 线程异步回调，注意线程安全 */
@@ -31,6 +31,7 @@ protected:
 private:
     std::string addr;
     int port;
+    int maxConn;
     std::string tips;
 
     ServerStates state = ServerStates::Closed;
@@ -44,8 +45,8 @@ private:
     mutable Mutex connStatesMutex;
 
 public:
-    TcpServer(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "TcpServer")
-        : addr(addr), port(port), tips(tips)
+    TcpServer(const std::string &addr = "127.0.0.1", int port = 12345, int maxConn = 1024, const std::string &tips = "TcpServer")
+        : addr(addr), port(port), maxConn(maxConn), tips(tips)
     {
         using namespace std::placeholders;
         server->SetHandleListen(std::bind(&TcpServer::OnListen, this, _1));
@@ -155,7 +156,7 @@ public:
             return false;
 
         SetState(ServerStates::Listen);
-        server->Listen(GetAddr(), GetPort());
+        server->Listen(GetAddr(), GetPort(), maxConn);
         return true;
     }
 

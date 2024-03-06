@@ -39,8 +39,8 @@ private:
     std::map<ConnId, std::shared_ptr<Connection>> conns;
 
 public:
-    HttpServer(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "HttpServer")
-        : Super(addr, port, tips)
+    HttpServer(const std::string &addr = "127.0.0.1", int port = 12345, int maxConn = 1024, const std::string &tips = "HttpServer")
+        : Super(addr, port, maxConn, tips)
     {
     }
 

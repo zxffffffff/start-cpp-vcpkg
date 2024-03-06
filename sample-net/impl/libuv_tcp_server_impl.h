@@ -25,7 +25,7 @@ public:
     /* socket */
     uv_tcp_t socket{0};
     sockaddr_in addr{0};
-    const int listen_backlog = 256;
+    int listen_backlog = 1024;
     std::map<void *, ConnId> connections; /* uv_tcp_t* */
 
     uv_tcp_t *findConnection(const ConnId &connId)
@@ -58,7 +58,7 @@ public:
         eventLoop.stop();
     }
 
-    virtual void Listen(const std::string &ip, int port) override
+    virtual void Listen(const std::string &ip, int port, int maxConn) override
     {
         assert(handleListen); /* 必须初始化 handler */
         assert(handleClose);
@@ -69,12 +69,12 @@ public:
 
         if (eventLoop.thisIsLoop())
         {
-            ListenOnEvent(ip, port);
+            ListenOnEvent(ip, port, maxConn);
         }
         else
         {
             eventLoop.moveToThread([=]
-                                   { ListenOnEvent(ip, port); });
+                                   { ListenOnEvent(ip, port, maxConn); });
         }
     }
 
@@ -119,8 +119,10 @@ public:
 
 private:
     /* 网络线程 */
-    void ListenOnEvent(const std::string &ip, int port)
+    void ListenOnEvent(const std::string &ip, int port, int maxConn)
     {
+        listen_backlog = maxConn;
+
         uv_tcp_init(eventLoop.loop(), &socket);
         socket.data = this;
 
