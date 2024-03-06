@@ -26,7 +26,7 @@
 class IThreadPool
 {
 public:
-    IThreadPool() { /* 开启 */ }
+    IThreadPool(int count) { /* 开启 */ }
     virtual ~IThreadPool() { /* 结束 */ }
 
     virtual std::future<void> MoveToThread(std::function<void()> f) = 0;

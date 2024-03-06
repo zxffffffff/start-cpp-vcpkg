@@ -14,18 +14,17 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
-/* 数量不足时，会自动创建临时线程 */
-template <int count>
+/* 线程池，不支持弹性扩容 */
 class ThreadPoolImpl : public IThreadPool
 {
     boost::asio::thread_pool pool;
 
 public:
-    ThreadPoolImpl()
-        : pool(count)
+    ThreadPoolImpl(int count)
+        : IThreadPool(count), pool(count)
     {
     }
 
