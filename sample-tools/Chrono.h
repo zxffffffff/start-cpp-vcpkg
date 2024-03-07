@@ -14,9 +14,10 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
+/* 高精度 */
 class Chrono
 {
 public:
@@ -30,20 +31,20 @@ public:
 
     void start()
     {
-        time_start = std::chrono::steady_clock::now();
+        time_start = std::chrono::high_resolution_clock::now();
     }
 
-    int64_t stop()
+    double stop()
     {
-        time_stop = std::chrono::steady_clock::now();
+        time_stop = std::chrono::high_resolution_clock::now();
         return use_time();
     }
 
-    int64_t use_time()
+    double use_time()
     {
         return std::chrono::duration<double, std::milli>(time_stop - time_start).count();
     }
 
 private:
-    std::chrono::steady_clock::time_point time_start, time_stop;
+    std::chrono::high_resolution_clock::time_point time_start, time_stop;
 };
