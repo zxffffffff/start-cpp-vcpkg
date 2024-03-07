@@ -32,6 +32,7 @@ int main(int argc, char *argv[])
     std::cout << "你好 SampleMain." << std::endl;
 
     std::cout << "系统版本: " << Platform::GetOSType() << " " << Platform::GetOSVersion() << std::endl;
+    std::cout << "CPU数量: " << Hardware::GetCPUs() << std::endl;
     std::cout << "Mac地址: " << Hardware::GetMacAddr() << std::endl;
 
     SampleDynamicLib sample_dynamic_lib;
