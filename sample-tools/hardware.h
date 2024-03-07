@@ -20,11 +20,13 @@
 #include <Iphlpapi.h>
 #pragma comment(lib, "iphlpapi.lib")
 #elif __APPLE__
+#include <sys/sysctl.h>
 #include <IOKit/IOKitLib.h>
 #if (MAC_OS_X_VERSION_MAX_ALLOWED < 120000) // Before macOS 12 Monterey
 #define kIOMainPortDefault kIOMasterPortDefault
 #endif
 #elif __linux__
+#include "sys/sysinfo.h"
 #include <net/if.h>
 #include <sys/ioctl.h>
 #include <netinet/in.h>
@@ -43,6 +45,27 @@
 class Hardware
 {
 public:
+    /* 获取 CPU 个数，用来创建线程池等 */
+    static int GetCPUs()
+    {
+#ifdef _WIN32
+        SYSTEM_INFO sysInfo;
+        GetSystemInfo(&sysInfo);
+        return sysInfo.dwNumberOfProcessors;
+
+#elif __APPLE__
+        uint64_t logicalcpu = 0;
+        size_t logicalcpu_size = sizeof(logicalcpu);
+        sysctlbyname("hw.logicalcpu", &logicalcpu, &logicalcpu_size, nullptr, 0);
+        // or "hw.physicalcpu"
+        return logicalcpu;
+
+#elif __linux__
+        // or get_nprocs_conf()
+        return get_nprocs();
+#endif
+    }
+
     /* 使用mac地址作为设备唯一标识 (00-00-00-00-00-00)
      * 1、如果存在多个网卡，会将所有网卡mac地址相加
      * 2、如果存在虚拟网卡，会将其mac地址剔除，除非全部都是虚拟网卡
