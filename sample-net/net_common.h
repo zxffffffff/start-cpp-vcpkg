@@ -29,7 +29,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 #if CPP_VERSION >= 2017
@@ -42,7 +42,7 @@ using WLock = std::lock_guard<Mutex>;
 using RLock = WLock;
 #endif
 
-/* 通用 alias */
+/* 通用 alias，注意 shared_ptr 构造成本非常高，尽量使用 move */
 using Error = std::shared_ptr<std::pair<int, std::string>>;
 using Buffer = std::shared_ptr<std::vector<char>>;
 using ConnId = std::string; /* 可以用内存地址，需增加uid */
