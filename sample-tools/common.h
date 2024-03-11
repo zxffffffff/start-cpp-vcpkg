@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <sstream>
+#include <chrono>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -26,13 +27,20 @@
 class Common
 {
 public:
+    /* 纪元时间（Unix Epoch Time）1970 至今 */
+    static int64_t NowSinceEpoch_MS()
+    {
+        auto now = std::chrono::system_clock::now();
+        return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
+    }
+
     /* 随机guid (00000000-0000-0000-0000-000000000000) */
     static std::string GenGuid()
     {
         boost::uuids::random_generator gen;
         return boost::uuids::to_string(gen());
     }
-    
+
     static std::string stringToHex(const std::vector<char> &input)
     {
         std::string out;
