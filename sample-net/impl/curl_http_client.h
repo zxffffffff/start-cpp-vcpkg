@@ -14,12 +14,13 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class IHttpClientImpl : public IHttpClient
 {
     long enableSSLVerify = 1;
+    std::string SSLCertificatesPath;
 
 public:
     virtual void InitOnce() override
@@ -35,6 +36,11 @@ public:
     virtual void SetSSLVerify(bool enable) override
     {
         enableSSLVerify = enable ? 1 : 0;
+    }
+
+    virtual void SetSSLFile(const std::string &SSL_ca_file) override
+    {
+        SSLCertificatesPath = SSL_ca_file;
     }
 
     virtual std::string URLEncode(const std::string &msg) const override
@@ -93,6 +99,8 @@ public:
         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, enableSSLVerify);
+        if (SSLCertificatesPath.size())
+            curl_easy_setopt(curl, CURLOPT_CAINFO, SSLCertificatesPath.c_str());
         struct curl_slist *headers = NULL;
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());
@@ -135,6 +143,8 @@ public:
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
         curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, enableSSLVerify);
+        if (SSLCertificatesPath.size())
+            curl_easy_setopt(curl, CURLOPT_CAINFO, SSLCertificatesPath.c_str());
         struct curl_slist *headers = NULL;
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());

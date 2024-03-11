@@ -13,7 +13,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 struct HttpRequest
@@ -72,6 +72,7 @@ public:
     virtual void CleanupOnce() {}
 
     virtual void SetSSLVerify(bool enable) = 0;
+    virtual void SetSSLFile(const std::string &SSL_ca_file) = 0;
 
     virtual std::string URLEncode(const std::string &msg) const = 0;
     virtual std::string URLDecode(const std::string &msg) const = 0;
@@ -99,5 +100,5 @@ public:
 
     virtual Error ParseReq(Buffer buffer, HttpRequest &out_req) = 0; // 0, -1, 1:需要读取更多数据
 
-    virtual std::string MakeRes(const std::string& body) = 0;
+    virtual std::string MakeRes(const std::string &body) = 0;
 };

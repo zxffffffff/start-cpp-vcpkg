@@ -54,6 +54,19 @@ public:
     /* 不建议在生产环境禁用 SSL 验证 */
     void SetSSLVerify(bool enable) { client->SetSSLVerify(enable); }
 
+    /* Linux 不同系统路径不同，手动搜索并指定
+     * # cert list copied from golang src/crypto/x509/root_unix.go
+     * "/etc/ssl/certs/ca-certificates.crt",     # Debian/Ubuntu/Gentoo etc.
+     * "/etc/pki/tls/certs/ca-bundle.crt",       # Fedora/RHEL
+     * "/etc/ssl/ca-bundle.pem",                 # OpenSUSE
+     * "/etc/openssl/certs/ca-certificates.crt", # NetBSD
+     * "/etc/ssl/cert.pem",                      # OpenBSD
+     * "/usr/local/share/certs/ca-root-nss.crt", # FreeBSD/DragonFly
+     * "/etc/pki/tls/cacert.pem",                # OpenELEC
+     * "/etc/certs/ca-certificates.crt",         # Solaris 11.2+
+     */
+    void SetSSLFile(const std::string &SSL_ca_file) { client->SetSSLFile(SSL_ca_file); }
+
     void SetPrefix(const std::string &urlPrefix) { this->urlPrefix = urlPrefix; }
     const std::string &GetPrefix() const { return urlPrefix; }
 
