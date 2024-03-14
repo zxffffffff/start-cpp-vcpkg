@@ -41,6 +41,19 @@ public:
         return boost::uuids::to_string(gen());
     }
 
+    /* 时间戳转换 YYYY-mm-dd HH:MM:SS.ms */
+    static std::string TimeFormat(int64_t time_ms)
+    {
+        std::time_t time = time_ms / 1000;
+        int64_t milliseconds = time_ms % 1000;
+
+        std::ostringstream oss;
+        std::tm *local_time = std::localtime(&time);
+        oss << std::put_time(local_time, "%Y-%m-%d %H:%M:%S");
+        oss << "." << std::setw(3) << std::setfill('0') << milliseconds;
+        return oss.str();
+    }
+
     static std::string stringToHex(const std::vector<char> &input)
     {
         std::string out;

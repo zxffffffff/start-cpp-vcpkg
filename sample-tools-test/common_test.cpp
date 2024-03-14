@@ -25,6 +25,15 @@ TEST(Common, Time)
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     auto now = Common::NowSinceEpoch_MS();
     ASSERT_GE(now, start + 100);
+
+    std::string s = Common::TimeFormat(start);
+    ASSERT_NE(s.find("-"), std::string::npos);
+    ASSERT_NE(s.find(" "), std::string::npos);
+    ASSERT_NE(s.find(":"), std::string::npos);
+    ASSERT_NE(s.find("."), std::string::npos);
+
+    std::string s2 = Common::TimeFormat(now);
+    ASSERT_LT(s, s2);
 }
 
 TEST(Common, Guid)
