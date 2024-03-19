@@ -22,7 +22,7 @@ using TestTcpClient = TcpClient<ClientImpl>;
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 using namespace std::chrono_literals;
@@ -51,9 +51,9 @@ TEST(tcp, pingpong)
         server->Write(connId, buffer);
     };
     server->SetHandleConnRead(serverRead);
-    ASSERT_EQ(server->GetState(), ServerStates::Closed);
+    ASSERT_EQ(server->GetState(), ServerState::Closed);
     server->ListenSync();
-    ASSERT_EQ(server->GetState(), ServerStates::Listening);
+    ASSERT_EQ(server->GetState(), ServerState::Listening);
 
     // client
     constexpr int cnt = 3;
@@ -69,9 +69,9 @@ TEST(tcp, pingpong)
             client_recv->strs.push_back(std::string(buffer->data(), buffer->size()));
         };
         client->SetHandleRead(clientRead);
-        ASSERT_EQ(client->GetState(), ConnectionStates::Closed);
+        ASSERT_EQ(client->GetState(), ConnectionState::Closed);
         client->ConnectSync();
-        ASSERT_EQ(client->GetState(), ConnectionStates::Connected);
+        ASSERT_EQ(client->GetState(), ConnectionState::Connected);
     }
 
     for (int i = 0; i < cnt; ++i)
@@ -92,17 +92,17 @@ TEST(tcp, pingpong)
     for (int i = 0; i < cnt; ++i)
     {
         auto client = &(*clients)[i];
-        EXPECT_EQ(client->GetState(), ConnectionStates::Connected);
+        EXPECT_EQ(client->GetState(), ConnectionState::Connected);
         client->Close();
     }
-    EXPECT_EQ(server->GetState(), ServerStates::Listening);
+    EXPECT_EQ(server->GetState(), ServerState::Listening);
     server->CloseSync();
-    EXPECT_EQ(server->GetState(), ServerStates::Closed);
+    EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < cnt; ++i)
     {
         auto client = &(*clients)[i];
-        client->WaitForState(ConnectionStates::Closed, 1);
-        EXPECT_EQ(client->GetState(), ConnectionStates::Closed);
+        client->WaitForState(ConnectionState::Closed, 1);
+        EXPECT_EQ(client->GetState(), ConnectionState::Closed);
     }
 }
 
@@ -201,12 +201,12 @@ TEST(tcp, monkeytest)
         client->Close();
     }
     server->CloseSync();
-    EXPECT_EQ(server->GetState(), ServerStates::Closed);
+    EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        client->WaitForState(ConnectionStates::Closed, 1);
-        EXPECT_EQ(client->GetState(), ConnectionStates::Closed);
+        client->WaitForState(ConnectionState::Closed, 1);
+        EXPECT_EQ(client->GetState(), ConnectionState::Closed);
     }
 }
 
@@ -302,11 +302,11 @@ TEST(tcp, monkeytest2)
         client->Close();
     }
     server->CloseSync();
-    EXPECT_EQ(server->GetState(), ServerStates::Closed);
+    EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        client->WaitForState(ConnectionStates::Closed, 1);
-        EXPECT_EQ(client->GetState(), ConnectionStates::Closed);
+        client->WaitForState(ConnectionState::Closed, 1);
+        EXPECT_EQ(client->GetState(), ConnectionState::Closed);
     }
 }
