@@ -71,6 +71,8 @@ public:
     virtual void InitOnce() {}
     virtual void CleanupOnce() {}
 
+    virtual void SetVerbose(bool verbose) = 0;
+    virtual void SetProxy(bool enable) = 0;
     virtual void SetSSLVerify(bool enable) = 0;
     virtual void SetSSLFile(const std::string &SSL_ca_file) = 0;
 
