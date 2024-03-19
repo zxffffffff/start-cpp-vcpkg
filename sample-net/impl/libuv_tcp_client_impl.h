@@ -85,6 +85,22 @@ public:
         }
     }
 
+    /* 本地socket地址，随机端口号 */
+    std::string GetSocketAddr()
+    {
+        struct sockaddr_storage addr;
+        int addrlen = sizeof(addr);
+        uv_tcp_getsockname(&socket, (struct sockaddr *)&addr, &addrlen);
+
+        struct sockaddr_in *address = (struct sockaddr_in *)&addr;
+        char ip[INET_ADDRSTRLEN + 1]{0};
+        uv_inet_ntop(AF_INET, &address->sin_addr, ip, addrlen);
+        int port = ntohs(address->sin_port);
+
+        std::string client_addr = std::string(ip) + ":" + std::to_string(port);
+        return client_addr;
+    }
+
 private:
     /* 网络线程 */
     void ConnectOnEvent(const std::string &ip, int port)
@@ -115,8 +131,8 @@ private:
             }
 
             struct addrinfo *res = resolver.addrinfo;
-            char dns_ip[17] = {'\0'};
-            uv_ip4_name((struct sockaddr_in *)res->ai_addr, dns_ip, 16);
+            char dns_ip[INET_ADDRSTRLEN + 1]{0};
+            uv_ip4_name((struct sockaddr_in *)res->ai_addr, dns_ip, INET_ADDRSTRLEN);
             addr_status = uv_ip4_addr(dns_ip, port, &dest);
             uv_freeaddrinfo(res);
         }
