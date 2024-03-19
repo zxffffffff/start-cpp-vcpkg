@@ -14,11 +14,11 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 /* 线程异步回调，注意线程安全 */
-using HandleClientStates = std::function<void(ConnectionStates, Error)>;
+using HandleClientStates = std::function<void(ConnectionState, Error)>;
 using HandleClientRead = std::function<void(Buffer)>;
 
 template <class ITcpClientImpl>
@@ -32,7 +32,7 @@ private:
     int port;
     std::string tips;
 
-    ConnectionStates state = ConnectionStates::Closed;
+    ConnectionState state = ConnectionState::Closed;
     mutable Mutex stateMutex;
     HandleClientStates handleStates;
     HandleClientRead handleRead;
@@ -60,12 +60,12 @@ public:
     void SetPort(int port) { this->port = port; }
     int GetPort() const { return port; }
 
-    ConnectionStates GetState() const
+    ConnectionState GetState() const
     {
         RLock lock(stateMutex);
         return state;
     }
-    void SetState(ConnectionStates new_state, Error err = MakeSuccess())
+    void SetState(ConnectionState new_state, Error err = MakeSuccess())
     {
         {
             WLock lock(stateMutex);
@@ -76,23 +76,24 @@ public:
     }
     bool IsRunning() const { return CheckIsRunning(GetState()); }
 
-    bool WaitForState(ConnectionStates state, double timeout_sec)
+    bool WaitForState(ConnectionState state, double timeout_sec)
     {
-        return WaitForState({state}, timeout_sec);
+        return WaitForState({state}, timeout_sec) == state;
     }
 
-    bool WaitForState(std::initializer_list<ConnectionStates> state_list, double timeout_sec)
+    ConnectionState WaitForState(std::initializer_list<ConnectionState> state_list, double timeout_sec)
     {
-        std::set<ConnectionStates> states(state_list);
+        std::set<ConnectionState> states(state_list);
         auto start = std::chrono::steady_clock::now();
         std::chrono::milliseconds duration(int(timeout_sec * 1000));
         while (std::chrono::steady_clock::now() - start < duration)
         {
-            if (states.find(GetState()) != states.end())
-                return true;
+            ConnectionState state = GetState();
+            if (states.find(state) != states.end())
+                return state;
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        return (states.find(GetState()) != states.end());
+        return GetState();
     }
 
     /* 线程异步回调，注意线程安全 */
@@ -108,17 +109,17 @@ public:
         if (IsRunning())
             return false;
 
-        SetState(ConnectionStates::Connecting);
+        SetState(ConnectionState::Connecting);
         client->Connect(GetAddr(), GetPort());
         return true;
     }
 
     bool Close()
     {
-        if (GetState() <= ConnectionStates::Closing)
+        if (GetState() <= ConnectionState::Closing)
             return false;
 
-        SetState(ConnectionStates::Closing);
+        SetState(ConnectionState::Closing);
         client->Close();
         return true;
     }
@@ -136,13 +137,13 @@ public:
     bool ConnectSync(double timeout_sec = 5)
     {
         Connect();
-        return WaitForState({ConnectionStates::Connected, ConnectionStates::ConnFailed}, timeout_sec);
+        return WaitForState({ConnectionState::Connected, ConnectionState::ConnFailed}, timeout_sec) == ConnectionState::Connected;
     }
 
     bool CloseSync(double timeout_sec = 5)
     {
         Close();
-        return WaitForState(ConnectionStates::Closed, timeout_sec);
+        return WaitForState(ConnectionState::Closed, timeout_sec);
     }
 
 protected:
@@ -152,16 +153,16 @@ protected:
         if (err->first)
         {
             // err
-            SetState(ConnectionStates::ConnFailed, err);
+            SetState(ConnectionState::ConnFailed, err);
             return;
         }
         // success
-        SetState(ConnectionStates::Connected);
+        SetState(ConnectionState::Connected);
     }
 
     virtual void OnClose(Error err)
     {
-        SetState(ConnectionStates::Closed, err);
+        SetState(ConnectionState::Closed, err);
     }
 
     virtual void OnWrite(Error err)
@@ -169,7 +170,7 @@ protected:
         if (err->first)
         {
             // error
-            SetState(ConnectionStates::Shutdown, err);
+            SetState(ConnectionState::Shutdown, err);
             client->Close();
             return;
         }
@@ -180,7 +181,7 @@ protected:
         if (err->first)
         {
             // error
-            SetState(ConnectionStates::Shutdown, err);
+            SetState(ConnectionState::Shutdown, err);
             client->Close();
             return;
         }

@@ -14,92 +14,101 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 /* 状态流转参考 doc */
-enum class ServerStates : int
+enum class ServerState : int
 {
-    Closed,         /* 初始状态 */
-    Closing,        /* -> Closed */
+    Closed,  /* 初始状态 */
+    Closing, /* -> Closed */
 
-    Listen,         /* -> */
-    Listening,      /* success */
-    ListenFailed,   /* err */
+    Listen,       /* -> */
+    Listening,    /* success */
+    ListenFailed, /* err */
 };
 
-enum class ConnectionStates : int
+enum class ConnectionState : int
 {
-    Closed,         /* 初始状态 */
-    Closing,        /* -> Closed */
+    Closed,  /* 初始状态 */
+    Closing, /* -> Closed */
 
-    Connecting,     /* -> */
-    Connected,      /* success */
-    ConnFailed,     /* err */
+    Connecting, /* -> */
+    Connected,  /* success */
+    ConnFailed, /* err */
 
     // InitRequest, /* -> */
     // Inited,      /* success */
     // InitFailed,  /* err */
 
-    Shutdown,       /* 读写异常、心跳超时 -> Closing */
+    Shutdown, /* 读写异常、心跳超时 -> Closing */
 };
 
-inline bool CheckIsRunning(ServerStates state)
+inline bool CheckIsRunning(ServerState state)
 {
     switch (state)
     {
-    case ServerStates::Closed:       return false;
-    case ServerStates::Closing:      return false;
-    case ServerStates::Listen:       return true;
-    case ServerStates::Listening:    return true;
-    case ServerStates::ListenFailed: return false;
-    default:                         return false;
+    case ServerState::Closed:
+    case ServerState::Closing:
+    case ServerState::ListenFailed:
+        return false;
+    case ServerState::Listen:
+    case ServerState::Listening:
+        return true;
     }
+    return false;
 }
 
-inline bool CheckIsRunning(ConnectionStates state)
+inline bool CheckIsRunning(ConnectionState state)
 {
     switch (state)
     {
-    case ConnectionStates::Closed:         return false;
-    case ConnectionStates::Closing:        return false;
-    case ConnectionStates::Connecting:     return true;
-    case ConnectionStates::Connected:      return true;
-    case ConnectionStates::ConnFailed:     return false;
-    // case ConnectionStates::InitRequest: return true;
-    // case ConnectionStates::Inited:      return true;
-    // case ConnectionStates::InitFailed:  return false;
-    case ConnectionStates::Shutdown:       return false;
-    default:                               return false;
+    case ConnectionState::Closed:
+    case ConnectionState::Closing:
+    case ConnectionState::ConnFailed:
+    case ConnectionState::Shutdown:
+        return false;
+    case ConnectionState::Connecting:
+    case ConnectionState::Connected:
+        return true;
     }
+    return false;
 }
 
-inline const char* ToString(ServerStates state)
+inline const char *ToString(ServerState state)
 {
     switch (state)
     {
-    case ServerStates::Closed:       return "Closed";
-    case ServerStates::Closing:      return "Closing";
-    case ServerStates::Listen:       return "Listen";
-    case ServerStates::Listening:    return "Listening";
-    case ServerStates::ListenFailed: return "ListenFailed";
-    default:                         return "???";
+    case ServerState::Closed:
+        return "Closed";
+    case ServerState::Closing:
+        return "Closing";
+    case ServerState::Listen:
+        return "Listen";
+    case ServerState::Listening:
+        return "Listening";
+    case ServerState::ListenFailed:
+        return "ListenFailed";
     }
+    return "???";
 }
 
-inline const char* ToString(ConnectionStates state)
+inline const char *ToString(ConnectionState state)
 {
     switch (state)
     {
-    case ConnectionStates::Closed:         return "Closed";
-    case ConnectionStates::Closing:        return "Closing";
-    case ConnectionStates::Connecting:     return "Connecting";
-    case ConnectionStates::Connected:      return "Connected";
-    case ConnectionStates::ConnFailed:     return "ConnFailed";
-    // case ConnectionStates::InitRequest: return "InitRequest";
-    // case ConnectionStates::Inited:      return "Inited";
-    // case ConnectionStates::InitFailed:  return "InitFailed";
-    case ConnectionStates::Shutdown:       return "Shutdown";
-    default:                               return "???";
+    case ConnectionState::Closed:
+        return "Closed";
+    case ConnectionState::Closing:
+        return "Closing";
+    case ConnectionState::Connecting:
+        return "Connecting";
+    case ConnectionState::Connected:
+        return "Connected";
+    case ConnectionState::ConnFailed:
+        return "ConnFailed";
+    case ConnectionState::Shutdown:
+        return "Shutdown";
     }
+    return "???";
 }
