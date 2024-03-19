@@ -51,6 +51,10 @@ public:
             client->CleanupOnce();
     }
 
+    virtual void SetVerbose(bool verbose) { client->SetVerbose(verbose); }
+
+    virtual void SetProxy(bool enable) { client->SetProxy(enable); }
+
     /* 不建议在生产环境禁用 SSL 验证 */
     void SetSSLVerify(bool enable) { client->SetSSLVerify(enable); }
 

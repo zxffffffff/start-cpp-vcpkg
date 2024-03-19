@@ -33,6 +33,8 @@ TEST(HttpServerTest, GetPost)
         google::InitGoogleLogging("test");
 
     TestHttpClient http(4);
+    // http.SetVerbose(true);
+    http.SetProxy(false);
 
     auto server = std::make_shared<TestHttpServer>("127.0.0.1", 12333);
     auto handler = [](ConnId, Error err, std::shared_ptr<HttpRequest> req, ServerResponseCbk cbk)

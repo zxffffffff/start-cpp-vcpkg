@@ -19,7 +19,9 @@
 
 class IHttpClientImpl : public IHttpClient
 {
-    long enableSSLVerify = 1;
+    bool enableVerbose = false;
+    bool enableProxy = true;
+    bool enableSSLVerify = true;
     std::string SSLCertificatesPath;
 
 public:
@@ -33,9 +35,19 @@ public:
         curl_global_cleanup();
     }
 
+    virtual void SetVerbose(bool verbose) override
+    {
+        enableVerbose = verbose;
+    }
+
+    virtual void SetProxy(bool enable) override
+    {
+        enableProxy = enable;
+    }
+
     virtual void SetSSLVerify(bool enable) override
     {
-        enableSSLVerify = enable ? 1 : 0;
+        enableSSLVerify = enable;
     }
 
     virtual void SetSSLFile(const std::string &SSL_ca_file) override
@@ -94,13 +106,17 @@ public:
         std::stringstream res;
 
         CURL *curl = curl_easy_init();
-        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        if (enableVerbose)
+            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        if (!enableProxy)
+            curl_easy_setopt(curl, CURLOPT_PROXY, "");
+        if (!enableSSLVerify)
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+        if (!SSLCertificatesPath.empty())
+            curl_easy_setopt(curl, CURLOPT_CAINFO, SSLCertificatesPath.c_str());
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, enableSSLVerify);
-        if (SSLCertificatesPath.size())
-            curl_easy_setopt(curl, CURLOPT_CAINFO, SSLCertificatesPath.c_str());
         struct curl_slist *headers = NULL;
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());
@@ -138,13 +154,17 @@ public:
         std::stringstream res;
 
         CURL *curl = curl_easy_init();
-        // curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        if (enableVerbose)
+            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        if (!enableProxy)
+            curl_easy_setopt(curl, CURLOPT_PROXY, "");
+        if (!enableSSLVerify)
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+        if (!SSLCertificatesPath.empty())
+            curl_easy_setopt(curl, CURLOPT_CAINFO, SSLCertificatesPath.c_str());
         curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
         curl_easy_setopt(curl, CURLOPT_POST, 1);
         curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1);
-        curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, enableSSLVerify);
-        if (SSLCertificatesPath.size())
-            curl_easy_setopt(curl, CURLOPT_CAINFO, SSLCertificatesPath.c_str());
         struct curl_slist *headers = NULL;
         for (auto &s : _headers)
             headers = curl_slist_append(headers, s.c_str());
