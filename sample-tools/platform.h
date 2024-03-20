@@ -14,6 +14,7 @@
 
 // for system
 #ifdef _WIN32
+#define _WINSOCKAPI_ /* Prevent inclusion of winsock.h in windows.h */
 #include <windows.h>
 #undef min
 #undef max
