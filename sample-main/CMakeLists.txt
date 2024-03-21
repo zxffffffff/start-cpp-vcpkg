@@ -11,8 +11,7 @@ message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# Public 头文件
-add_executable (${PROJECT_NAME}
+add_executable(${PROJECT_NAME}
     "main.cpp"
 )
 
