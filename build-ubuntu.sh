@@ -24,6 +24,7 @@ vcpkg_cmake=${vcpkg_path}/scripts/buildsystems/vcpkg.cmake
 echo config: ${config}
 echo install_path: ${install_path}
 echo vcpkg_cmake: ${vcpkg_cmake}
+rm -rf ${install_path}
 
 echo "cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${vcpkg_cmake} -DCMAKE_INSTALL_PREFIX=${install_path}"
 cmake -B build -S . -DCMAKE_TOOLCHAIN_FILE=${vcpkg_cmake} -DCMAKE_INSTALL_PREFIX=${install_path}
