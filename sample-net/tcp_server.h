@@ -45,7 +45,7 @@ private:
     mutable Mutex connStatesMutex;
 
 public:
-    TcpServer(const std::string &addr = "127.0.0.1", int port = 12345, int maxConn = 1024, const std::string &tips = "TcpServer")
+    TcpServer(const std::string &addr = "127.0.0.1", int port = 49151, int maxConn = 1024, const std::string &tips = "TcpServer")
         : addr(addr), port(port), maxConn(maxConn), tips(tips)
     {
         using namespace std::placeholders;
