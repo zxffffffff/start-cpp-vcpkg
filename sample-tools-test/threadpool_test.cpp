@@ -18,6 +18,7 @@
 
 TEST(stl_threadpool_impl, Test)
 {
+    /* 自动扩容 */
     auto pool = std::make_shared<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
@@ -27,46 +28,47 @@ TEST(stl_threadpool_impl, Test)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;
-            return true;
         };
         pool->MoveToThread(test);
     }
 
-    /* 不准确，受到CPU核心数影响 */
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 + 50));
-    EXPECT_GT(flag, 4);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    EXPECT_GT(flag, 4 * 2);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 * (10 - 2)));
-    EXPECT_EQ(flag, 4 * 10);
+    /* 不准确，受到电脑性能影响 */
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    EXPECT_GT(flag.load(), 4 * 10 / 2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    ASSERT_EQ(flag.load(), 4 * 10);
 }
 
 TEST(stl_threadpool_impl, Recursive)
 {
+    /* 自动扩容 */
     auto pool = std::make_shared<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 4 * 5; ++i)
     {
         auto test = [pool, i]
         {
-            for (int j = 0; j < 8; ++j)
+            // i * 2
             {
-                auto test2 = [pool, j]
+                auto test2 = [pool]
                 {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(10 * j));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     ++flag;
                     return true;
                 };
                 pool->MoveToThread(test2);
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10 * i));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;
             return true;
         };
         pool->MoveToThread(test);
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    EXPECT_GT(flag, 8);
+    /* 不准确，受到电脑性能影响 */
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    EXPECT_GT(flag.load(), 4 * 10 / 2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    ASSERT_EQ(flag.load(), 4 * 10);
 }

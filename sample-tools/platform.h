@@ -58,6 +58,9 @@ public:
         size = WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::string result(size, '\0');
         WideCharToMultiByte(CP_ACP, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
+        /* 移除重复的'\0' */
+        while (result.size() && result.back() == '\0')
+            result.pop_back();
         return result;
 #else
         return str;
@@ -76,6 +79,9 @@ public:
         size = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
         std::string result(size, '\0');
         WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &result[0], size, nullptr, nullptr);
+        /* 移除重复的'\0' */
+        while (result.size() && result.back() == '\0')
+            result.pop_back();
         return result;
 #else
         return str;

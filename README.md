@@ -26,9 +26,8 @@
 - sample-net (tcp, http)
   - `libcurl`: 最流行的多协议文件传输库，支持 HTTP 请求。
   - `libuv`: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
-  > ![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/sample-net/doc/states.png)
 - sample-test
-  - `googletest`: Google 测试框架。
+  - `gtest`: Google 测试框架。
 
 ## 快速开始：
 - 运行 `build-platform.xxx` 在线安装第三方库，需要能够访问外网 (github) 
@@ -39,7 +38,7 @@
 ### 已验证：
 - Windows 10 x64 (VS 2022) 
 - Ubuntu 20.04 x64 (VS Code) 
-- macOS 13.1 Apple M1 (VS Code) 
+- macOS 14.4 ARM64 (VS Code) 
 
 ### 编译器最低版本建议：
 | C++ compiler  | Minimum OS version |
@@ -98,8 +97,9 @@
 ```
 
 # Vcpkg 
-- 安装 `vcpkg` 工具 (已添加 `submodule`) 
-- 建议使用 `submodule` 引入`git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
+- 安装 `vcpkg` 工具 (已添加 `submodule`)
+- 手动引入建议使用 `git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
+- 初始化、拉取更新可以使用 `git submodule update --init --recursive`
 
 ## 参考
 - https://github.com/microsoft/vcpkg

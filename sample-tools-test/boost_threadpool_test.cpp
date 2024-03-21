@@ -18,6 +18,7 @@
 
 TEST(boost_threadpool_impl, Test)
 {
+    /* 不自动扩容 */
     auto pool = std::make_shared<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
@@ -27,41 +28,43 @@ TEST(boost_threadpool_impl, Test)
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;
-            return true;
         };
         pool->MoveToThread(test);
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 + 50));
-    EXPECT_EQ(flag, 4 * 10);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    EXPECT_GE(flag.load(), 4 * 10 / 2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    ASSERT_EQ(flag.load(), 4 * 10);
 }
 
 TEST(boost_threadpool_impl, Recursive)
 {
+    /* 不自动扩容 */
     auto pool = std::make_shared<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 4 * 5; ++i)
     {
         auto test = [pool, i]
         {
-            for (int j = 0; j < 8; ++j)
+            // i * 2
             {
-                auto test2 = [pool, j]
+                auto test2 = [pool]
                 {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(10 * j));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     ++flag;
-                    return true;
                 };
                 pool->MoveToThread(test2);
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(10 * i));
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;
-            return true;
         };
         pool->MoveToThread(test);
     }
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    EXPECT_GT(flag, 8);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    EXPECT_GE(flag.load(), 4 * 10 / 2);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    ASSERT_EQ(flag.load(), 4 * 10);
 }
