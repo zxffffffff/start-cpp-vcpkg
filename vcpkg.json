@@ -23,6 +23,7 @@
     "sqlite3",
     "mysql-connector-cpp",
     "mongo-cxx-driver",
-    "hiredis"
+    "hiredis",
+    "imgui"
   ]
 }
