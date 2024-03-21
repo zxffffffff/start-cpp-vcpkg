@@ -24,6 +24,12 @@
     "mysql-connector-cpp",
     "mongo-cxx-driver",
     "hiredis",
-    "imgui"
+    {
+      "name": "imgui",
+      "features": [
+        "glfw-binding",
+        "opengl3-binding"
+      ]
+    }
   ]
 }
