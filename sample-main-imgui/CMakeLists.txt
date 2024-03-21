@@ -11,7 +11,9 @@ message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# 引入DearImGui
+# 引入DearImGui(opengl3/glfw3)
+find_package(OpenGL REQUIRED)
+find_package(glfw3 CONFIG REQUIRED)
 find_package(imgui CONFIG REQUIRED)
 
 add_executable(${PROJECT_NAME}
@@ -19,6 +21,8 @@ add_executable(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
+    PRIVATE opengl32
+    PRIVATE glfw
     PRIVATE imgui::imgui
 )
 
