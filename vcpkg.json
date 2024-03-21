@@ -23,13 +23,6 @@
     "sqlite3",
     "mysql-connector-cpp",
     "mongo-cxx-driver",
-    "hiredis",
-    {
-      "name": "imgui",
-      "features": [
-        "glfw-binding",
-        "opengl3-binding"
-      ]
-    }
+    "hiredis"
   ]
 }
