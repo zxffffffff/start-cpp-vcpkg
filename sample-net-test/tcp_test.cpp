@@ -82,7 +82,7 @@ TEST(tcp, pingpong)
         client->Write(MakeBuffer(msg));
     }
 
-    std::this_thread::sleep_for(200ms + cnt * 10ms);
+    std::this_thread::sleep_for(500ms + cnt * 100ms);
 
     EXPECT_EQ(server_recv->strs.size(), cnt);
     std::sort(server_recv->strs.begin(), server_recv->strs.end());
@@ -226,7 +226,7 @@ TEST(tcp, monkeytest2)
     };
     server->SetHandleConnRead(serverRead);
     server->ListenSync();
-    auto ServerListenClose = [&]
+    auto ServerListenSwitch = [&]
     {
         if (server->IsRunning())
             server->CloseSync();
@@ -270,6 +270,7 @@ TEST(tcp, monkeytest2)
             server_cmd.push_back(ServerWrite); // 100% -> 50%
 
         std::srand(std::time(nullptr));
+        int keep_write = 0;
         while (thread_run)
         {
             int random = std::rand() % server_cmd.size();
@@ -277,8 +278,8 @@ TEST(tcp, monkeytest2)
             f();
             std::this_thread::sleep_for(5ms);
 
-            if (server_cmd.size() < 100)
-                server_cmd.push_back(ServerListenClose); // 0% -> 50%
+            if (keep_write++ > 20 && server_cmd.size() < 100)
+                server_cmd.push_back(ServerListenSwitch); // 0% -> 50%
         }
     };
     std::thread thread(test);

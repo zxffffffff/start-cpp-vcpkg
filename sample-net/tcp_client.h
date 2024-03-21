@@ -38,7 +38,7 @@ private:
     HandleClientRead handleRead;
 
 public:
-    TcpClient(const std::string &addr = "127.0.0.1", int port = 12345, const std::string &tips = "TcpClient")
+    TcpClient(const std::string &addr = "127.0.0.1", int port = 49151, const std::string &tips = "TcpClient")
         : addr(addr), port(port), tips(tips)
     {
         using namespace std::placeholders;
