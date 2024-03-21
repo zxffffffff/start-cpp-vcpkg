@@ -36,9 +36,9 @@
 - 跨平台 C++ 工程建议使用 UTF-8，这样仅需设置 Windows 编译环境 (Windows 默认使用 GBK 编码需要设置，Win7 特殊处理) 
 
 ### 已验证：
-- Windows 10 x64 (VS 2022) 
-- Ubuntu 20.04 x64 (VS Code) 
-- macOS 14.4 ARM64 (VS Code) 
+- macOS 14.4 (arm64-osx)
+- Windows 10 (x64-windows)
+- CentOS 8   (x64-linux)
 
 ### 编译器最低版本建议：
 | C++ compiler  | Minimum OS version |
