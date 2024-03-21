@@ -48,11 +48,11 @@ echo "copy %vcpkg_installed%\bin\*.dll %install_path%\bin"
 copy %vcpkg_installed%\bin\*.dll %install_path%\bin
 echo "%install_path%\bin\sample-main.exe"
 %install_path%\bin\sample-main.exe
-echo "%install_path%\bin\sample-tools-test.exe"
-%install_path%\bin\sample-tools-test.exe
-echo "%install_path%\bin\sample-net-test.exe"
-%install_path%\bin\sample-net-test.exe
 echo "%install_path%\bin\sample-db-test.exe"
 %install_path%\bin\sample-db-test.exe
 echo "%install_path%\bin\sample-datacenter-test.exe"
 %install_path%\bin\sample-datacenter-test.exe
+echo "%install_path%\bin\sample-tools-test.exe"
+%install_path%\bin\sample-tools-test.exe
+echo "%install_path%\bin\sample-net-test.exe"
+%install_path%\bin\sample-net-test.exe
