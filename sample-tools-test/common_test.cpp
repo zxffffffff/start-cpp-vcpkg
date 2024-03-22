@@ -51,3 +51,14 @@ TEST(Common, Guid)
     }
     ASSERT_EQ(guids.size(), cnt);
 }
+
+TEST(Common, Random)
+{
+    std::set<int> nums;
+    for (int i = 0; i < 100 * 10000; ++i)
+    {
+        nums.insert(Common::Random());
+    }
+    /* 会有重复，尽可能的随机就行 */
+    EXPECT_GT(nums.size(), 99 * 10000);
+}
