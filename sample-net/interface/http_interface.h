@@ -47,7 +47,7 @@ struct HttpResponse
         std::stringstream ss;
         if (errCode)
         {
-            ss << "err=" << errCode << ":" << errMsg;
+            ss << errCode << ":" << errMsg;
             if (data.size())
                 ss << " data=" << data;
         }
