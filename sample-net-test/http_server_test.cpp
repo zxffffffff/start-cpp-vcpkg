@@ -29,9 +29,6 @@ using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl>;
 
 TEST(HttpServerTest, GetPost)
 {
-    if (!google::IsGoogleLoggingInitialized())
-        google::InitGoogleLogging("test");
-
     TestHttpClient http(4);
     // http.SetVerbose(true);
     http.SetProxy(false);

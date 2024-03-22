@@ -35,9 +35,6 @@ struct Data
 
 TEST(tcp, pingpong)
 {
-    if (!google::IsGoogleLoggingInitialized())
-        google::InitGoogleLogging("test");
-
     // server
     auto server = std::make_shared<TestTcpServer>();
     auto server_recv = std::make_shared<Data>();
@@ -108,9 +105,6 @@ TEST(tcp, pingpong)
 
 TEST(tcp, monkeytest)
 {
-    if (!google::IsGoogleLoggingInitialized())
-        google::InitGoogleLogging("test");
-
     // server
     auto server = std::make_shared<TestTcpServer>();
     auto server_recv = std::make_shared<Data>();
@@ -212,9 +206,6 @@ TEST(tcp, monkeytest)
 
 TEST(tcp, monkeytest2)
 {
-    if (!google::IsGoogleLoggingInitialized())
-        google::InitGoogleLogging("test");
-
     // server
     auto server = std::make_shared<TestTcpServer>();
     auto server_recv = std::make_shared<Data>();
@@ -226,20 +217,6 @@ TEST(tcp, monkeytest2)
     };
     server->SetHandleConnRead(serverRead);
     server->ListenSync();
-    auto ServerListenSwitch = [&]
-    {
-        if (server->IsRunning())
-            server->CloseSync();
-        else
-            server->ListenSync();
-    };
-    auto ServerWrite = [&]
-    {
-        // [1] ping ->
-        static std::atomic_int index;
-        server->Write(MakeBuffer(std::to_string(index)));
-        ++index;
-    };
 
     // client
     constexpr int client_cnt = 10;
@@ -262,6 +239,26 @@ TEST(tcp, monkeytest2)
         client->Connect();
     }
 
+    auto ServerListenSwitch = [&]
+    {
+        if (server->IsRunning())
+            server->CloseSync();
+        else
+            server->ListenSync();
+        for (int i = 0; i < client_cnt; ++i)
+        {
+            auto client = &(*clients)[i];
+            client->Connect();
+        }
+    };
+    auto ServerWrite = [&]
+    {
+        // [1] ping ->
+        static std::atomic_int index;
+        server->Write(MakeBuffer(std::to_string(index)));
+        ++index;
+    };
+
     static std::atomic<bool> thread_run{true};
     auto test = [&]
     {
@@ -270,7 +267,6 @@ TEST(tcp, monkeytest2)
             server_cmd.push_back(ServerWrite); // 100% -> 50%
 
         std::srand(std::time(nullptr));
-        int keep_write = 0;
         while (thread_run)
         {
             int random = std::rand() % server_cmd.size();
@@ -278,7 +274,7 @@ TEST(tcp, monkeytest2)
             f();
             std::this_thread::sleep_for(5ms);
 
-            if (keep_write++ > 20 && server_cmd.size() < 100)
+            if (server_cmd.size() < 100)
                 server_cmd.push_back(ServerListenSwitch); // 0% -> 50%
         }
     };

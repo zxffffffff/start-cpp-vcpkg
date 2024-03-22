@@ -23,9 +23,6 @@ using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl>;
 
 TEST(HttpClientTest, TestBaidu)
 {
-    if (!google::IsGoogleLoggingInitialized())
-        google::InitGoogleLogging("test");
-
     TestHttpClient http(4);
     TestHttpClient http2(4);
 
