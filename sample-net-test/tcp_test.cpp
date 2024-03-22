@@ -9,6 +9,7 @@
 #include <glog/logging.h>
 #include <gtest/gtest.h>
 
+#include "common.h"
 #include "tcp_server.h"
 #include "tcp_client.h"
 #include "impl/libuv_tcp_server_impl.h"
@@ -162,10 +163,9 @@ TEST(tcp, monkeytest)
         for (int i = 0; i < 80; ++i)
             client_cmd.push_back(ClientWrite); // 80%
 
-        std::srand(std::time(nullptr));
         while (thread_run)
         {
-            int random = std::rand() % client_cmd.size();
+            int random = Common::Random() % client_cmd.size();
             auto f = client_cmd[random];
             f(index);
             std::this_thread::sleep_for(5ms);
@@ -266,10 +266,9 @@ TEST(tcp, monkeytest2)
         for (int i = 0; i < 50; ++i)
             server_cmd.push_back(ServerWrite); // 100% -> 50%
 
-        std::srand(std::time(nullptr));
         while (thread_run)
         {
-            int random = std::rand() % server_cmd.size();
+            int random = Common::Random() % server_cmd.size();
             auto f = server_cmd[random];
             f();
             std::this_thread::sleep_for(5ms);

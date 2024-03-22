@@ -10,6 +10,7 @@
 #include <iostream>
 #include <sstream>
 #include <chrono>
+#include <random>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -39,6 +40,15 @@ public:
     {
         boost::uuids::random_generator gen;
         return boost::uuids::to_string(gen());
+    }
+
+    /* 伪随机数 */
+    static int Random(int n_min = 0, int n_max = INT_MAX)
+    {
+        std::random_device r;
+        std::default_random_engine el(r());
+        std::uniform_int_distribution<int> uniform_dist(n_min, n_max);
+        return uniform_dist(el);
     }
 
     /* 时间戳转换 YYYY-mm-dd HH:MM:SS.ms */
