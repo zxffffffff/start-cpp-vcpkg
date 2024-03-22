@@ -15,6 +15,9 @@ if (WIN32)
     # Windows 可选编译配置集（vcpkg built-in/community triplets）
     set(VCPKG_TARGET_TRIPLET x64-windows)
     
+    # MSVC 手动开启 __cplusplus 宏（否则始终是 199711L）
+    set(CMAKE_CXX_FLAGS "/permissive- /Zc:__cplusplus")
+
     # 源码使用 utf-8 编码格式编译
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
