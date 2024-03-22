@@ -12,9 +12,6 @@ set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
-    # Windows 可选编译配置集（vcpkg built-in/community triplets）
-    set(VCPKG_TARGET_TRIPLET x64-windows)
-    
     # MSVC 手动开启 __cplusplus 宏（否则始终是 199711L）
     set(CMAKE_CXX_FLAGS "/permissive- /Zc:__cplusplus")
 
@@ -36,6 +33,9 @@ else()
     # 静态链接 C++ 依赖库，不要使用 -static 静态链接 glibc
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 endif()
+
+# 可选 vcpkg 编译配置集（vcpkg built-in/community triplets）
+# 例如：set(VCPKG_TARGET_TRIPLET x64-windows)
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
