@@ -93,7 +93,7 @@ public:
         return MakeSuccess();
     }
 
-    virtual std::string MakeRes(const std::string& body) override
+    virtual std::string MakeRes(const std::string &body) override
     {
 #if 1
         namespace beast = boost::beast;
@@ -102,7 +102,7 @@ public:
         http::response<http::string_body> response;
         response.version(11); // HTTP/1.1
         response.result(http::status::ok);
-        response.set(http::field::server, BOOST_BEAST_VERSION_STRING);
+        // response.set(http::field::server, BOOST_BEAST_VERSION_STRING);
         response.set(http::field::content_type, "application/JSON;charset=UTF-8");
         response.set(http::field::cache_control, "no-cache");
         response.body() = body;
@@ -112,8 +112,11 @@ public:
 #else
         /* 手动构建 HTTP 响应字符串 */
         std::stringstream ss;
-        ss << "HTTP/1.1 200 OK" << "\r\n";
-        ss << "Content-Type: " << "application/JSON;charset=UTF-8" << "\r\n";
+        ss << "HTTP/1.1 200 OK"
+           << "\r\n";
+        ss << "Content-Type: "
+           << "application/JSON;charset=UTF-8"
+           << "\r\n";
         ss << "Content-Length: " << body.size() << "\r\n";
         ss << "\r\n";
         ss << body;
