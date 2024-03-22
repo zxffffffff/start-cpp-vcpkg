@@ -51,11 +51,13 @@ public:
             client->CleanupOnce();
     }
 
+    /* 查看详细请求信息，仅用于调试 */
     virtual void SetVerbose(bool verbose) { client->SetVerbose(verbose); }
 
+    /* 禁用 http 代理，例如 https_proxy=http://127.0.0.1:7890 */
     virtual void SetProxy(bool enable) { client->SetProxy(enable); }
 
-    /* 不建议在生产环境禁用 SSL 验证 */
+    /* 禁用 SSL 验证，不建议在生产环境使用 */
     void SetSSLVerify(bool enable) { client->SetSSLVerify(enable); }
 
     /* Linux 不同系统路径不同，手动搜索并指定
