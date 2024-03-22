@@ -16,7 +16,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class ThreadTimerImpl : public IThreadTimer
@@ -27,7 +27,7 @@ class ThreadTimerImpl : public IThreadTimer
         std::atomic_int m_interval_ms{50};
         std::atomic_bool m_running{false};
     };
-    std::unique_ptr<ThreadData> thread_data = std::make_unique<ThreadData>();
+    std::shared_ptr<ThreadData> thread_data = std::make_shared<ThreadData>();
 
     std::thread m_thread;
 

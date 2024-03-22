@@ -150,12 +150,12 @@ public:
 /* [1]+[2]组合，支持弹性扩容 */
 class ThreadPoolImpl : public IThreadPool
 {
-    std::unique_ptr<ThreadPool> threadPool;
-    std::unique_ptr<ThreadMgr> threadMgr;
+    std::shared_ptr<ThreadPool> threadPool;
+    std::shared_ptr<ThreadMgr> threadMgr;
 
 public:
     ThreadPoolImpl(int count)
-        : IThreadPool(count), threadPool(std::make_unique<ThreadPool>(count)), threadMgr(std::make_unique<ThreadMgr>())
+        : IThreadPool(count), threadPool(std::make_shared<ThreadPool>(count)), threadMgr(std::make_shared<ThreadMgr>())
     {
     }
 
