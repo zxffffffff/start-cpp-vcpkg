@@ -11,6 +11,14 @@ message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
+# 引入 boost (大部分 header-only 的库不需要 link)
+find_package(Boost REQUIRED)
+message(STATUS "[${PROJECT_NAME}] Boost_VERSION_STRING : ${Boost_VERSION_STRING}")
+message(STATUS "[${PROJECT_NAME}] Boost_INCLUDE_DIRS : ${Boost_INCLUDE_DIRS}")
+message(STATUS "[${PROJECT_NAME}] Boost_LIBRARY_DIRS : ${Boost_LIBRARY_DIRS}")
+include_directories(${Boost_INCLUDE_DIRS})
+add_definitions(-DBOOST_ASIO_NO_EXCEPTIONS) #boost会捕获assert
+
 # 引入 zlib
 find_package(ZLIB REQUIRED)
 message(STATUS "[${PROJECT_NAME}] ZLIB_VERSION_STRING : ${ZLIB_VERSION_STRING}")
@@ -50,9 +58,9 @@ file(GLOB_RECURSE include_headers
     interface/threadpool_interface.h
     interface/threadtimer_interface.h
     impl/cryptopp_impl.h
-    impl/stl_threadpool_impl.h 
-    impl/boost_threadpool_impl.h 
-    impl/stl_threadtimer_impl.h 
+    impl/stl_threadpool_impl.h
+    impl/boost_threadpool_impl.h
+    impl/stl_threadtimer_impl.h
 )
 
 add_library(${PROJECT_NAME} STATIC
@@ -61,6 +69,7 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_link_libraries(${PROJECT_NAME}
+    PUBLIC Boost::boost
     PUBLIC gflags::gflags
     PUBLIC glog::glog
     PUBLIC ZLIB::ZLIB

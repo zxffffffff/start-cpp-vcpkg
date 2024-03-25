@@ -20,9 +20,9 @@
 
 #if CPP_VERSION >= 2017
 #include <shared_mutex>
-#else /* C++11/14 */
+#else // C++ 11/14
 #include <mutex>
-#endif
+#endif // C++ 17
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -36,11 +36,11 @@
 using Mutex = std::shared_mutex;
 using WLock = std::unique_lock<Mutex>;
 using RLock = std::shared_lock<Mutex>;
-#else /* C++11/14 */
+#else // C++ 11/14
 using Mutex = std::mutex;
 using WLock = std::lock_guard<Mutex>;
 using RLock = WLock;
-#endif
+#endif // C++ 17
 
 /* 通用 alias，注意 shared_ptr 构造成本非常高，尽量使用 move */
 using Error = std::shared_ptr<std::pair<int, std::string>>;

@@ -6,7 +6,6 @@
 **
 ****************************************************************************/
 #include "gtest/gtest.h"
-#include "glog/logging.h"
 
 #include "http_client.h"
 #include "impl/curl_http_client.h"
@@ -25,6 +24,8 @@ TEST(HttpClientTest, TestBaidu)
 {
     TestHttpClient http(4);
     TestHttpClient http2(4);
+    http.SetProxy(false);
+    http2.SetProxy(false);
 
     auto response = http.Get("https://www.baidu.com", {}).get();
     EXPECT_EQ(response.errCode, 0) << response.errMsg;
