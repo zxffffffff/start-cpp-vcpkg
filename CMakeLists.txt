@@ -12,12 +12,12 @@ set(CMAKE_CXX_STANDARD 11)
 set(CXX_STANDARD_REQUIRED ON)
 
 if (WIN32)
-    # MSVC 手动开启 __cplusplus 宏（否则始终是 199711L）
-    set(CMAKE_CXX_FLAGS "/permissive- /Zc:__cplusplus")
-
     # 源码使用 utf-8 编码格式编译
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
+
+    # MSVC 手动开启 __cplusplus 宏（否则始终是 199711L）
+    set(CMAKE_CXX_FLAGS "/permissive- /Zc:__cplusplus")
 elseif (APPLE)
     # 编译动态库需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -34,8 +34,16 @@ else()
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++")
 endif()
 
-# 可选 vcpkg 编译配置集（vcpkg built-in/community triplets）
-# 例如：set(VCPKG_TARGET_TRIPLET x64-windows)
+# 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
+if (WIN32)
+    message(STATUS "[start-cpp-vcpkg] CMAKE_GENERATOR_PLATFORM : ${CMAKE_GENERATOR_PLATFORM}")
+    if("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64" OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
+        set(VCPKG_TARGET_TRIPLET x64-windows)
+    else()
+        set(VCPKG_TARGET_TRIPLET x86-windows)
+    endif()
+endif()
+message(STATUS "[start-cpp-vcpkg] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
