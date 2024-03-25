@@ -44,4 +44,4 @@ namespace std
         return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
     }
 }
-#endif /* 2011 */
+#endif // C++ 11

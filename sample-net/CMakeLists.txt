@@ -19,13 +19,8 @@ find_package(CURL CONFIG REQUIRED)
 message(STATUS "[${PROJECT_NAME}] CURL_VERSION_STRING : ${CURL_VERSION_STRING}")
 message(STATUS "[${PROJECT_NAME}] CURL_LIBRARIES : ${CURL_LIBRARIES}")
 
-# 引入boost库（header-only的库不需要）
+# 引入 boost-url (需要link)
 find_package(Boost REQUIRED COMPONENTS url)
-message(STATUS "[${PROJECT_NAME}] Boost_VERSION_STRING : ${Boost_VERSION_STRING}")
-message(STATUS "[${PROJECT_NAME}] Boost_INCLUDE_DIRS : ${Boost_INCLUDE_DIRS}")
-message(STATUS "[${PROJECT_NAME}] Boost_LIBRARY_DIRS : ${Boost_LIBRARY_DIRS}")
-add_definitions(-DBOOST_ASIO_NO_EXCEPTIONS) #boost会捕获assert
-include_directories(${Boost_INCLUDE_DIRS})
 
 # Public 头文件
 file(GLOB_RECURSE include_headers
@@ -54,7 +49,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-tools
     PRIVATE $<IF:$<TARGET_EXISTS:libuv::uv_a>,libuv::uv_a,libuv::uv>
     PRIVATE CURL::libcurl
-    PRIVATE Boost::boost Boost::url
+    PRIVATE Boost::url
 )
 
 target_include_directories(${PROJECT_NAME}

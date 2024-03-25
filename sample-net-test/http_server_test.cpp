@@ -6,7 +6,6 @@
 **
 ****************************************************************************/
 #include "gtest/gtest.h"
-#include "glog/logging.h"
 
 #include "http_server.h"
 #include "impl/boost_http_parser.h"
