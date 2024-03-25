@@ -21,6 +21,7 @@
 class ThreadPoolImpl : public IThreadPool
 {
     boost::asio::thread_pool pool;
+    std::atomic_bool m_running{true};
 
 public:
     ThreadPoolImpl(int count)
@@ -30,20 +31,24 @@ public:
 
     virtual ~ThreadPoolImpl()
     {
-        /* 等待所有任务完成 */
+        m_running = false;
         pool.join();
     }
 
-    virtual std::future<void> MoveToThread(std::function<void()> f) override
+    virtual std::future<bool> MoveToThread(std::function<void()> f) override
     {
-        auto promise = std::make_shared<std::promise<void>>();
+        auto promise = std::make_shared<std::promise<bool>>();
         auto future = promise->get_future();
         auto task = [=]
         {
             f();
-            promise->set_value();
+            promise->set_value(true);
         };
-        boost::asio::post(pool, task);
+
+        if (m_running)
+            boost::asio::post(pool, task);
+        else
+            promise->set_value(false);
         return future;
     }
 };
