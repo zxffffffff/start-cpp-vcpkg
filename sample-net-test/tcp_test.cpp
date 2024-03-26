@@ -32,7 +32,7 @@ struct Data
     std::vector<std::string> strs;
 };
 
-TEST(tcp, pingpong)
+TEST(TcpCS, pingpong)
 {
     // server
     auto server = std::make_shared<TestTcpServer>();
@@ -102,7 +102,7 @@ TEST(tcp, pingpong)
     }
 }
 
-TEST(tcp, monkeytest)
+TEST(TcpCS, monkeytest)
 {
     // server
     auto server = std::make_shared<TestTcpServer>();
@@ -202,7 +202,7 @@ TEST(tcp, monkeytest)
     }
 }
 
-TEST(tcp, monkeytest2)
+TEST(TcpCS, monkeytest2)
 {
     // server
     auto server = std::make_shared<TestTcpServer>();
