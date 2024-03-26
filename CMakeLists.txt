@@ -36,6 +36,7 @@ endif()
 
 # 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
 if (WIN32)
+    message(STATUS "[start-cpp-vcpkg] CMAKE_GENERATOR : ${CMAKE_GENERATOR}")
     message(STATUS "[start-cpp-vcpkg] CMAKE_GENERATOR_PLATFORM : ${CMAKE_GENERATOR_PLATFORM}")
     if("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64" OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
         set(VCPKG_TARGET_TRIPLET x64-windows)
