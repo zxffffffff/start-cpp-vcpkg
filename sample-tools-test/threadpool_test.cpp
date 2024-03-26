@@ -43,21 +43,22 @@ TEST(stl_threadpool_impl, Recursive)
 {
     /* 自动扩容 */
     auto pool = std::make_unique<ThreadPoolImpl>(4);
+    auto p_pool = pool.get();
     static std::atomic<int> flag{0};
 
     for (int i = 0; i < 4 * 5; ++i)
     {
-        auto test = [&]
+        auto test = [=]
         {
             // i * 2
             {
-                auto test2 = [&]
+                auto test2 = [=]
                 {
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     ++flag;
                     return true;
                 };
-                pool->MoveToThread(test2);
+                p_pool->MoveToThread(test2);
             }
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;

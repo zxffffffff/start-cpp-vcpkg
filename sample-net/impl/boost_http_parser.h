@@ -55,21 +55,16 @@ public:
         out_req.path = url.path();
 
         std::vector<std::string> keyValues;
-        auto add_params = [&](const std::vector<std::string> &keyValues)
-        {
-            for (const auto &keyValue : keyValues)
-            {
-                std::vector<std::string> keyValueSplit;
-                boost::algorithm::split(keyValueSplit, keyValue, boost::is_any_of("="));
-                if (keyValueSplit.size() == 2)
-                {
-                    out_req.parameters[keyValueSplit[0]] = keyValueSplit[1];
-                }
-            }
-        };
-
         boost::algorithm::split(keyValues, url.query(), boost::is_any_of("&"));
-        add_params(keyValues);
+        for (const auto &keyValue : keyValues)
+        {
+            std::vector<std::string> keyValueSplit;
+            boost::algorithm::split(keyValueSplit, keyValue, boost::is_any_of("="));
+            if (keyValueSplit.size() == 2)
+            {
+                out_req.parameters[keyValueSplit[0]] = keyValueSplit[1];
+            }
+        }
 
         if ("POST" == out_req.method)
         {

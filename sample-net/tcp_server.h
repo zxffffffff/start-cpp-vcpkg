@@ -87,12 +87,11 @@ public:
 
     bool WaitForState(ServerState state, double timeout_sec)
     {
-        return WaitForState({state}, timeout_sec) == state;
+        return WaitForStates({state}, timeout_sec) == state;
     }
 
-    ServerState WaitForState(std::initializer_list<ServerState> state_list, double timeout_sec)
+    ServerState WaitForStates(std::set<ServerState> states, double timeout_sec)
     {
-        std::set<ServerState> states(state_list);
         auto start = std::chrono::steady_clock::now();
         std::chrono::milliseconds duration(int(timeout_sec * 1000));
         while (std::chrono::steady_clock::now() - start < duration)
@@ -195,7 +194,7 @@ public:
     bool ListenSync(double timeout_sec = 5)
     {
         Listen();
-        return WaitForState({ServerState::Listening, ServerState::ListenFailed}, timeout_sec) == ServerState::Listening;
+        return WaitForStates({ServerState::Listening, ServerState::ListenFailed}, timeout_sec) == ServerState::Listening;
     }
 
     bool CloseSync(double timeout_sec = 5)
