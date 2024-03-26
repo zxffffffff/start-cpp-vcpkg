@@ -7,7 +7,6 @@
     "glog",
     "gtest",
     "boost-algorithm",
-    "boost-asio",
     "boost-beast",
     "boost-url",
     "boost-uuid",

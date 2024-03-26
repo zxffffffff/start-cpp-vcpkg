@@ -12,7 +12,7 @@
 #include "tcp_client.h"
 #include "impl/libuv_tcp_server_impl.h"
 #include "impl/libuv_tcp_client_impl.h"
-#include "impl/boost_threadpool_impl.h"
+#include "impl/stl_threadpool_impl.h"
 using TestTcpServer = TcpServer<ServerImpl>;
 using TestTcpClient = TcpClient<ClientImpl>;
 
