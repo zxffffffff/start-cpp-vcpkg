@@ -7,6 +7,7 @@
 ****************************************************************************/
 #pragma once
 #include "cpp_version.h"
+#include <thread>
 #include <string>
 #include <set>
 #include <sstream>
@@ -46,12 +47,17 @@
 class Hardware
 {
 public:
-    /* 获取 CPU 个数，用来创建线程池等 */
+    /* 获取 CPU 逻辑核心数 */
     static int GetCPUs()
     {
+        /* 硬件支持的并发线程数，失败返回0 */
+        int n = std::thread::hardware_concurrency();
+
 #ifdef _WIN32
         SYSTEM_INFO sysInfo;
         GetSystemInfo(&sysInfo);
+        // logical cpu
+        assert(sysInfo.dwNumberOfProcessors == n);
         return sysInfo.dwNumberOfProcessors;
 
 #elif __APPLE__
@@ -59,11 +65,14 @@ public:
         size_t logicalcpu_size = sizeof(logicalcpu);
         sysctlbyname("hw.logicalcpu", &logicalcpu, &logicalcpu_size, nullptr, 0);
         // or "hw.physicalcpu"
+        assert(logicalcpu == n);
         return logicalcpu;
 
 #elif __linux__
+        int nprocs = get_nprocs();
         // or get_nprocs_conf()
-        return get_nprocs();
+        assert(nprocs == n);
+        return nprocs;
 #endif
     }
 
