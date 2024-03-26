@@ -19,12 +19,12 @@
 TEST(stl_threadpool_impl, Test)
 {
     /* 自动扩容 */
-    auto pool = std::make_shared<ThreadPoolImpl>(4);
+    auto pool = std::make_unique<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
     for (int i = 0; i < 4 * 10; ++i)
     {
-        auto test = [pool, i]
+        auto test = []
         {
             std::this_thread::sleep_for(std::chrono::milliseconds(100));
             ++flag;
@@ -42,16 +42,16 @@ TEST(stl_threadpool_impl, Test)
 TEST(stl_threadpool_impl, Recursive)
 {
     /* 自动扩容 */
-    auto pool = std::make_shared<ThreadPoolImpl>(4);
+    auto pool = std::make_unique<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
     for (int i = 0; i < 4 * 5; ++i)
     {
-        auto test = [pool, i]
+        auto test = [&]
         {
             // i * 2
             {
-                auto test2 = [pool]
+                auto test2 = [&]
                 {
                     std::this_thread::sleep_for(std::chrono::milliseconds(100));
                     ++flag;
@@ -71,4 +71,27 @@ TEST(stl_threadpool_impl, Recursive)
     EXPECT_GT(flag.load(), 4 * 10 / 2);
     std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
     ASSERT_EQ(flag.load(), 4 * 10);
+}
+
+TEST(stl_threadpool_impl, Shutdown)
+{
+    /* 不自动扩容 */
+    auto pool = std::make_unique<ThreadPoolImpl>(4);
+    static std::atomic<int> flag{0};
+
+    for (int i = 0; i < 4 * 10; ++i)
+    {
+        auto test = []
+        {
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            ++flag;
+        };
+        pool->MoveToThread(test);
+    }
+
+    while (flag < 10)
+    {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    pool = nullptr; // Shutdown
 }

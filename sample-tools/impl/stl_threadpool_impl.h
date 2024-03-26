@@ -78,17 +78,16 @@ public:
         }
     }
 
-    bool MoveToThread(std::function<void()> task)
+    void MoveToThread(std::function<void()> task)
     {
         if (!m_running)
-            return false;
+            return;
 
         {
             std::unique_lock<std::mutex> lock(queueMutex);
             tasks.push(std::move(task));
         }
         condition.notify_one();
-        return true;
     }
 
     int GetIdleThreadCount() const
@@ -110,6 +109,9 @@ class ThreadMgr
 private:
     void workerThread(std::function<void()> task)
     {
+        if (!m_running)
+            return;
+
         task();
 
         std::unique_lock<std::mutex> lock(mutex);
@@ -140,14 +142,13 @@ public:
         }
     }
 
-    bool MoveToThread(std::function<void()> task)
+    void MoveToThread(std::function<void()> task)
     {
         if (!m_running)
-            return false;
+            return;
 
         std::unique_lock<std::mutex> lock(mutex);
         threads.emplace_back(&ThreadMgr::workerThread, this, std::move(task));
-        return true;
     }
 };
 
@@ -163,24 +164,11 @@ public:
     {
     }
 
-    virtual std::future<bool> MoveToThread(std::function<void()> f) override
+    virtual void MoveToThread(std::function<void()> f) override
     {
-        auto promise = std::make_shared<std::promise<bool>>();
-        auto future = promise->get_future();
-        auto task = [=]
-        {
-            f();
-            promise->set_value(true);
-        };
-
-        bool ret = false;
         if (threadPool->GetIdleThreadCount() > 0)
-            ret = threadPool->MoveToThread(task);
+            threadPool->MoveToThread(f);
         else
-            ret = threadMgr->MoveToThread(task);
-
-        if (!ret)
-            promise->set_value(false);
-        return future;
+            threadMgr->MoveToThread(f);
     }
 };
