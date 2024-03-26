@@ -35,20 +35,10 @@ public:
         pool.join();
     }
 
-    virtual std::future<bool> MoveToThread(std::function<void()> f) override
+    virtual void MoveToThread(std::function<void()> f) override
     {
-        auto promise = std::make_shared<std::promise<bool>>();
-        auto future = promise->get_future();
-        auto task = [=]
-        {
-            f();
-            promise->set_value(true);
-        };
-
-        if (m_running)
-            boost::asio::post(pool, task);
-        else
-            promise->set_value(false);
-        return future;
+        if (!m_running)
+            return;
+        boost::asio::post(pool, f);
     }
 };
