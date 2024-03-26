@@ -17,7 +17,6 @@ message(STATUS "[${PROJECT_NAME}] Boost_VERSION_STRING : ${Boost_VERSION_STRING}
 message(STATUS "[${PROJECT_NAME}] Boost_INCLUDE_DIRS : ${Boost_INCLUDE_DIRS}")
 message(STATUS "[${PROJECT_NAME}] Boost_LIBRARY_DIRS : ${Boost_LIBRARY_DIRS}")
 include_directories(${Boost_INCLUDE_DIRS})
-add_definitions(-DBOOST_ASIO_NO_EXCEPTIONS) #boost会捕获assert
 
 # 引入 zlib
 find_package(ZLIB REQUIRED)
@@ -59,7 +58,6 @@ file(GLOB_RECURSE include_headers
     interface/threadtimer_interface.h
     impl/cryptopp_impl.h
     impl/stl_threadpool_impl.h
-    impl/boost_threadpool_impl.h
     impl/stl_threadtimer_impl.h
 )
 

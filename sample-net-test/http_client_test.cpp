@@ -9,7 +9,7 @@
 
 #include "http_client.h"
 #include "impl/curl_http_client.h"
-#include "impl/boost_threadpool_impl.h"
+#include "impl/stl_threadpool_impl.h"
 using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
