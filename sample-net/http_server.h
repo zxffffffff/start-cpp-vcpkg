@@ -21,11 +21,11 @@
 using ServerResponseCbk = std::function<void(std::string)>;
 using HandleServerRequest = std::function<void(ConnId, Error, std::shared_ptr<HttpRequest>, ServerResponseCbk)>;
 
-template <class IHttpParserImpl, class ITcpServerImpl>
-class HttpServer : public TcpServer<ITcpServerImpl>
+template <class T_IHttpParser, class T_ITcpServerImpl>
+class HttpServer : public TcpServer<T_ITcpServerImpl>
 {
 protected:
-    using Super = TcpServer<ITcpServerImpl>;
+    using Super = TcpServer<T_ITcpServerImpl>;
 
 private:
     HandleServerRequest handleServerRequest;
@@ -33,7 +33,7 @@ private:
     struct Connection
     {
         Buffer recv;
-        std::unique_ptr<IHttpParser> parser = std::make_unique<IHttpParserImpl>();
+        std::unique_ptr<IHttpParser> parser = std::make_unique<T_IHttpParser>();
         mutable Mutex connMutex;
     };
     std::map<ConnId, std::shared_ptr<Connection>> conns;

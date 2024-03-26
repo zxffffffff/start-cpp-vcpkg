@@ -17,7 +17,7 @@
 #pragma warning(disable : 4566)
 #endif
 
-class IHttpClientImpl : public IHttpClient
+class HttpClientImpl : public IHttpClient
 {
     bool enableVerbose = false;
     bool enableProxy = true;

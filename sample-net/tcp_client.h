@@ -21,11 +21,11 @@
 using HandleClientStates = std::function<void(ConnectionState, Error)>;
 using HandleClientRead = std::function<void(Buffer)>;
 
-template <class ITcpClientImpl>
+template <class T_IClient>
 class TcpClient
 {
 protected:
-    std::unique_ptr<IClient> client = std::make_unique<ITcpClientImpl>();
+    std::unique_ptr<IClient> client = std::make_unique<T_IClient>();
 
 private:
     std::string addr;
