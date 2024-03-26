@@ -67,6 +67,14 @@ add_library(${PROJECT_NAME} STATIC
     ${include_headers}
 )
 
+if (MSVC)
+# 手动启用 C++ 异常: https://learn.microsoft.com/zh-cn/cpp/build/reference/eh-exception-handling-model
+set_target_properties(${PROJECT_NAME}
+    PROPERTIES
+    COMPILE_FLAGS "/EHsc"
+)
+endif()
+
 target_link_libraries(${PROJECT_NAME}
     PUBLIC gflags::gflags
     PUBLIC glog::glog
