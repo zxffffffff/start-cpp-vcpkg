@@ -22,11 +22,11 @@ using HandleServerState = std::function<void(ServerState, Error)>;
 using HandleServerConnStates = std::function<void(ConnId, ConnectionState, Error)>;
 using HandleServerConnRead = std::function<void(ConnId, Buffer)>;
 
-template <class ITcpServerImpl>
+template <class T_ITcpServerImpl>
 class TcpServer
 {
 protected:
-    std::unique_ptr<IServer> server = std::make_unique<ITcpServerImpl>();
+    std::unique_ptr<IServer> server = std::make_unique<T_ITcpServerImpl>();
 
 private:
     std::string addr;

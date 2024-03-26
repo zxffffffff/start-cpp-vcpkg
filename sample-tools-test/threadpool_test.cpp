@@ -34,7 +34,7 @@ TEST(stl_threadpool_impl, Test)
 
     /* 不准确，受到电脑性能影响 */
     std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
-    EXPECT_GT(flag.load(), 4 * 10 / 2);
+    EXPECT_GE(flag.load(), 4 * 10 / 2);
     std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
     ASSERT_EQ(flag.load(), 4 * 10);
 }
@@ -68,7 +68,7 @@ TEST(stl_threadpool_impl, Recursive)
 
     /* 不准确，受到电脑性能影响 */
     std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
-    EXPECT_GT(flag.load(), 4 * 10 / 2);
+    EXPECT_GE(flag.load(), 4 * 10 / 2);
     std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
     ASSERT_EQ(flag.load(), 4 * 10);
 }

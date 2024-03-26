@@ -16,7 +16,7 @@ using TestHttpServer = HttpServer<HttpParserImpl, ServerImpl>;
 #include "http_client.h"
 #include "impl/curl_http_client.h"
 #include "impl/boost_threadpool_impl.h"
-using TestHttpClient = HttpClient<IHttpClientImpl, ThreadPoolImpl>;
+using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
