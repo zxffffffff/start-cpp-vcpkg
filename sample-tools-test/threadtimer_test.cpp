@@ -44,7 +44,7 @@ TEST(ThreadTimerImpl, Recursive)
         timer->Start();
     };
 
-    ThreadTimerImpl timer(100, [&]
+    ThreadTimerImpl timer(100, [=]
                           { ++flag; recursive(); });
     timer.Start();
 

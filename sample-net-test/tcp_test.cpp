@@ -58,7 +58,7 @@ TEST(TcpCS, pingpong)
     for (int i = 0; i < cnt; ++i)
     {
         auto client = &(*clients)[i];
-        auto clientRead = [&](Buffer buffer)
+        auto clientRead = [=](Buffer buffer)
         {
             // [3] -> pong
             std::lock_guard<std::mutex> guard(client_recv->mutex);
@@ -126,7 +126,7 @@ TEST(TcpCS, monkeytest)
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        auto clientRead = [&, i](Buffer buffer)
+        auto clientRead = [=](Buffer buffer)
         {
             // [3] -> pong
             auto &data = (*client_recv)[i];
@@ -135,7 +135,7 @@ TEST(TcpCS, monkeytest)
         };
         client->SetHandleRead(clientRead);
     }
-    auto ClientConnectClose = [&](int i)
+    auto ClientConnectClose = [=](int i)
     {
         auto client = &(*clients)[i];
         if (client->IsRunning())
@@ -143,7 +143,7 @@ TEST(TcpCS, monkeytest)
         else
             client->ConnectSync();
     };
-    auto ClientWrite = [&](int i)
+    auto ClientWrite = [=](int i)
     {
         // [1] ping ->
         auto client = &(*clients)[i];
@@ -153,7 +153,7 @@ TEST(TcpCS, monkeytest)
     };
 
     static std::atomic<bool> thread_run{true};
-    auto test = [&](int index)
+    auto test = [=](int index)
     {
         std::vector<std::function<void(int)>> client_cmd;
         for (int i = 0; i < 20; ++i)
@@ -223,7 +223,7 @@ TEST(TcpCS, monkeytest2)
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];
-        auto clientRead = [&, i](Buffer buffer)
+        auto clientRead = [=](Buffer buffer)
         {
             // [2] -> pingpong ->
             auto &data = (*client_recv)[i];
@@ -237,7 +237,7 @@ TEST(TcpCS, monkeytest2)
         client->Connect();
     }
 
-    auto ServerListenSwitch = [&]
+    auto ServerListenSwitch = [=]
     {
         if (server->IsRunning())
             server->CloseSync();
@@ -249,7 +249,7 @@ TEST(TcpCS, monkeytest2)
             client->Connect();
         }
     };
-    auto ServerWrite = [&]
+    auto ServerWrite = [=]
     {
         // [1] ping ->
         static std::atomic_int index;
@@ -258,7 +258,7 @@ TEST(TcpCS, monkeytest2)
     };
 
     static std::atomic<bool> thread_run{true};
-    auto test = [&]
+    auto test = [=]
     {
         std::vector<std::function<void()>> server_cmd;
         for (int i = 0; i < 50; ++i)
@@ -289,7 +289,6 @@ TEST(TcpCS, monkeytest2)
         client_size += recv->strs.size();
     }
     EXPECT_TRUE(client_size > 0);
-
     for (int i = 0; i < client_cnt; ++i)
     {
         auto client = &(*clients)[i];

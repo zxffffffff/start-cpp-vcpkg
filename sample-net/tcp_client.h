@@ -78,12 +78,11 @@ public:
 
     bool WaitForState(ConnectionState state, double timeout_sec)
     {
-        return WaitForState({state}, timeout_sec) == state;
+        return WaitForStates({state}, timeout_sec) == state;
     }
 
-    ConnectionState WaitForState(std::initializer_list<ConnectionState> state_list, double timeout_sec)
+    ConnectionState WaitForStates(std::set<ConnectionState> states, double timeout_sec)
     {
-        std::set<ConnectionState> states(state_list);
         auto start = std::chrono::steady_clock::now();
         std::chrono::milliseconds duration(int(timeout_sec * 1000));
         while (std::chrono::steady_clock::now() - start < duration)
@@ -137,7 +136,7 @@ public:
     bool ConnectSync(double timeout_sec = 5)
     {
         Connect();
-        return WaitForState({ConnectionState::Connected, ConnectionState::ConnFailed}, timeout_sec) == ConnectionState::Connected;
+        return WaitForStates({ConnectionState::Connected, ConnectionState::ConnFailed}, timeout_sec) == ConnectionState::Connected;
     }
 
     bool CloseSync(double timeout_sec = 5)
