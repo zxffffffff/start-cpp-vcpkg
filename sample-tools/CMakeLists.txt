@@ -68,7 +68,6 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC Boost::boost
     PUBLIC gflags::gflags
     PUBLIC glog::glog
     PUBLIC ZLIB::ZLIB
