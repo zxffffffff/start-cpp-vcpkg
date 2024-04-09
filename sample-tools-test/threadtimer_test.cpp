@@ -16,6 +16,7 @@
 #pragma warning(disable : 4566)
 #endif
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(ThreadTimerImpl, Test)
 {
     static std::atomic<int> flag{0};
@@ -33,6 +34,7 @@ TEST(ThreadTimerImpl, Test)
     EXPECT_EQ(flag.load(), 3);
 }
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(ThreadTimerImpl, Recursive)
 {
     static std::atomic<int> flag{0};

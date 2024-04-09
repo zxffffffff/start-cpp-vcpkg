@@ -16,6 +16,7 @@
 #pragma warning(disable : 4566)
 #endif
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(stl_threadpool_impl, Test)
 {
     /* 自动扩容 */
@@ -39,6 +40,7 @@ TEST(stl_threadpool_impl, Test)
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(stl_threadpool_impl, Recursive)
 {
     /* 自动扩容 */
@@ -74,6 +76,7 @@ TEST(stl_threadpool_impl, Recursive)
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(stl_threadpool_impl, Shutdown)
 {
     /* 不自动扩容 */
