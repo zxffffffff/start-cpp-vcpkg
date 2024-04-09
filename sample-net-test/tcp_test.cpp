@@ -32,6 +32,7 @@ struct Data
     std::vector<std::string> strs;
 };
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, pingpong)
 {
     // server
@@ -102,6 +103,7 @@ TEST(TcpCS, pingpong)
     }
 }
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, monkeytest)
 {
     // server
@@ -202,6 +204,7 @@ TEST(TcpCS, monkeytest)
     }
 }
 
+/* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, monkeytest2)
 {
     // server
