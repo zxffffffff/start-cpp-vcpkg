@@ -31,10 +31,13 @@
 *.out
 *.app
 
-# cpp-deps-vcpkg
+# start-cpp-vcpkg
 vcpkg_installed
-build
-install
+build/*
+build-*/*
+install/*
+install-*/*
 .vs
-out
+out/*
 .vscode
+enc_temp_folder

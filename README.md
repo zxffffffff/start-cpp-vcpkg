@@ -1,9 +1,9 @@
 # start-cpp-vcpkg
 
 ## 温馨提示：
-- 不是所有的库都支持，不是所有支持的库都能编译过（提 Issue 微软处理的很快）
-- 该手动引入 third-party 的库还得手动来（大陆下载网络不是很稳定）
-- vcpkg 默认使用最新的库，如果需要指定旧版库，会很麻烦（配置 baseline）
+- 叫得出名字的库基本都支持，如果 vcpkg search 没有那就真没有了
+- 下载网络不是很稳定，建议仅开源项目和小型项目使用
+- 编译会产生较大的中间文件，需要手动删除
 
 # 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - sample-tools (crypto, threadpool)
@@ -30,10 +30,11 @@
   - `gtest`: Google 测试框架。
 
 ## 快速开始：
-- 运行 `build-platform.xxx` 在线安装第三方库，需要能够访问外网 (github) 
+- 运行 `build-xxx` 在线安装第三方库，需要能够访问外网 (github) 
 - 网络异常导致的错误，可以尝试重新运行脚本(下载较多，可能需要反复重试) 
-- 优先使用静态库 (Linux默认静态编译，动态链接系统库) 
-- 跨平台 C++ 工程建议使用 UTF-8，这样仅需设置 Windows 编译环境 (Windows 默认使用 GBK 编码需要设置，Win7 特殊处理) 
+- 跨平台项目建议使用静态库 (Linux默认静态编译，动态链接系统库) 
+- 跨平台项目建议使用 UTF-8，这样仅需设置 Windows 编译环境 (Windows 默认使用 GBK 编码需要设置，Win7 特殊处理) 
+- 跨平台项目建议使用 `git config --global core.autocrlf input` 提交时转换为LF
 
 ### 已验证：
 - macOS 14.4 (arm64-osx)
@@ -97,7 +98,7 @@
 ```
 
 # Vcpkg 
-- 安装 `vcpkg` 工具 (已添加 `submodule`)
+- 安装 `vcpkg` 工具 (参考本工程 `.gitmodules`)
 - 手动引入建议使用 `git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
 - 初始化、拉取更新可以使用 `git submodule update --init --recursive`
 
@@ -112,12 +113,12 @@
 .\vcpkg\packages\xxx\CONTROL
 ```
 
-## Windows (已加入 build 脚本) 
+## Windows
 - Windows 7 或更新的版本
 - Visual Studio 2015 Update 3 或更新的版本 (包含英文语言包) 
 - 运行 `bootstrap-vcpkg.bat` 脚本
 
-## Unix (已加入 build 脚本) 
+## Unix
 - g++ >= 6
 - macOS:
   ```Bash
@@ -144,54 +145,62 @@
 - 使用 CMake，您可以设置 `set(VCPKG_TARGET_TRIPLET <triplet>)`
 - 使用 MSBuild，您可以设置 `VcpkgTriplet`
 ```
-vcpkg built-in triplets: (官方提供 triplets) 
+//查看三元组：./vcpkg/vcpkg help triplet
+Built-in Triplets:
+  x64-android
   x64-linux
+  arm64-osx
   x64-windows
+  arm64-uwp
   x64-windows-static
   x86-windows
+  arm-neon-android
   arm64-windows
   x64-uwp
   x64-osx
-  arm-uwp
-vcpkg community triplets: (社区提供 triplets 未经过持续集成测试可能不兼容) 
+  arm64-android
+Community Triplets:
   wasm32-emscripten
   x64-xbox-scarlett-static
   ppc64le-linux
+  arm64-ios-simulator-release
   x64-xbox-xboxone
   arm-linux-release
   arm64-osx-release
   x86-mingw-static
   arm64-ios
   x86-linux
+  arm64-ios-release
   x64-xbox-xboxone-static
   x64-mingw-dynamic
   x64-uwp-static-md
   x64-windows-release
+  loongarch32-linux
   x86-freebsd
   armv6-android
   x64-osx-release
   x64-linux-dynamic
-  x64-android
   riscv64-linux
+  loongarch32-linux-release
   x86-windows-static
+  mips64-linux
   arm64ec-windows
   arm-android
   arm64-mingw-dynamic
   arm64-uwp-static-md
-  arm64-osx
   arm64-windows-static
   arm-linux
   arm-windows
-  arm64-uwp
+  loongarch64-linux-release
   x86-mingw-dynamic
   x86-uwp-static-md
   arm-uwp-static-md
   s390x-linux
   x64-openbsd
   arm-mingw-dynamic
-  arm-neon-android
   x64-ios
   x64-xbox-scarlett
+  loongarch64-linux
   x64-mingw-static
   arm-ios
   x64-osx-dynamic
@@ -206,16 +215,18 @@ vcpkg community triplets: (社区提供 triplets 未经过持续集成测试可�
   arm64-windows-static-md
   arm64-mingw-static
   x86-windows-static-md
+  arm64-ios-simulator
   arm-mingw-static
   riscv32-linux-release
   arm64-osx-dynamic
+  x64-windows-static-md-release
   riscv32-linux
   x86-ios
   x64-windows-static-md
   arm64-windows-static-release
-  arm64-android
   arm-windows-static
   s390x-linux-release
   ppc64le-linux-release
   x86-windows-v120
+  arm-uwp
 ```

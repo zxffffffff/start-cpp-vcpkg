@@ -16,8 +16,10 @@ if (WIN32)
     add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
     add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
-    # MSVC 手动开启 __cplusplus 宏（否则始终是 199711L）
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Zc:__cplusplus")
+    # 手动启用 __cplusplus 宏（否则始终是 199711L）
+    # 手动启用 /permissive- 标准一致性模式（VS2017+）
+    # 手动启用 /EHsc C++ 异常: https://learn.microsoft.com/zh-cn/cpp/build/reference/eh-exception-handling-model
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /permissive- /Zc:__cplusplus")
 elseif (APPLE)
     # 编译动态库需要设置-fPIC
     set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
@@ -35,16 +37,7 @@ else()
 endif()
 
 # 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
-if (WIN32)
-    message(STATUS "[start-cpp-vcpkg] CMAKE_GENERATOR : ${CMAKE_GENERATOR}")
-    message(STATUS "[start-cpp-vcpkg] CMAKE_GENERATOR_PLATFORM : ${CMAKE_GENERATOR_PLATFORM}")
-    if("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x64" OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win64")
-        set(VCPKG_TARGET_TRIPLET x64-windows)
-    elseif("${CMAKE_GENERATOR_PLATFORM}" STREQUAL "x86" OR "${CMAKE_GENERATOR_PLATFORM}" STREQUAL "Win32")
-        set(VCPKG_TARGET_TRIPLET x86-windows)
-    endif()
-endif()
-message(STATUS "[start-cpp-vcpkg] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
+message(STATUS "[cpp-hs-gateway-api] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 # if(DEFINED ENV{VCPKG_ROOT})

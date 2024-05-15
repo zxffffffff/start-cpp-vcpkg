@@ -15,14 +15,6 @@ add_executable(${PROJECT_NAME}
     "main.cpp"
 )
 
-if (MSVC)
-# 手动启用 C++ 异常: https://learn.microsoft.com/zh-cn/cpp/build/reference/eh-exception-handling-model
-set_target_properties(${PROJECT_NAME}
-    PROPERTIES
-    COMPILE_FLAGS "/EHsc"
-)
-endif()
-
 target_link_libraries(${PROJECT_NAME}
     PUBLIC sample-dynamic-lib
 )
