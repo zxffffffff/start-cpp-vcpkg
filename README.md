@@ -1,9 +1,9 @@
 # start-cpp-vcpkg
 
 ## 温馨提示：
+- 可以使用环境变量 VCPKG_ROOT 指定 vcpkg 安装目录，也可以项目自带一个 vcpkg 子模块
+- 下载时网络不是很稳定，经常失败需要反复手动下载，建议仅开源项目和小型项目使用
 - 叫得出名字的库基本都支持，如果 vcpkg search 没有那就真没有了
-- 下载网络不是很稳定，建议仅开源项目和小型项目使用
-- 编译会产生较大的中间文件，需要手动删除
 
 # 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - sample-tools (crypto, threadpool)
@@ -144,8 +144,8 @@
 - 在Manifest模式下，可以在命令行传递 `vcpkg install --triplet=<triplet>`
 - 使用 CMake，您可以设置 `set(VCPKG_TARGET_TRIPLET <triplet>)`
 - 使用 MSBuild，您可以设置 `VcpkgTriplet`
+- 查看三元组 `vcpkg help triplet`
 ```
-//查看三元组：./vcpkg/vcpkg help triplet
 Built-in Triplets:
   x64-android
   x64-linux
