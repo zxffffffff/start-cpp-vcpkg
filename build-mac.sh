@@ -33,14 +33,14 @@ vcpkg_installed="${build_path}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}"
 echo vcpkg_installed: ${vcpkg_installed}
 # 可选 cp -rf "${vcpkg_installed}/include" "${install_path}/include"
 if [ "${config}" == "Debug" ]; then
-  cp -rf "${vcpkg_installed}/debug/lib" "${install_path}/lib"
+  cp -rf "${vcpkg_installed}/debug/lib/" "${install_path}/lib/"
 else
-  cp -rf "${vcpkg_installed}/lib" "${install_path}/lib"
+  cp -rf "${vcpkg_installed}/lib/" "${install_path}/lib/"
 fi
 
 # run
 echo run test
-export LD_LIBRARY_PATH=${install_path}/bin
+export DYLD_LIBRARY_PATH=${install_path}/bin:$DYLD_LIBRARY_PATH
 ${install_path}/bin/sample-main
 ${install_path}/bin/sample-db-test
 ${install_path}/bin/sample-datacenter-test
