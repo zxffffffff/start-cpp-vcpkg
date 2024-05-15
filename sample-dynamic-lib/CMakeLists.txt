@@ -11,9 +11,6 @@ message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
-# dll导出宏
-add_compile_definitions(SAMPLE_DYNAMIC_LIB_EXPORT)
-
 # Public 头文件
 file(GLOB_RECURSE include_headers
     define.h
@@ -23,6 +20,11 @@ file(GLOB_RECURSE include_headers
 add_library(${PROJECT_NAME} SHARED
     SampleDynamicLib.cpp
     ${include_headers}
+)
+
+# dynamic 导出宏
+target_compile_definitions(${PROJECT_NAME}
+    PRIVATE SAMPLE_DYNAMIC_LIB_EXPORT
 )
 
 target_link_libraries(${PROJECT_NAME}

@@ -5,9 +5,9 @@ root_path=$(dirname $(readlink -f "$0"))
 cd ${root_path}
 
 # 可选vcpkg配置版本
-# arm64-osx
-# x64-osx
-VCPKG_TARGET_TRIPLET=arm64-osx
+# x64-linux
+# x86-linux
+VCPKG_TARGET_TRIPLET=x64-linux
 echo VCPKG_TARGET_TRIPLET: ${VCPKG_TARGET_TRIPLET}
 
 # 配置Debug/Release

@@ -14,13 +14,17 @@
 #endif
 
 #ifdef _WIN32
-# ifdef SAMPLE_DYNAMIC_LIB_EXPORT
-#  define SAMPLE_DYNAMIC_LIB_API __declspec(dllexport)
-# else
-#  define SAMPLE_DYNAMIC_LIB_API __declspec(dllimport)
-# endif
+#   ifdef SAMPLE_DYNAMIC_LIB_EXPORT
+#       define SAMPLE_DYNAMIC_LIB_API __declspec(dllexport)
+#   else
+#       define SAMPLE_DYNAMIC_LIB_API __declspec(dllimport)
+#   endif
+#elif __APPLE__
+#   define SAMPLE_DYNAMIC_LIB_API __attribute__((visibility("default")))
+#elif __linux__
+#   define SAMPLE_DYNAMIC_LIB_API 
 #else
-# define SAMPLE_DYNAMIC_LIB_API __attribute__((visibility("default")))
+#   error "Unknown compiler"
 #endif
 
 #ifdef __cplusplus
