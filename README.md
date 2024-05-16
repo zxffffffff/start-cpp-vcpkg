@@ -1,7 +1,7 @@
 # start-cpp-vcpkg
 
 ## 温馨提示：
-- 可以使用环境变量 VCPKG_ROOT 指定 vcpkg 安装目录，也可以项目自带一个 vcpkg 子模块
+- 可以使用环境变量 VCPKG_ROOT、VCPKG_DOWNLOADS 指定安装、下载目录，也可以每个项目自带一个 vcpkg 子模块
 - 下载时网络不是很稳定，经常失败需要反复手动下载，建议仅开源项目和小型项目使用
 - 叫得出名字的库基本都支持，如果 vcpkg search 没有那就真没有了
 
