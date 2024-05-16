@@ -22,14 +22,14 @@ if (WIN32)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /EHsc /permissive- /Zc:__cplusplus")
 elseif (APPLE)
     # 编译动态库需要设置-fPIC
-    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC")
 
     # 需要 macOS 10.15 支持 C++17 filesystem
     set(CMAKE_OSX_DEPLOYMENT_TARGET "10.15")
 else()
     # 编译动态库需要设置-fPIC
-    set(CMAKE_C_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
+    set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fPIC -pthread")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -pthread")
 
     # 静态链接 C++ 依赖库，不要使用 -static 静态链接 glibc
