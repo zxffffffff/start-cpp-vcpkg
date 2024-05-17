@@ -55,9 +55,9 @@ set_target_properties(${PROJECT_NAME}
 
 install(TARGETS ${PROJECT_NAME}
     PUBLIC_HEADER DESTINATION include
-    RUNTIME DESTINATION bin
-    LIBRARY DESTINATION bin
-    ARCHIVE DESTINATION lib
+    RUNTIME DESTINATION bin # .dll
+    LIBRARY DESTINATION bin # .dylib .so
+    ARCHIVE DESTINATION lib # .lib .a
 )
 
 message("[${PROJECT_NAME}] -------- done")
