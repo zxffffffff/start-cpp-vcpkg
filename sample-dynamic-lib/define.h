@@ -22,7 +22,7 @@
 #elif __APPLE__
 #   define SAMPLE_DYNAMIC_LIB_API __attribute__((visibility("default")))
 #elif __linux__
-#   define SAMPLE_DYNAMIC_LIB_API 
+#   define SAMPLE_DYNAMIC_LIB_API __attribute__((visibility("default")))
 #else
 #   error "Unknown compiler"
 #endif
