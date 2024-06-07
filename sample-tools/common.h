@@ -12,6 +12,7 @@
 #include <sstream>
 #include <chrono>
 #include <random>
+#include <thread>
 #include <boost/uuid/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
 #include <boost/uuid/uuid_io.hpp>
@@ -105,5 +106,13 @@ public:
         std::string out;
         boost::algorithm::unhex(input, std::back_inserter(out));
         return out;
+    }
+
+    /* 线程安全的 static 缓冲区 */
+    static const char *toThreadLocalStr(const std::string &str)
+    {
+        thread_local std::string buf;
+        buf = str;
+        return buf.data();
     }
 };

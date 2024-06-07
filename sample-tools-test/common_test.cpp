@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 #include "common.h"
 #include <thread>
+#include <sstream>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -61,4 +62,31 @@ TEST(Common, Random)
     }
     /* 会有重复，尽可能的随机就行 */
     EXPECT_GT(nums.size(), 99 * 10000);
+}
+
+TEST(Common, toThreadLocalStr)
+{
+    auto test = [](int i)
+    {
+        for (int j = 0; j < 10000; ++j)
+        {
+            std::stringstream ss;
+            ss << std::this_thread::get_id() << "-" << i << "-" << j;
+            std::string s = ss.str();
+            const char *p = Common::toThreadLocalStr(s);
+            ASSERT_EQ(s, std::string(p));
+            // std::cerr << s << std::endl;
+        }
+    };
+
+    std::vector<std::thread> v;
+    for (int i = 0; i < 100; ++i)
+    {
+        v.emplace_back(test, i);
+    }
+    for (auto &th : v)
+    {
+        if (th.joinable())
+            th.join();
+    }
 }
