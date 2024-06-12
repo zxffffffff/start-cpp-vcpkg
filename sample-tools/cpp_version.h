@@ -16,13 +16,13 @@
 #pragma warning(disable : 4566)
 #endif
 
-#if __cplusplus >= 202302L /* C++23 */
+#if __cplusplus >= 202302L || _MSVC_LANG >= 202302L /* C++23 */
 #define CPP_VERSION 2023
-#elif __cplusplus >= 202002L /* C++20, C++2a */
+#elif __cplusplus >= 202002L || _MSVC_LANG >= 202002L /* C++20, C++2a */
 #define CPP_VERSION 2020
-#elif __cplusplus >= 201703L /* C++17, C++1z */
+#elif __cplusplus >= 201703L || _MSVC_LANG >= 201703L /* C++17, C++1z */
 #define CPP_VERSION 2017
-#elif __cplusplus >= 201402L /* C++14, C++1y */
+#elif __cplusplus >= 201402L || _MSVC_LANG >= 201402L /* C++14, C++1y */
 #define CPP_VERSION 2014
 #elif __cplusplus >= 201103L /* C++11, C++0x */
 #define CPP_VERSION 2011
@@ -31,7 +31,6 @@
 #else
 #error unknown version of C++ standard
 #endif
-
 #if CPP_VERSION <= 2011
 #include <memory>
 
