@@ -4,6 +4,20 @@ set -e
 root_path=$(dirname $(readlink -f "$0"))
 cd ${root_path}
 
+# vcpkg (vcpkg.json)
+vcpkg_path=${root_path}/vcpkg
+vcpkg_exe=${vcpkg_path}/vcpkg
+echo vcpkg_path: ${vcpkg_path}
+echo vcpkg_exe: ${vcpkg_exe}
+if [ ! -x ${vcpkg_exe} ]; then
+  vcpkg_sh=${vcpkg_path}/bootstrap-vcpkg.sh
+  echo vcpkg_sh: ${vcpkg_sh}
+  # 还需要安装开发环境，以 ubuntu 为例：
+  # sudo apt-get update
+  # sudo apt-get install build-essential tar curl zip unzip
+  sudo sh ${vcpkg_sh}
+fi
+
 # 可选vcpkg配置版本
 # x64-linux
 # x86-linux
