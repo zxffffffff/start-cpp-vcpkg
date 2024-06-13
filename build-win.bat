@@ -46,9 +46,15 @@ if EXIST %install_path% (
 )
 
 :: 可选编译器版本 -G
-:: Visual Studio 15 2017
-:: Visual Studio 16 2019
 :: Visual Studio 17 2022
+:: Visual Studio 16 2019
+:: Visual Studio 15 2017
+:: Visual Studio 14 2015
+:: 可选编译32/64位 -A
+:: Win32
+:: x64
+:: ARM
+:: ARM64
 echo cmake %build_path% ...
 cmake -B %build_path% -S . -DCMAKE_INSTALL_PREFIX=%install_path% -DVCPKG_TARGET_TRIPLET=%VCPKG_TARGET_TRIPLET% -DCMAKE_MSVC_RUNTIME_LIBRARY=%CMAKE_MSVC_RUNTIME_LIBRARY%
 IF %ERRORLEVEL% NEQ 0 (
