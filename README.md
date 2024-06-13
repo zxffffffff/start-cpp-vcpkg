@@ -44,9 +44,18 @@
 ### 编译器最低版本建议：
 | C++ compiler  | Minimum OS version |
 | ------------- | ------------------ |
-| MSVC v143     | Windows 7          |
+| MSVC v140     | Windows 7          |
 | Xcode 12      | macOS 10.15        |
 | Clang 10      | Ubuntu 18.04       |
+
+### Windows MSVC 参考
+| CMake version         | MSVC version    |
+| --------------------- | --------------- |
+| Visual Studio 17 2022 | v143            |
+| Visual Studio 16 2019 | v142            |
+| Visual Studio 15 2017 | v141            |
+| Visual Studio 14 2015 | v140            |
+| Visual Studio 12 2013 | 不保证二进制兼容性 |
 
 ### Apple C++ 版本参考
 | C++ Feature        | Minimum deployment target                     |
@@ -143,8 +152,8 @@
 - 在经典模式下，您可以使用三元组名称限定包引用，例如 `zlib:x64-windows-static-md`
 - 在Manifest模式下，可以在命令行传递 `vcpkg install --triplet=<triplet>`
 - 使用 CMake，您可以设置 `set(VCPKG_TARGET_TRIPLET <triplet>)`
-- 使用 MSBuild，您可以设置 `VcpkgTriplet`
 - 查看三元组 `vcpkg help triplet`
+- 可以手动修改 triplets 配置，例如设置 MSVC 版本 `set(VCPKG_PLATFORM_TOOLSET v140)`
 ```
 Built-in Triplets:
   x64-android
