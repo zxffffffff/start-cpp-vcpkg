@@ -4,6 +4,17 @@ setlocal EnableDelayedExpansion
 set root_path=%~dp0
 cd %root_path%
 
+:: 初始化 vcpkg
+set vcpkg_path=%root_path%\vcpkg
+set vcpkg_exe=%vcpkg_path%\vcpkg.exe
+echo vcpkg_path: %vcpkg_path%
+echo vcpkg_exe: %vcpkg_exe%
+if not exist %vcpkg_exe% (
+  set vcpkg_bat=%vcpkg_path%\bootstrap-vcpkg.bat
+  echo vcpkg_bat: !vcpkg_bat!
+  call !vcpkg_bat!
+)
+
 :: 可选vcpkg配置版本
 :: x64-windows
 :: x64-windows-static
