@@ -31,6 +31,7 @@
 #else
 #error unknown version of C++ standard
 #endif
+
 #if CPP_VERSION <= 2011
 #include <memory>
 
