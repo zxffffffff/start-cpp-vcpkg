@@ -210,7 +210,7 @@ public:
             {
                 size_t len = fixedLen < (nLen - i) ? fixedLen : (nLen - i);
                 std::string sOut;
-                StringSource((byte *)(msg.c_str() + i), len, true, new PK_DecryptorFilter(randPool, priv, new StringSink(sOut)));
+                StringSource((CryptoPP::byte *)(msg.c_str() + i), len, true, new PK_DecryptorFilter(randPool, priv, new StringSink(sOut)));
                 result += sOut;
             }
             if (ok)
@@ -237,7 +237,7 @@ public:
             size_t length = signer.MaxSignatureLength();
             SecByteBlock signature(length);
 
-            size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
+            size_t szlength = signer.SignMessage(randPool, (CryptoPP::byte *)msg.c_str(), msg.length(), signature);
             std::vector<char> result(szlength);
             memcpy(result.data(), signature.data(), szlength);
             if (ok)
@@ -264,7 +264,7 @@ public:
             size_t length = signer.MaxSignatureLength();
             SecByteBlock signature(length);
 
-            size_t szlength = signer.SignMessage(randPool, (const byte *)msg.c_str(), msg.length(), signature);
+            size_t szlength = signer.SignMessage(randPool, (CryptoPP::byte *)msg.c_str(), msg.length(), signature);
             signature.resize(szlength);
 
             std::stringstream ss;
@@ -293,7 +293,7 @@ public:
         try
         {
             RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
-            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign.data(), sign.size());
+            bool result = verifier.VerifyMessage((CryptoPP::byte *)msg.data(), msg.size(), (CryptoPP::byte *)sign.data(), sign.size());
             if (ok)
                 *ok = true;
             return result;
@@ -317,12 +317,12 @@ public:
             for (int i = 0; i < sign_hex.length(); i += 2)
             {
                 std::string byteString = sign_hex.substr(i, 2);
-                char byte = (char)strtol(byteString.c_str(), NULL, 16);
-                sign.push_back(byte);
+                char c = (char)strtol(byteString.c_str(), NULL, 16);
+                sign.push_back(c);
             }
 
             RSASSA_PKCS1v15_SHA_Verifier verifier(publicKey);
-            bool result = verifier.VerifyMessage((const byte *)msg.data(), msg.size(), (const byte *)sign.data(), sign.size());
+            bool result = verifier.VerifyMessage((CryptoPP::byte *)msg.data(), msg.size(), (CryptoPP::byte *)sign.data(), sign.size());
             if (ok)
                 *ok = true;
             return result;
