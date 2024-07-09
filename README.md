@@ -5,7 +5,7 @@
 - 下载时网络不是很稳定，经常失败需要反复手动下载，建议仅开源项目和小型项目使用
 - 叫得出名字的库基本都支持，如果 vcpkg search 没有那就真没有了
 
-# 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
+## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建：
 - sample-tools (crypto, threadpool)
   - `gflags`: Google 命令行标志库。
   - `glog`: Google 日志库。
