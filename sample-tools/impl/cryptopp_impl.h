@@ -75,7 +75,7 @@ class RSA_PKCS1v15_Impl : public I_RSA_PKCS1v15
         strReplace(pemKey, "-----END PUBLIC KEY-----", "");
         strReplace(pemKey, "-----BEGIN PRIVATE KEY-----", "");
         strReplace(pemKey, "-----END PRIVATE KEY-----", "");
-        strReplace(pemKey, "\r\n", "");
+        strReplace(pemKey, "\r", "");
         strReplace(pemKey, "\n", "");
         strReplace(pemKey, " ", "");
         return pemKey;
