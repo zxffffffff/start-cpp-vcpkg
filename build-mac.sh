@@ -1,7 +1,7 @@
 #!/bin/sh
 set -e
 
-root_path=$(dirname $(readlink -f "$0"))
+root_path=$(cd "$(dirname "$0")" && pwd)
 cd ${root_path}
 
 # 初始化 vcpkg
