@@ -13,8 +13,8 @@ if [ ! -x ${vcpkg_exe} ]; then
   vcpkg_sh=${vcpkg_path}/bootstrap-vcpkg.sh
   echo vcpkg_sh: ${vcpkg_sh}
   # 还需要安装开发环境，以 ubuntu 为例：
-  # sudo apt-get update
-  # sudo apt-get install build-essential tar curl zip unzip
+  # sudo apt update
+  # sudo apt install build-essential tar curl zip unzip cmake pkg-config
   sudo sh ${vcpkg_sh}
 fi
 
