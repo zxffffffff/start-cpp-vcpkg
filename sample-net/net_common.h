@@ -8,6 +8,7 @@
 #pragma once
 #include <algorithm>
 #include <string>
+#include <cstring>
 #include <functional>
 #include <memory>
 #include <future>
@@ -80,7 +81,7 @@ inline Buffer MakeBuffer(const char *buf, int len)
 {
     Buffer buffer = std::make_shared<std::vector<char>>(len);
     if (len > 0)
-        memcpy(buffer->data(), buf, len);
+        std::memcpy(buffer->data(), buf, len);
     return buffer;
 }
 

@@ -8,6 +8,7 @@
 #pragma once
 #include "interface/tcp_interface.h"
 #include "net_states.h"
+#include <thread>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */

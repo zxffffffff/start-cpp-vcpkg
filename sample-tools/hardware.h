@@ -197,7 +197,7 @@ public:
                 }
                 std::string macAddress = ss.str();
                 std::string mac_prefix = macAddress.substr(0, 8);
-                if (virtual_mac_prefix.contains(mac_prefix))
+                if (virtual_mac_prefix.count(mac_prefix))
                 {
                     virtualList.push_back(macAddress);
                 }

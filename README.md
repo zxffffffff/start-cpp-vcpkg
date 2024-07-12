@@ -39,7 +39,7 @@
 ### 已验证：
 - macOS 14.4 (arm64-osx)
 - Windows 10 (x64-windows)
-- CentOS 8   (x64-linux)
+- Ubuntu 24.04 (x64-linux)
 
 ### 编译器最低版本建议：
 | C++ compiler  | Minimum OS version |
