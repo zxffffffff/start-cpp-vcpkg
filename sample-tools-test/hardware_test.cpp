@@ -17,6 +17,14 @@
 #pragma warning(disable : 4566)
 #endif
 
+TEST(cpu, test)
+{
+    int cpus = Hardware::GetCPUs();
+
+    std::cout << "cpu: " << cpus << std::endl;
+    ASSERT_GT(cpus, 0);
+}
+
 TEST(macAddr, test)
 {
     std::string mac = Hardware::GetMacAddr();
