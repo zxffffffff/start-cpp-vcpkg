@@ -1,5 +1,7 @@
 # start-cpp-vcpkg
 
+![workflow](https://github.com/zxffffffff/start-cpp-vcpkg/actions/workflows/cmake-multi-platform.yml/badge.svg?event=push)
+
 ## 温馨提示：
 - 可以使用环境变量 VCPKG_ROOT、VCPKG_DOWNLOADS 指定安装、下载目录，也可以每个项目自带一个 vcpkg 子模块
 - 下载时网络不是很稳定，经常失败需要反复手动下载，建议仅开源项目和小型项目使用
