@@ -6,6 +6,7 @@
 **
 ****************************************************************************/
 #include "gtest/gtest.h"
+#include "common.h"
 
 #include "http_server.h"
 #include "impl/boost_http_parser.h"
@@ -29,11 +30,15 @@ using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(HttpServerTest, GetPost)
 {
+    /* 随机端口，减少端口被占用概率 */
+    std::string str_ip = "127.0.0.1";
+    int n_port = Common::Random(10000, 49151);
+
     TestHttpClient http(4);
     // http.SetVerbose(true);
     http.SetProxy(false);
 
-    auto server = std::make_shared<TestHttpServer>("127.0.0.1", 12333);
+    auto server = std::make_shared<TestHttpServer>(str_ip, n_port);
     auto handler = [](ConnId, Error err, std::shared_ptr<HttpRequest> req, ServerResponseCbk cbk)
     {
         EXPECT_EQ(err->first, 0);
@@ -51,15 +56,17 @@ TEST(HttpServerTest, GetPost)
     bool ok = server->ListenSync();
     ASSERT_TRUE(ok);
 
-    auto response = http.Get("http://127.0.0.1:12333", {}, 3).get();
+    std::string str_http = "http://" + str_ip + ":" + std::to_string(n_port);
+
+    auto response = http.Get(str_http, {}, 3).get();
     EXPECT_EQ(response.errCode, 0) << response.errMsg;
     EXPECT_EQ(response.data, "res method=GET path=/");
 
-    auto response2 = http.GetSync("http://127.0.0.1:12333/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
+    auto response2 = http.GetSync(str_http + "/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
     EXPECT_EQ(response2.errCode, 0) << response.errMsg;
     EXPECT_EQ(response2.data, "res method=GET path=/s cl=3 wd=zxffffffff");
 
-    auto response3 = http.PostSync("http://127.0.0.1:12333/test/xxx", {{"test", "1"}}, "test2=2", 3);
+    auto response3 = http.PostSync(str_http + "/test/xxx", {{"test", "1"}}, "test2=2", 3);
     EXPECT_EQ(response3.errCode, 0) << response.errMsg;
     EXPECT_EQ(response3.data, "res method=POST path=/test/xxx test=1 post_body=test2=2");
 
