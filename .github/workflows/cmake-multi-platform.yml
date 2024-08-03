@@ -49,6 +49,13 @@ jobs:
       with:
         submodules: recursive
 
+    - name: Cache vcpkg packages
+      uses: actions/cache@v3
+      with:
+        path: |
+          vcpkg/downloads
+          vcpkg/packages
+    
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
       id: strings
