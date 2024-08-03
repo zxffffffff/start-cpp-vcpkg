@@ -54,8 +54,9 @@ jobs:
       with:
         path: |
           vcpkg/downloads
+          vcpkg/buildtrees
           vcpkg/packages
-        key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/vcpkg/versions/baseline.json') }}
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.cpp_compiler }}-${{ hashFiles('**/vcpkg/versions/baseline.json') }}
         save-always: true
     
     - name: Set reusable strings
