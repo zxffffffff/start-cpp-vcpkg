@@ -35,8 +35,12 @@ struct Data
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, pingpong)
 {
+    /* 随机端口，减少端口被占用概率 */
+    std::string str_ip = "127.0.0.1";
+    int n_port = Common::Random(10000, 49151);
+
     // server
-    auto server = std::make_shared<TestTcpServer>();
+    auto server = std::make_shared<TestTcpServer>(str_ip, n_port);
     auto server_recv = std::make_shared<Data>();
     auto serverRead = [=](ConnId connId, Buffer buffer)
     {
@@ -54,11 +58,13 @@ TEST(TcpCS, pingpong)
 
     // client
     constexpr int cnt = 3;
-    auto clients = std::make_shared<std::vector<TestTcpClient>>(cnt);
+    std::vector<std::shared_ptr<TestTcpClient>> clients(cnt);
+    for (int i = 0; i < cnt; ++i)
+        clients[i] = std::make_shared<TestTcpClient>(str_ip, n_port);
     auto client_recv = std::make_shared<Data>();
     for (int i = 0; i < cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         auto clientRead = [=](Buffer buffer)
         {
             // [3] -> pong
@@ -74,7 +80,7 @@ TEST(TcpCS, pingpong)
     for (int i = 0; i < cnt; ++i)
     {
         // [1] ping ->
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         std::string msg = std::to_string(1000 + i);
         client->Write(MakeBuffer(msg));
     }
@@ -88,7 +94,7 @@ TEST(TcpCS, pingpong)
 
     for (int i = 0; i < cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         EXPECT_EQ(client->GetState(), ConnectionState::Connected);
         client->Close();
     }
@@ -97,7 +103,7 @@ TEST(TcpCS, pingpong)
     EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         client->WaitForState(ConnectionState::Closed, 1);
         EXPECT_EQ(client->GetState(), ConnectionState::Closed);
     }
@@ -106,8 +112,12 @@ TEST(TcpCS, pingpong)
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, monkeytest)
 {
+    /* 随机端口，减少端口被占用概率 */
+    std::string str_ip = "127.0.0.1";
+    int n_port = Common::Random(10000, 49151);
+
     // server
-    auto server = std::make_shared<TestTcpServer>();
+    auto server = std::make_shared<TestTcpServer>(str_ip, n_port);
     auto server_recv = std::make_shared<Data>();
     auto serverRead = [=](ConnId connId, Buffer buffer)
     {
@@ -123,23 +133,28 @@ TEST(TcpCS, monkeytest)
 
     // client
     constexpr int client_cnt = 10;
-    auto clients = std::make_shared<std::vector<TestTcpClient>>(client_cnt);
-    auto client_recv = std::make_shared<std::vector<Data>>(client_cnt);
+    std::vector<std::shared_ptr<TestTcpClient>> clients(client_cnt);
+    std::vector<std::shared_ptr<Data>> client_recv(client_cnt);
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        clients[i] = std::make_shared<TestTcpClient>(str_ip, n_port);
+        client_recv[i] = std::make_shared<Data>();
+    }
+    for (int i = 0; i < client_cnt; ++i)
+    {
+        auto client = clients[i];
         auto clientRead = [=](Buffer buffer)
         {
             // [3] -> pong
-            auto &data = (*client_recv)[i];
-            std::lock_guard<std::mutex> guard(data.mutex);
-            data.strs.push_back(std::string(buffer->data(), buffer->size()));
+            auto &data = client_recv[i];
+            std::lock_guard<std::mutex> guard(data->mutex);
+            data->strs.push_back(std::string(buffer->data(), buffer->size()));
         };
         client->SetHandleRead(clientRead);
     }
     auto ClientConnectClose = [=](int i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         if (client->IsRunning())
             client->CloseSync();
         else
@@ -148,7 +163,7 @@ TEST(TcpCS, monkeytest)
     auto ClientWrite = [=](int i)
     {
         // [1] ping ->
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         static std::atomic_int index;
         client->Write(MakeBuffer(std::to_string(100000 * i + index)));
         ++index;
@@ -184,21 +199,21 @@ TEST(TcpCS, monkeytest)
     int client_size = 0;
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto recv = &(*client_recv)[i];
+        auto recv = client_recv[i];
         client_size += recv->strs.size();
     }
     EXPECT_TRUE(client_size > 0);
 
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         client->Close();
     }
     server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         client->WaitForState(ConnectionState::Closed, 1);
         EXPECT_EQ(client->GetState(), ConnectionState::Closed);
     }
@@ -207,8 +222,12 @@ TEST(TcpCS, monkeytest)
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, monkeytest2)
 {
+    /* 随机端口，减少端口被占用概率 */
+    std::string str_ip = "127.0.0.1";
+    int n_port = Common::Random(10000, 49151);
+
     // server
-    auto server = std::make_shared<TestTcpServer>();
+    auto server = std::make_shared<TestTcpServer>(str_ip, n_port);
     auto server_recv = std::make_shared<Data>();
     auto serverRead = [=](ConnId connId, Buffer buffer)
     {
@@ -221,18 +240,23 @@ TEST(TcpCS, monkeytest2)
 
     // client
     constexpr int client_cnt = 10;
-    auto clients = std::make_shared<std::vector<TestTcpClient>>(client_cnt);
-    auto client_recv = std::make_shared<std::vector<Data>>(client_cnt);
+    std::vector<std::shared_ptr<TestTcpClient>> clients(client_cnt);
+    std::vector<std::shared_ptr<Data>> client_recv(client_cnt);
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        clients[i] = std::make_shared<TestTcpClient>(str_ip, n_port);
+        client_recv[i] = std::make_shared<Data>();
+    }
+    for (int i = 0; i < client_cnt; ++i)
+    {
+        auto client = clients[i];
         auto clientRead = [=](Buffer buffer)
         {
             // [2] -> pingpong ->
-            auto &data = (*client_recv)[i];
+            auto data = client_recv[i];
             {
-                std::lock_guard<std::mutex> guard(data.mutex);
-                data.strs.push_back(std::string(buffer->data(), buffer->size()));
+                std::lock_guard<std::mutex> guard(data->mutex);
+                data->strs.push_back(std::string(buffer->data(), buffer->size()));
             }
             client->Write(buffer);
         };
@@ -248,7 +272,7 @@ TEST(TcpCS, monkeytest2)
             server->ListenSync();
         for (int i = 0; i < client_cnt; ++i)
         {
-            auto client = &(*clients)[i];
+            auto client = clients[i];
             client->Connect();
         }
     };
@@ -288,20 +312,20 @@ TEST(TcpCS, monkeytest2)
     int client_size = 0;
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto recv = &(*client_recv)[i];
+        auto recv = client_recv[i];
         client_size += recv->strs.size();
     }
     EXPECT_TRUE(client_size > 0);
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         client->Close();
     }
     server->CloseSync();
     EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
-        auto client = &(*clients)[i];
+        auto client = clients[i];
         client->WaitForState(ConnectionState::Closed, 1);
         EXPECT_EQ(client->GetState(), ConnectionState::Closed);
     }
