@@ -72,6 +72,7 @@ add_subdirectory(sample-dynamic-lib)
 add_subdirectory(sample-main)
 
 # test
+include(CTest) # 支持 ctest 命令
 include_directories(${PROJECT_SOURCE_DIR}/sample-tools-test)
 include_directories(${PROJECT_SOURCE_DIR}/sample-net-test)
 include_directories(${PROJECT_SOURCE_DIR}/sample-db-test)
