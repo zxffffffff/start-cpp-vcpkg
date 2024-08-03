@@ -55,7 +55,7 @@ jobs:
         path: |
           vcpkg/downloads
           vcpkg/packages
-        key: all-platform
+        key: ${{ runner.os }}-${{ runner.arch }}-${{ hashFiles('**/vcpkg/versions/baseline.json') }}
         save-always: true
     
     - name: Set reusable strings
