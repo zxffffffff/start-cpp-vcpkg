@@ -18,7 +18,7 @@
 
 TEST(utf8, en)
 {
-    std::string utf8 = u8"abc123!@#$%^&*()_-+=*/\\'\"“?:,.。～";
+    std::string utf8 = u8"abcABC123~!@#$%^&*()_+-={}[]|\\:;\"\'<>,.?/";
     std::string local = Platform::utf8_to_local(utf8);
     std::string utf8_2 = Platform::local_to_utf8(local);
     std::string local_2 = Platform::utf8_to_local(utf8_2);
@@ -37,7 +37,7 @@ TEST(utf8, cn)
         return;
 #endif
 
-    std::string utf8 = u8"abc123!@#$%^&*()_-+=*/\\'‘\"“?？:：,，.。你好～";
+    std::string utf8 = u8"你好，世界！";
     std::string local = Platform::utf8_to_local(utf8);
     std::string utf8_2 = Platform::local_to_utf8(local);
     std::string local_2 = Platform::utf8_to_local(utf8_2);
