@@ -18,11 +18,13 @@
 
 TEST(utf8, test)
 {
-    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
-    std::string local = Platform::utf8_to_local(msg);
-    std::string utf8 = Platform::local_to_utf8(local);
+    std::string utf8 = u8"abc123!@#$%^&*()_-+=*/\\'‘\"“?？:：,，.。你好～";
+    std::string local = Platform::utf8_to_local(utf8);
+    std::string utf8_2 = Platform::local_to_utf8(local);
+    std::string local_2 = Platform::utf8_to_local(utf8_2);
 
-    EXPECT_EQ(msg, utf8);
+    EXPECT_EQ(utf8, utf8_2);
+    EXPECT_EQ(local, local_2);
 }
 
 TEST(os, test)
