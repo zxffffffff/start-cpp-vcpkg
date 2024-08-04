@@ -16,8 +16,27 @@
 #pragma warning(disable : 4566)
 #endif
 
-TEST(utf8, test)
+TEST(utf8, en)
 {
+    std::string utf8 = u8"abc123!@#$%^&*()_-+=*/\\'\"“?:,.。～";
+    std::string local = Platform::utf8_to_local(utf8);
+    std::string utf8_2 = Platform::local_to_utf8(local);
+    std::string local_2 = Platform::utf8_to_local(utf8_2);
+
+    EXPECT_EQ(utf8, utf8_2);
+    EXPECT_EQ(local, local_2);
+}
+
+TEST(utf8, cn)
+{
+#ifdef _WIN32
+    /* 获取系统的 ANSI 代码页 */
+    UINT codePage = GetACP();
+    /* 检查是否是 GB2312 (CP936) 中文操作系统，可能是 Windows-1252 (CP1252) */
+    if (codePage != 936)
+        return;
+#endif
+
     std::string utf8 = u8"abc123!@#$%^&*()_-+=*/\\'‘\"“?？:：,，.。你好～";
     std::string local = Platform::utf8_to_local(utf8);
     std::string utf8_2 = Platform::local_to_utf8(local);
