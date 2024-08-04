@@ -23,7 +23,7 @@ TEST(Common, Time)
     auto start = Common::NowSinceEpoch_MS();
     ASSERT_GT(start, 0);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    Common::Sleep(100);
     auto now = Common::NowSinceEpoch_MS();
     ASSERT_GE(now, start + 100);
 

@@ -30,6 +30,17 @@
 class Common
 {
 public:
+    /* 更准确的 sleep，可能会提前 */
+    static int64_t Sleep(int64_t ms)
+    {
+        auto start = std::chrono::high_resolution_clock::now();
+        auto target_wake_time = start + std::chrono::milliseconds(ms);
+        std::this_thread::sleep_until(target_wake_time);
+        auto stop = std::chrono::high_resolution_clock::now();
+        int64_t use = (stop - start).count();
+        return use - ms;
+    }
+
     /* 纪元时间（Unix Epoch Time）1970 至今 */
     static int64_t NowSinceEpoch_MS()
     {
