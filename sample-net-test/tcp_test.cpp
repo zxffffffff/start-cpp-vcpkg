@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include "common.h"
+#include "platform.h"
 #include "hardware.h"
 #include "tcp_server.h"
 #include "tcp_client.h"
