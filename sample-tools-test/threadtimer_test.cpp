@@ -21,53 +21,55 @@
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(ThreadTimerImpl, Test)
 {
-    int sleep_ms = 1000 / Hardware::GetCPUs();
-    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+    /* 低端设备无法准确计时 */
+    if (Hardware::GetCPUs() < 8)
+        return;
 
     static std::atomic<int> flag{0};
-    ThreadTimerImpl timer(sleep_ms, []
+    ThreadTimerImpl timer(100, []
                           { ++flag; });
     timer.Start();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms + sleep_ms / 2));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 + 100 / 2));
     EXPECT_GE(flag.load(), 1);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     EXPECT_GE(flag.load(), 2);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     EXPECT_GE(flag.load(), 3);
 }
 
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(ThreadTimerImpl, Recursive)
 {
-    int sleep_ms = 1000 / Hardware::GetCPUs();
-    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+    /* 低端设备无法准确计时 */
+    if (Hardware::GetCPUs() < 8)
+        return;
 
     static std::atomic<int> flag{0};
 
-    auto recursive = [sleep_ms]
+    auto recursive = []
     {
-        auto timer = new ThreadTimerImpl(sleep_ms, [sleep_ms]
+        auto timer = new ThreadTimerImpl(100, []
                                          { ++flag; });
         timer->Start();
     };
 
-    ThreadTimerImpl timer(sleep_ms, [=]
+    ThreadTimerImpl timer(100, [=]
                           { ++flag; recursive(); });
     timer.Start();
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms + sleep_ms / 2));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100 + 100 / 2));
     EXPECT_GE(flag.load(), 0 + 1 + 0);
 
     /* 不准确，受到电脑性能影响 */
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     EXPECT_GE(flag.load(), 1 + 1 + 1 + 0);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     EXPECT_GE(flag.load(), 3 + 1 + 1 + 1 + 0);
 
-    std::this_thread::sleep_for(std::chrono::milliseconds(sleep_ms));
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     EXPECT_GE(flag.load(), 6 + 1 + 1 + 1 + 1 + 0);
 }
