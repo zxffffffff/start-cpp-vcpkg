@@ -16,7 +16,7 @@
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 class ThreadTimerImpl : public IThreadTimer
@@ -107,9 +107,9 @@ private:
         size_t count = 0;
         while (thread_data->m_running)
         {
-            auto start = steady_clock::now();
+            auto start = std::chrono::high_resolution_clock::now();
             milliseconds duration(thread_data->m_interval_ms);
-            while (thread_data->m_running && duration_cast<milliseconds>(steady_clock::now() - start).count() < duration.count())
+            while (thread_data->m_running && duration_cast<milliseconds>(std::chrono::high_resolution_clock::now() - start).count() < duration.count())
             {
                 std::this_thread::sleep_for(milliseconds(10)); /* 最小精度 */
             }

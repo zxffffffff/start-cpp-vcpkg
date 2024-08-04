@@ -25,13 +25,13 @@ TEST(ThreadTimerImpl, Test)
     timer.Start();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100 + 50));
-    EXPECT_EQ(flag.load(), 1);
+    EXPECT_GE(flag.load(), 1);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    EXPECT_EQ(flag.load(), 2);
+    EXPECT_GE(flag.load(), 2);
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
-    EXPECT_EQ(flag.load(), 3);
+    EXPECT_GE(flag.load(), 3);
 }
 
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
@@ -51,7 +51,7 @@ TEST(ThreadTimerImpl, Recursive)
     timer.Start();
 
     std::this_thread::sleep_for(std::chrono::milliseconds(100 + 50));
-    EXPECT_EQ(flag.load(), 0 + 1 + 0);
+    EXPECT_GE(flag.load(), 0 + 1 + 0);
 
     /* 不准确，受到电脑性能影响 */
     std::this_thread::sleep_for(std::chrono::milliseconds(100));

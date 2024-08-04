@@ -7,6 +7,7 @@
 ****************************************************************************/
 #include <gtest/gtest.h>
 #include "impl/stl_threadpool_impl.h"
+#include "common.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -27,16 +28,16 @@ TEST(stl_threadpool_impl, Test)
     {
         auto test = []
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            Common::Sleep(100);
             ++flag;
         };
         pool->MoveToThread(test);
     }
 
     /* 不准确，受到电脑性能影响 */
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    Common::Sleep(100 * 10 / 2 + 50);
     EXPECT_GE(flag.load(), 4 * 10 / 2);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    Common::Sleep(100 * 10 / 2 + 50);
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
@@ -56,13 +57,13 @@ TEST(stl_threadpool_impl, Recursive)
             {
                 auto test2 = [=]
                 {
-                    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                    Common::Sleep(100);
                     ++flag;
                     return true;
                 };
                 p_pool->MoveToThread(test2);
             }
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            Common::Sleep(100);
             ++flag;
             return true;
         };
@@ -70,9 +71,9 @@ TEST(stl_threadpool_impl, Recursive)
     }
 
     /* 不准确，受到电脑性能影响 */
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    Common::Sleep(100 * 10 / 2 + 50);
     EXPECT_GE(flag.load(), 4 * 10 / 2);
-    std::this_thread::sleep_for(std::chrono::milliseconds(100 * 10 / 2 + 50));
+    Common::Sleep(100 * 10 / 2 + 50);
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
@@ -87,7 +88,7 @@ TEST(stl_threadpool_impl, Shutdown)
     {
         auto test = []
         {
-            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+            Common::Sleep(100);
             ++flag;
         };
         pool->MoveToThread(test);
@@ -95,7 +96,7 @@ TEST(stl_threadpool_impl, Shutdown)
 
     while (flag < 10)
     {
-        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        Common::Sleep(10);
     }
     pool = nullptr; // Shutdown
 }
