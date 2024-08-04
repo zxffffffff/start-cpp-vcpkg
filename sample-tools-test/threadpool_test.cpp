@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 #include "impl/stl_threadpool_impl.h"
 #include "common.h"
+#include "platform.h"
 #include "hardware.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
