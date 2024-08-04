@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 
 #include "common.h"
+#include "hardware.h"
 #include "tcp_server.h"
 #include "tcp_client.h"
 #include "impl/libuv_tcp_server_impl.h"
@@ -35,6 +36,9 @@ struct Data
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, pingpong)
 {
+    int sleep_ms = 1000 / Hardware::GetCPUs();
+    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+
     /* 随机端口，减少端口被占用概率 */
     std::string str_ip = "127.0.0.1";
     int n_port = Common::Random(10000, 49151);
@@ -85,7 +89,7 @@ TEST(TcpCS, pingpong)
         client->Write(MakeBuffer(msg));
     }
 
-    std::this_thread::sleep_for(500ms + cnt * 100ms);
+    Common::Sleep(cnt * sleep_ms * 1.5);
 
     EXPECT_EQ(server_recv->strs.size(), cnt);
     std::sort(server_recv->strs.begin(), server_recv->strs.end());
@@ -112,6 +116,9 @@ TEST(TcpCS, pingpong)
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, monkeytest)
 {
+    int sleep_ms = 1000 / Hardware::GetCPUs();
+    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+
     /* 随机端口，减少端口被占用概率 */
     std::string str_ip = "127.0.0.1";
     int n_port = Common::Random(10000, 49151);
@@ -183,13 +190,13 @@ TEST(TcpCS, monkeytest)
             int random = Common::Random() % client_cmd.size();
             auto f = client_cmd[random];
             f(index);
-            std::this_thread::sleep_for(5ms);
+            Common::Sleep(sleep_ms / 10);
         }
     };
     std::vector<std::thread> threads;
     for (int i = 0; i < client_cnt; ++i)
         threads.push_back(std::thread(test, i));
-    std::this_thread::sleep_for(5s);
+    std::this_thread::sleep_for(10s);
     thread_run = false;
     for (int i = 0; i < client_cnt; ++i)
         threads[i].join();
@@ -222,6 +229,9 @@ TEST(TcpCS, monkeytest)
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(TcpCS, monkeytest2)
 {
+    int sleep_ms = 1000 / Hardware::GetCPUs();
+    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+
     /* 随机端口，减少端口被占用概率 */
     std::string str_ip = "127.0.0.1";
     int n_port = Common::Random(10000, 49151);
@@ -296,14 +306,14 @@ TEST(TcpCS, monkeytest2)
             int random = Common::Random() % server_cmd.size();
             auto f = server_cmd[random];
             f();
-            std::this_thread::sleep_for(5ms);
+            Common::Sleep(sleep_ms / 10);
 
             if (server_cmd.size() < 100)
                 server_cmd.push_back(ServerListenSwitch); // 0% -> 50%
         }
     };
     std::thread thread(test);
-    std::this_thread::sleep_for(5s);
+    std::this_thread::sleep_for(10s);
     thread_run = false;
     thread.join();
 
