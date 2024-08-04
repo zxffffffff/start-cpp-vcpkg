@@ -39,9 +39,9 @@ TEST(stl_threadpool_impl, Test)
     }
 
     /* 不准确，受到电脑性能影响 */
-    Common::Sleep(sleep_ms * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
     EXPECT_GE(flag.load(), 4 * 10 / 2);
-    Common::Sleep(sleep_ms * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
@@ -78,9 +78,9 @@ TEST(stl_threadpool_impl, Recursive)
     }
 
     /* 不准确，受到电脑性能影响 */
-    Common::Sleep(sleep_ms * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
     EXPECT_GE(flag.load(), 4 * 10 / 2);
-    Common::Sleep(sleep_ms * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
