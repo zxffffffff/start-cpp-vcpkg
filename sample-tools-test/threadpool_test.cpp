@@ -25,10 +25,12 @@ TEST(stl_threadpool_impl, Test)
     auto pool = std::make_unique<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
-    int sleep_ms = 1000 / Hardware::GetCPUs();
+    int cpus = Hardware::GetCPUs();
+    cpus += cpus % 2;
+    int sleep_ms = 1000 / cpus;
     sleep_ms = std::min(std::max(100, sleep_ms), 1000);
 
-    for (int i = 0; i < 4 * 10; ++i)
+    for (int i = 0; i < 4 * cpus; ++i)
     {
         auto test = [sleep_ms]
         {
@@ -39,10 +41,10 @@ TEST(stl_threadpool_impl, Test)
     }
 
     /* 不准确，受到电脑性能影响 */
-    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
-    EXPECT_GE(flag.load(), 4 * 10 / 2);
-    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
-    ASSERT_EQ(flag.load(), 4 * 10);
+    Common::Sleep(sleep_ms * cpus / 2 + sleep_ms / 2);
+    EXPECT_GE(flag.load(), 4 * cpus / 2);
+    Common::Sleep(sleep_ms * cpus / 2 + sleep_ms / 2);
+    ASSERT_EQ(flag.load(), 4 * cpus);
 }
 
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
@@ -53,10 +55,12 @@ TEST(stl_threadpool_impl, Recursive)
     auto p_pool = pool.get();
     static std::atomic<int> flag{0};
 
-    int sleep_ms = 1000 / Hardware::GetCPUs();
+    int cpus = Hardware::GetCPUs();
+    cpus += cpus % 2;
+    int sleep_ms = 1000 / cpus;
     sleep_ms = std::min(std::max(100, sleep_ms), 1000);
 
-    for (int i = 0; i < 4 * 5; ++i)
+    for (int i = 0; i < 4 * cpus; ++i)
     {
         auto test = [=]
         {
@@ -78,10 +82,10 @@ TEST(stl_threadpool_impl, Recursive)
     }
 
     /* 不准确，受到电脑性能影响 */
-    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
-    EXPECT_GE(flag.load(), 4 * 10 / 2);
-    Common::Sleep(sleep_ms * 10 / 2 + sleep_ms / 2);
-    ASSERT_EQ(flag.load(), 4 * 10);
+    Common::Sleep(sleep_ms * cpus / 2 + sleep_ms / 2);
+    EXPECT_GE(flag.load(), 4 * cpus / 2);
+    Common::Sleep(sleep_ms * cpus / 2 + sleep_ms / 2);
+    ASSERT_EQ(flag.load(), 4 * cpus);
 }
 
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
@@ -91,10 +95,12 @@ TEST(stl_threadpool_impl, Shutdown)
     auto pool = std::make_unique<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
-    int sleep_ms = 1000 / Hardware::GetCPUs();
+    int cpus = Hardware::GetCPUs();
+    cpus += cpus % 2;
+    int sleep_ms = 1000 / cpus;
     sleep_ms = std::min(std::max(100, sleep_ms), 1000);
 
-    for (int i = 0; i < 4 * 10; ++i)
+    for (int i = 0; i < 4 * cpus; ++i)
     {
         auto test = [sleep_ms]
         {
