@@ -8,6 +8,7 @@
 #include <gtest/gtest.h>
 #include "impl/stl_threadpool_impl.h"
 #include "common.h"
+#include "hardware.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -24,20 +25,23 @@ TEST(stl_threadpool_impl, Test)
     auto pool = std::make_unique<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
+    int sleep_ms = 1000 / Hardware::GetCPUs();
+    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+
     for (int i = 0; i < 4 * 10; ++i)
     {
-        auto test = []
+        auto test = [sleep_ms]
         {
-            Common::Sleep(100);
+            Common::Sleep(sleep_ms);
             ++flag;
         };
         pool->MoveToThread(test);
     }
 
     /* 不准确，受到电脑性能影响 */
-    Common::Sleep(100 * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + 50);
     EXPECT_GE(flag.load(), 4 * 10 / 2);
-    Common::Sleep(100 * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + 50);
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
@@ -49,6 +53,9 @@ TEST(stl_threadpool_impl, Recursive)
     auto p_pool = pool.get();
     static std::atomic<int> flag{0};
 
+    int sleep_ms = 1000 / Hardware::GetCPUs();
+    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+
     for (int i = 0; i < 4 * 5; ++i)
     {
         auto test = [=]
@@ -57,13 +64,13 @@ TEST(stl_threadpool_impl, Recursive)
             {
                 auto test2 = [=]
                 {
-                    Common::Sleep(100);
+                    Common::Sleep(sleep_ms);
                     ++flag;
                     return true;
                 };
                 p_pool->MoveToThread(test2);
             }
-            Common::Sleep(100);
+            Common::Sleep(sleep_ms);
             ++flag;
             return true;
         };
@@ -71,9 +78,9 @@ TEST(stl_threadpool_impl, Recursive)
     }
 
     /* 不准确，受到电脑性能影响 */
-    Common::Sleep(100 * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + 50);
     EXPECT_GE(flag.load(), 4 * 10 / 2);
-    Common::Sleep(100 * 10 / 2 + 50);
+    Common::Sleep(sleep_ms * 10 / 2 + 50);
     ASSERT_EQ(flag.load(), 4 * 10);
 }
 
@@ -84,11 +91,14 @@ TEST(stl_threadpool_impl, Shutdown)
     auto pool = std::make_unique<ThreadPoolImpl>(4);
     static std::atomic<int> flag{0};
 
+    int sleep_ms = 1000 / Hardware::GetCPUs();
+    sleep_ms = std::min(std::max(100, sleep_ms), 1000);
+
     for (int i = 0; i < 4 * 10; ++i)
     {
-        auto test = []
+        auto test = [sleep_ms]
         {
-            Common::Sleep(100);
+            Common::Sleep(sleep_ms);
             ++flag;
         };
         pool->MoveToThread(test);
