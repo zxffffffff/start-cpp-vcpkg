@@ -4,229 +4,250 @@
 #include "res/HeartbeatRes.pb.h"
 
 #include <algorithm>
-
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/wire_format.h>
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/extension_set.h"
+#include "google/protobuf/wire_format_lite.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/generated_message_reflection.h"
+#include "google/protobuf/reflection_ops.h"
+#include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
 
+// Must be included last.
+#include "google/protobuf/port_def.inc"
 PROTOBUF_PRAGMA_INIT_SEG
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = _pb::internal;
+inline constexpr HeartbeatRes::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : resindex_{::int64_t{0}},
+        _cached_size_{0} {}
 
-PROTOBUF_CONSTEXPR HeartbeatRes::HeartbeatRes(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.resindex_)*/int64_t{0}
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+template <typename>
+PROTOBUF_CONSTEXPR HeartbeatRes::HeartbeatRes(::_pbi::ConstantInitialized)
+    : _impl_(::_pbi::ConstantInitialized()) {}
 struct HeartbeatResDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR HeartbeatResDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR HeartbeatResDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~HeartbeatResDefaultTypeInternal() {}
   union {
     HeartbeatRes _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 HeartbeatResDefaultTypeInternal _HeartbeatRes_default_instance_;
-static ::_pb::Metadata file_level_metadata_res_2fHeartbeatRes_2eproto[1];
-static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_res_2fHeartbeatRes_2eproto = nullptr;
-static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_res_2fHeartbeatRes_2eproto = nullptr;
 
-const uint32_t TableStruct_res_2fHeartbeatRes_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::HeartbeatRes, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::HeartbeatRes, _impl_.resindex_),
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 HeartbeatResDefaultTypeInternal _HeartbeatRes_default_instance_;
+static ::_pb::Metadata file_level_metadata_res_2fHeartbeatRes_2eproto[1];
+static constexpr const ::_pb::EnumDescriptor**
+    file_level_enum_descriptors_res_2fHeartbeatRes_2eproto = nullptr;
+static constexpr const ::_pb::ServiceDescriptor**
+    file_level_service_descriptors_res_2fHeartbeatRes_2eproto = nullptr;
+const ::uint32_t TableStruct_res_2fHeartbeatRes_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
+    protodesc_cold) = {
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::HeartbeatRes, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::HeartbeatRes, _impl_.resindex_),
 };
-static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::HeartbeatRes)},
+
+static const ::_pbi::MigrationSchema
+    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+        {0, -1, -1, sizeof(::HeartbeatRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::_HeartbeatRes_default_instance_._instance,
+    &::_HeartbeatRes_default_instance_._instance,
 };
-
-const char descriptor_table_protodef_res_2fHeartbeatRes_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\026res/HeartbeatRes.proto\" \n\014HeartbeatRes"
-  "\022\020\n\010resIndex\030\002 \001(\003b\006proto3"
-  ;
-static ::_pbi::once_flag descriptor_table_res_2fHeartbeatRes_2eproto_once;
+const char descriptor_table_protodef_res_2fHeartbeatRes_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+    "\n\026res/HeartbeatRes.proto\" \n\014HeartbeatRes"
+    "\022\020\n\010resIndex\030\002 \001(\003b\006proto3"
+};
+static ::absl::once_flag descriptor_table_res_2fHeartbeatRes_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_res_2fHeartbeatRes_2eproto = {
-    false, false, 66, descriptor_table_protodef_res_2fHeartbeatRes_2eproto,
+    false,
+    false,
+    66,
+    descriptor_table_protodef_res_2fHeartbeatRes_2eproto,
     "res/HeartbeatRes.proto",
-    &descriptor_table_res_2fHeartbeatRes_2eproto_once, nullptr, 0, 1,
-    schemas, file_default_instances, TableStruct_res_2fHeartbeatRes_2eproto::offsets,
-    file_level_metadata_res_2fHeartbeatRes_2eproto, file_level_enum_descriptors_res_2fHeartbeatRes_2eproto,
+    &descriptor_table_res_2fHeartbeatRes_2eproto_once,
+    nullptr,
+    0,
+    1,
+    schemas,
+    file_default_instances,
+    TableStruct_res_2fHeartbeatRes_2eproto::offsets,
+    file_level_metadata_res_2fHeartbeatRes_2eproto,
+    file_level_enum_descriptors_res_2fHeartbeatRes_2eproto,
     file_level_service_descriptors_res_2fHeartbeatRes_2eproto,
 };
+
+// This function exists to be marked as weak.
+// It can significantly speed up compilation by breaking up LLVM's SCC
+// in the .pb.cc translation units. Large translation units see a
+// reduction of more than 35% of walltime for optimized builds. Without
+// the weak attribute all the messages in the file, including all the
+// vtables and everything they use become part of the same SCC through
+// a cycle like:
+// GetMetadata -> descriptor table -> default instances ->
+//   vtables -> GetMetadata
+// By adding a weak function here we break the connection from the
+// individual vtables back into the descriptor table.
 PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_res_2fHeartbeatRes_2eproto_getter() {
   return &descriptor_table_res_2fHeartbeatRes_2eproto;
 }
-
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_res_2fHeartbeatRes_2eproto(&descriptor_table_res_2fHeartbeatRes_2eproto);
-
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
+static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_res_2fHeartbeatRes_2eproto(&descriptor_table_res_2fHeartbeatRes_2eproto);
 // ===================================================================
 
 class HeartbeatRes::_Internal {
  public:
 };
 
-HeartbeatRes::HeartbeatRes(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
+HeartbeatRes::HeartbeatRes(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:HeartbeatRes)
 }
-HeartbeatRes::HeartbeatRes(const HeartbeatRes& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  HeartbeatRes* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.resindex_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _this->_impl_.resindex_ = from._impl_.resindex_;
-  // @@protoc_insertion_point(copy_constructor:HeartbeatRes)
+HeartbeatRes::HeartbeatRes(
+    ::google::protobuf::Arena* arena, const HeartbeatRes& from)
+    : HeartbeatRes(arena) {
+  MergeFrom(from);
 }
+inline PROTOBUF_NDEBUG_INLINE HeartbeatRes::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0} {}
 
-inline void HeartbeatRes::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.resindex_){int64_t{0}}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
+inline void HeartbeatRes::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.resindex_ = {};
 }
-
 HeartbeatRes::~HeartbeatRes() {
   // @@protoc_insertion_point(destructor:HeartbeatRes)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-
 inline void HeartbeatRes::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.~Impl_();
 }
 
-void HeartbeatRes::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void HeartbeatRes::Clear() {
+PROTOBUF_NOINLINE void HeartbeatRes::Clear() {
 // @@protoc_insertion_point(message_clear_start:HeartbeatRes)
-  uint32_t cached_has_bits = 0;
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.resindex_ = int64_t{0};
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _impl_.resindex_ = ::int64_t{0};
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* HeartbeatRes::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // int64 resIndex = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 16)) {
-          _impl_.resindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
+const char* HeartbeatRes::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
 }
 
-uint8_t* HeartbeatRes::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2> HeartbeatRes::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967293,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_HeartbeatRes_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // int64 resIndex = 2;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(HeartbeatRes, _impl_.resindex_), 63>(),
+     {16, 63, 0, PROTOBUF_FIELD_OFFSET(HeartbeatRes, _impl_.resindex_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // int64 resIndex = 2;
+    {PROTOBUF_FIELD_OFFSET(HeartbeatRes, _impl_.resindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+::uint8_t* HeartbeatRes::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:HeartbeatRes)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
 
   // int64 resIndex = 2;
   if (this->_internal_resindex() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt64ToArray(2, this->_internal_resindex(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<2>(
+            stream, this->_internal_resindex(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:HeartbeatRes)
   return target;
 }
 
-size_t HeartbeatRes::ByteSizeLong() const {
+::size_t HeartbeatRes::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:HeartbeatRes)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // int64 resIndex = 2;
   if (this->_internal_resindex() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_resindex());
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_resindex());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData HeartbeatRes::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    HeartbeatRes::MergeImpl
+const ::google::protobuf::Message::ClassData HeartbeatRes::_class_data_ = {
+    HeartbeatRes::MergeImpl,
+    nullptr,  // OnDemandRegisterArenaDtor
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*HeartbeatRes::GetClassData() const { return &_class_data_; }
+const ::google::protobuf::Message::ClassData* HeartbeatRes::GetClassData() const {
+  return &_class_data_;
+}
 
-
-void HeartbeatRes::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+void HeartbeatRes::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
   auto* const _this = static_cast<HeartbeatRes*>(&to_msg);
   auto& from = static_cast<const HeartbeatRes&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:HeartbeatRes)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_resindex() != 0) {
     _this->_internal_set_resindex(from._internal_resindex());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void HeartbeatRes::CopyFrom(const HeartbeatRes& from) {
@@ -236,29 +257,28 @@ void HeartbeatRes::CopyFrom(const HeartbeatRes& from) {
   MergeFrom(from);
 }
 
-bool HeartbeatRes::IsInitialized() const {
+PROTOBUF_NOINLINE bool HeartbeatRes::IsInitialized() const {
   return true;
 }
 
-void HeartbeatRes::InternalSwap(HeartbeatRes* other) {
+::_pbi::CachedSize* HeartbeatRes::AccessCachedSize() const {
+  return &_impl_._cached_size_;
+}
+void HeartbeatRes::InternalSwap(HeartbeatRes* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.resindex_, other->_impl_.resindex_);
+        swap(_impl_.resindex_, other->_impl_.resindex_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata HeartbeatRes::GetMetadata() const {
+::google::protobuf::Metadata HeartbeatRes::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_res_2fHeartbeatRes_2eproto_getter, &descriptor_table_res_2fHeartbeatRes_2eproto_once,
       file_level_metadata_res_2fHeartbeatRes_2eproto[0]);
 }
-
 // @@protoc_insertion_point(namespace_scope)
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::HeartbeatRes*
-Arena::CreateMaybeMessage< ::HeartbeatRes >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::HeartbeatRes >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
-
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"

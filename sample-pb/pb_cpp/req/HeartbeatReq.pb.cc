@@ -4,229 +4,250 @@
 #include "req/HeartbeatReq.pb.h"
 
 #include <algorithm>
-
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/wire_format.h>
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/extension_set.h"
+#include "google/protobuf/wire_format_lite.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/generated_message_reflection.h"
+#include "google/protobuf/reflection_ops.h"
+#include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
 
+// Must be included last.
+#include "google/protobuf/port_def.inc"
 PROTOBUF_PRAGMA_INIT_SEG
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = _pb::internal;
+inline constexpr HeartbeatReq::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : reqindex_{::int64_t{0}},
+        _cached_size_{0} {}
 
-PROTOBUF_CONSTEXPR HeartbeatReq::HeartbeatReq(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.reqindex_)*/int64_t{0}
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+template <typename>
+PROTOBUF_CONSTEXPR HeartbeatReq::HeartbeatReq(::_pbi::ConstantInitialized)
+    : _impl_(::_pbi::ConstantInitialized()) {}
 struct HeartbeatReqDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR HeartbeatReqDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR HeartbeatReqDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~HeartbeatReqDefaultTypeInternal() {}
   union {
     HeartbeatReq _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 HeartbeatReqDefaultTypeInternal _HeartbeatReq_default_instance_;
-static ::_pb::Metadata file_level_metadata_req_2fHeartbeatReq_2eproto[1];
-static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_req_2fHeartbeatReq_2eproto = nullptr;
-static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_req_2fHeartbeatReq_2eproto = nullptr;
 
-const uint32_t TableStruct_req_2fHeartbeatReq_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::HeartbeatReq, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::HeartbeatReq, _impl_.reqindex_),
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 HeartbeatReqDefaultTypeInternal _HeartbeatReq_default_instance_;
+static ::_pb::Metadata file_level_metadata_req_2fHeartbeatReq_2eproto[1];
+static constexpr const ::_pb::EnumDescriptor**
+    file_level_enum_descriptors_req_2fHeartbeatReq_2eproto = nullptr;
+static constexpr const ::_pb::ServiceDescriptor**
+    file_level_service_descriptors_req_2fHeartbeatReq_2eproto = nullptr;
+const ::uint32_t TableStruct_req_2fHeartbeatReq_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
+    protodesc_cold) = {
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::HeartbeatReq, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::HeartbeatReq, _impl_.reqindex_),
 };
-static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::HeartbeatReq)},
+
+static const ::_pbi::MigrationSchema
+    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+        {0, -1, -1, sizeof(::HeartbeatReq)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::_HeartbeatReq_default_instance_._instance,
+    &::_HeartbeatReq_default_instance_._instance,
 };
-
-const char descriptor_table_protodef_req_2fHeartbeatReq_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\026req/HeartbeatReq.proto\" \n\014HeartbeatReq"
-  "\022\020\n\010reqIndex\030\001 \001(\003b\006proto3"
-  ;
-static ::_pbi::once_flag descriptor_table_req_2fHeartbeatReq_2eproto_once;
+const char descriptor_table_protodef_req_2fHeartbeatReq_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+    "\n\026req/HeartbeatReq.proto\" \n\014HeartbeatReq"
+    "\022\020\n\010reqIndex\030\001 \001(\003b\006proto3"
+};
+static ::absl::once_flag descriptor_table_req_2fHeartbeatReq_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_req_2fHeartbeatReq_2eproto = {
-    false, false, 66, descriptor_table_protodef_req_2fHeartbeatReq_2eproto,
+    false,
+    false,
+    66,
+    descriptor_table_protodef_req_2fHeartbeatReq_2eproto,
     "req/HeartbeatReq.proto",
-    &descriptor_table_req_2fHeartbeatReq_2eproto_once, nullptr, 0, 1,
-    schemas, file_default_instances, TableStruct_req_2fHeartbeatReq_2eproto::offsets,
-    file_level_metadata_req_2fHeartbeatReq_2eproto, file_level_enum_descriptors_req_2fHeartbeatReq_2eproto,
+    &descriptor_table_req_2fHeartbeatReq_2eproto_once,
+    nullptr,
+    0,
+    1,
+    schemas,
+    file_default_instances,
+    TableStruct_req_2fHeartbeatReq_2eproto::offsets,
+    file_level_metadata_req_2fHeartbeatReq_2eproto,
+    file_level_enum_descriptors_req_2fHeartbeatReq_2eproto,
     file_level_service_descriptors_req_2fHeartbeatReq_2eproto,
 };
+
+// This function exists to be marked as weak.
+// It can significantly speed up compilation by breaking up LLVM's SCC
+// in the .pb.cc translation units. Large translation units see a
+// reduction of more than 35% of walltime for optimized builds. Without
+// the weak attribute all the messages in the file, including all the
+// vtables and everything they use become part of the same SCC through
+// a cycle like:
+// GetMetadata -> descriptor table -> default instances ->
+//   vtables -> GetMetadata
+// By adding a weak function here we break the connection from the
+// individual vtables back into the descriptor table.
 PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_req_2fHeartbeatReq_2eproto_getter() {
   return &descriptor_table_req_2fHeartbeatReq_2eproto;
 }
-
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_req_2fHeartbeatReq_2eproto(&descriptor_table_req_2fHeartbeatReq_2eproto);
-
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
+static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_req_2fHeartbeatReq_2eproto(&descriptor_table_req_2fHeartbeatReq_2eproto);
 // ===================================================================
 
 class HeartbeatReq::_Internal {
  public:
 };
 
-HeartbeatReq::HeartbeatReq(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
+HeartbeatReq::HeartbeatReq(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:HeartbeatReq)
 }
-HeartbeatReq::HeartbeatReq(const HeartbeatReq& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  HeartbeatReq* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.reqindex_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
-
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _this->_impl_.reqindex_ = from._impl_.reqindex_;
-  // @@protoc_insertion_point(copy_constructor:HeartbeatReq)
+HeartbeatReq::HeartbeatReq(
+    ::google::protobuf::Arena* arena, const HeartbeatReq& from)
+    : HeartbeatReq(arena) {
+  MergeFrom(from);
 }
+inline PROTOBUF_NDEBUG_INLINE HeartbeatReq::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0} {}
 
-inline void HeartbeatReq::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.reqindex_){int64_t{0}}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
+inline void HeartbeatReq::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  _impl_.reqindex_ = {};
 }
-
 HeartbeatReq::~HeartbeatReq() {
   // @@protoc_insertion_point(destructor:HeartbeatReq)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-
 inline void HeartbeatReq::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  ABSL_DCHECK(GetArena() == nullptr);
+  _impl_.~Impl_();
 }
 
-void HeartbeatReq::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void HeartbeatReq::Clear() {
+PROTOBUF_NOINLINE void HeartbeatReq::Clear() {
 // @@protoc_insertion_point(message_clear_start:HeartbeatReq)
-  uint32_t cached_has_bits = 0;
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
-  _impl_.reqindex_ = int64_t{0};
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _impl_.reqindex_ = ::int64_t{0};
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* HeartbeatReq::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // int64 reqIndex = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          _impl_.reqindex_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
+const char* HeartbeatReq::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
 }
 
-uint8_t* HeartbeatReq::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<0, 1, 0, 0, 2> HeartbeatReq::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    1, 0,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967294,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    1,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_HeartbeatReq_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // int64 reqIndex = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(HeartbeatReq, _impl_.reqindex_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(HeartbeatReq, _impl_.reqindex_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // int64 reqIndex = 1;
+    {PROTOBUF_FIELD_OFFSET(HeartbeatReq, _impl_.reqindex_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kInt64)},
+  }},
+  // no aux_entries
+  {{
+  }},
+};
+
+::uint8_t* HeartbeatReq::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:HeartbeatReq)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
 
   // int64 reqIndex = 1;
   if (this->_internal_reqindex() != 0) {
-    target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteInt64ToArray(1, this->_internal_reqindex(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+        WriteInt64ToArrayWithField<1>(
+            stream, this->_internal_reqindex(), target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:HeartbeatReq)
   return target;
 }
 
-size_t HeartbeatReq::ByteSizeLong() const {
+::size_t HeartbeatReq::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:HeartbeatReq)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // int64 reqIndex = 1;
   if (this->_internal_reqindex() != 0) {
-    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(this->_internal_reqindex());
+    total_size += ::_pbi::WireFormatLite::Int64SizePlusOne(
+        this->_internal_reqindex());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData HeartbeatReq::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    HeartbeatReq::MergeImpl
+const ::google::protobuf::Message::ClassData HeartbeatReq::_class_data_ = {
+    HeartbeatReq::MergeImpl,
+    nullptr,  // OnDemandRegisterArenaDtor
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*HeartbeatReq::GetClassData() const { return &_class_data_; }
+const ::google::protobuf::Message::ClassData* HeartbeatReq::GetClassData() const {
+  return &_class_data_;
+}
 
-
-void HeartbeatReq::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+void HeartbeatReq::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
   auto* const _this = static_cast<HeartbeatReq*>(&to_msg);
   auto& from = static_cast<const HeartbeatReq&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:HeartbeatReq)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (from._internal_reqindex() != 0) {
     _this->_internal_set_reqindex(from._internal_reqindex());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void HeartbeatReq::CopyFrom(const HeartbeatReq& from) {
@@ -236,29 +257,28 @@ void HeartbeatReq::CopyFrom(const HeartbeatReq& from) {
   MergeFrom(from);
 }
 
-bool HeartbeatReq::IsInitialized() const {
+PROTOBUF_NOINLINE bool HeartbeatReq::IsInitialized() const {
   return true;
 }
 
-void HeartbeatReq::InternalSwap(HeartbeatReq* other) {
+::_pbi::CachedSize* HeartbeatReq::AccessCachedSize() const {
+  return &_impl_._cached_size_;
+}
+void HeartbeatReq::InternalSwap(HeartbeatReq* PROTOBUF_RESTRICT other) {
   using std::swap;
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  swap(_impl_.reqindex_, other->_impl_.reqindex_);
+        swap(_impl_.reqindex_, other->_impl_.reqindex_);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata HeartbeatReq::GetMetadata() const {
+::google::protobuf::Metadata HeartbeatReq::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_req_2fHeartbeatReq_2eproto_getter, &descriptor_table_req_2fHeartbeatReq_2eproto_once,
       file_level_metadata_req_2fHeartbeatReq_2eproto[0]);
 }
-
 // @@protoc_insertion_point(namespace_scope)
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::HeartbeatReq*
-Arena::CreateMaybeMessage< ::HeartbeatReq >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::HeartbeatReq >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
-
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"

@@ -4,91 +4,121 @@
 #include "res/QuoteUnsubscribeTickRes.pb.h"
 
 #include <algorithm>
-
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/wire_format.h>
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/extension_set.h"
+#include "google/protobuf/wire_format_lite.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/generated_message_reflection.h"
+#include "google/protobuf/reflection_ops.h"
+#include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
 
+// Must be included last.
+#include "google/protobuf/port_def.inc"
 PROTOBUF_PRAGMA_INIT_SEG
-
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = _pb::internal;
-
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 namespace Quote {
-PROTOBUF_CONSTEXPR UnsubscribeTickRes::UnsubscribeTickRes(
-    ::_pbi::ConstantInitialized) {}
+      template <typename>
+PROTOBUF_CONSTEXPR UnsubscribeTickRes::UnsubscribeTickRes(::_pbi::ConstantInitialized) {}
 struct UnsubscribeTickResDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR UnsubscribeTickResDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR UnsubscribeTickResDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~UnsubscribeTickResDefaultTypeInternal() {}
   union {
     UnsubscribeTickRes _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UnsubscribeTickResDefaultTypeInternal _UnsubscribeTickRes_default_instance_;
+
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 UnsubscribeTickResDefaultTypeInternal _UnsubscribeTickRes_default_instance_;
 }  // namespace Quote
 static ::_pb::Metadata file_level_metadata_res_2fQuoteUnsubscribeTickRes_2eproto[1];
-static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto = nullptr;
-static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto = nullptr;
-
-const uint32_t TableStruct_res_2fQuoteUnsubscribeTickRes_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::Quote::UnsubscribeTickRes, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
+static constexpr const ::_pb::EnumDescriptor**
+    file_level_enum_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto = nullptr;
+static constexpr const ::_pb::ServiceDescriptor**
+    file_level_service_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto = nullptr;
+const ::uint32_t TableStruct_res_2fQuoteUnsubscribeTickRes_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
+    protodesc_cold) = {
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::Quote::UnsubscribeTickRes, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
 };
-static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::Quote::UnsubscribeTickRes)},
+
+static const ::_pbi::MigrationSchema
+    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+        {0, -1, -1, sizeof(::Quote::UnsubscribeTickRes)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::Quote::_UnsubscribeTickRes_default_instance_._instance,
+    &::Quote::_UnsubscribeTickRes_default_instance_._instance,
 };
-
-const char descriptor_table_protodef_res_2fQuoteUnsubscribeTickRes_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n!res/QuoteUnsubscribeTickRes.proto\022\005Quo"
-  "te\"\024\n\022UnsubscribeTickResb\006proto3"
-  ;
-static ::_pbi::once_flag descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_once;
+const char descriptor_table_protodef_res_2fQuoteUnsubscribeTickRes_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+    "\n!res/QuoteUnsubscribeTickRes.proto\022\005Quo"
+    "te\"\024\n\022UnsubscribeTickResb\006proto3"
+};
+static ::absl::once_flag descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto = {
-    false, false, 72, descriptor_table_protodef_res_2fQuoteUnsubscribeTickRes_2eproto,
+    false,
+    false,
+    72,
+    descriptor_table_protodef_res_2fQuoteUnsubscribeTickRes_2eproto,
     "res/QuoteUnsubscribeTickRes.proto",
-    &descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_once, nullptr, 0, 1,
-    schemas, file_default_instances, TableStruct_res_2fQuoteUnsubscribeTickRes_2eproto::offsets,
-    file_level_metadata_res_2fQuoteUnsubscribeTickRes_2eproto, file_level_enum_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto,
+    &descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_once,
+    nullptr,
+    0,
+    1,
+    schemas,
+    file_default_instances,
+    TableStruct_res_2fQuoteUnsubscribeTickRes_2eproto::offsets,
+    file_level_metadata_res_2fQuoteUnsubscribeTickRes_2eproto,
+    file_level_enum_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto,
     file_level_service_descriptors_res_2fQuoteUnsubscribeTickRes_2eproto,
 };
+
+// This function exists to be marked as weak.
+// It can significantly speed up compilation by breaking up LLVM's SCC
+// in the .pb.cc translation units. Large translation units see a
+// reduction of more than 35% of walltime for optimized builds. Without
+// the weak attribute all the messages in the file, including all the
+// vtables and everything they use become part of the same SCC through
+// a cycle like:
+// GetMetadata -> descriptor table -> default instances ->
+//   vtables -> GetMetadata
+// By adding a weak function here we break the connection from the
+// individual vtables back into the descriptor table.
 PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_getter() {
   return &descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto;
 }
-
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_res_2fQuoteUnsubscribeTickRes_2eproto(&descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto);
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
+static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_res_2fQuoteUnsubscribeTickRes_2eproto(&descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto);
 namespace Quote {
-
 // ===================================================================
 
 class UnsubscribeTickRes::_Internal {
  public:
 };
 
-UnsubscribeTickRes::UnsubscribeTickRes(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase(arena, is_message_owned) {
+UnsubscribeTickRes::UnsubscribeTickRes(::google::protobuf::Arena* arena)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
   // @@protoc_insertion_point(arena_constructor:Quote.UnsubscribeTickRes)
 }
-UnsubscribeTickRes::UnsubscribeTickRes(const UnsubscribeTickRes& from)
-  : ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase() {
-  UnsubscribeTickRes* const _this = this; (void)_this;
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+UnsubscribeTickRes::UnsubscribeTickRes(
+    ::google::protobuf::Arena* arena,
+    const UnsubscribeTickRes& from)
+    : ::google::protobuf::internal::ZeroFieldsBase(arena) {
+  UnsubscribeTickRes* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+
   // @@protoc_insertion_point(copy_constructor:Quote.UnsubscribeTickRes)
 }
 
@@ -96,32 +126,20 @@ UnsubscribeTickRes::UnsubscribeTickRes(const UnsubscribeTickRes& from)
 
 
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData UnsubscribeTickRes::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::CopyImpl,
-    ::PROTOBUF_NAMESPACE_ID::internal::ZeroFieldsBase::MergeImpl,
-};
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*UnsubscribeTickRes::GetClassData() const { return &_class_data_; }
 
 
 
 
-
-
-
-::PROTOBUF_NAMESPACE_ID::Metadata UnsubscribeTickRes::GetMetadata() const {
+::google::protobuf::Metadata UnsubscribeTickRes::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_getter, &descriptor_table_res_2fQuoteUnsubscribeTickRes_2eproto_once,
       file_level_metadata_res_2fQuoteUnsubscribeTickRes_2eproto[0]);
 }
-
 // @@protoc_insertion_point(namespace_scope)
 }  // namespace Quote
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::Quote::UnsubscribeTickRes*
-Arena::CreateMaybeMessage< ::Quote::UnsubscribeTickRes >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::Quote::UnsubscribeTickRes >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
-
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"
