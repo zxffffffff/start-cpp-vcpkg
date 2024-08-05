@@ -4,288 +4,293 @@
 #include "common/Stock.pb.h"
 
 #include <algorithm>
-
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/wire_format.h>
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/extension_set.h"
+#include "google/protobuf/wire_format_lite.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/generated_message_reflection.h"
+#include "google/protobuf/reflection_ops.h"
+#include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
 
+// Must be included last.
+#include "google/protobuf/port_def.inc"
 PROTOBUF_PRAGMA_INIT_SEG
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = _pb::internal;
+inline constexpr Stock::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : code_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        market_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        _cached_size_{0} {}
 
-PROTOBUF_CONSTEXPR Stock::Stock(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.code_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.market_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+template <typename>
+PROTOBUF_CONSTEXPR Stock::Stock(::_pbi::ConstantInitialized)
+    : _impl_(::_pbi::ConstantInitialized()) {}
 struct StockDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR StockDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR StockDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~StockDefaultTypeInternal() {}
   union {
     Stock _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StockDefaultTypeInternal _Stock_default_instance_;
-static ::_pb::Metadata file_level_metadata_common_2fStock_2eproto[1];
-static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_common_2fStock_2eproto = nullptr;
-static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_common_2fStock_2eproto = nullptr;
 
-const uint32_t TableStruct_common_2fStock_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::Stock, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::Stock, _impl_.code_),
-  PROTOBUF_FIELD_OFFSET(::Stock, _impl_.market_),
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 StockDefaultTypeInternal _Stock_default_instance_;
+static ::_pb::Metadata file_level_metadata_common_2fStock_2eproto[1];
+static constexpr const ::_pb::EnumDescriptor**
+    file_level_enum_descriptors_common_2fStock_2eproto = nullptr;
+static constexpr const ::_pb::ServiceDescriptor**
+    file_level_service_descriptors_common_2fStock_2eproto = nullptr;
+const ::uint32_t TableStruct_common_2fStock_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
+    protodesc_cold) = {
+    ~0u,  // no _has_bits_
+    PROTOBUF_FIELD_OFFSET(::Stock, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::Stock, _impl_.code_),
+    PROTOBUF_FIELD_OFFSET(::Stock, _impl_.market_),
 };
-static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::Stock)},
+
+static const ::_pbi::MigrationSchema
+    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+        {0, -1, -1, sizeof(::Stock)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::_Stock_default_instance_._instance,
+    &::_Stock_default_instance_._instance,
 };
-
-const char descriptor_table_protodef_common_2fStock_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\022common/Stock.proto\"%\n\005Stock\022\014\n\004code\030\001 "
-  "\001(\t\022\016\n\006market\030\002 \001(\tb\006proto3"
-  ;
-static ::_pbi::once_flag descriptor_table_common_2fStock_2eproto_once;
+const char descriptor_table_protodef_common_2fStock_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+    "\n\022common/Stock.proto\"%\n\005Stock\022\014\n\004code\030\001 "
+    "\001(\t\022\016\n\006market\030\002 \001(\tb\006proto3"
+};
+static ::absl::once_flag descriptor_table_common_2fStock_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_common_2fStock_2eproto = {
-    false, false, 67, descriptor_table_protodef_common_2fStock_2eproto,
+    false,
+    false,
+    67,
+    descriptor_table_protodef_common_2fStock_2eproto,
     "common/Stock.proto",
-    &descriptor_table_common_2fStock_2eproto_once, nullptr, 0, 1,
-    schemas, file_default_instances, TableStruct_common_2fStock_2eproto::offsets,
-    file_level_metadata_common_2fStock_2eproto, file_level_enum_descriptors_common_2fStock_2eproto,
+    &descriptor_table_common_2fStock_2eproto_once,
+    nullptr,
+    0,
+    1,
+    schemas,
+    file_default_instances,
+    TableStruct_common_2fStock_2eproto::offsets,
+    file_level_metadata_common_2fStock_2eproto,
+    file_level_enum_descriptors_common_2fStock_2eproto,
     file_level_service_descriptors_common_2fStock_2eproto,
 };
+
+// This function exists to be marked as weak.
+// It can significantly speed up compilation by breaking up LLVM's SCC
+// in the .pb.cc translation units. Large translation units see a
+// reduction of more than 35% of walltime for optimized builds. Without
+// the weak attribute all the messages in the file, including all the
+// vtables and everything they use become part of the same SCC through
+// a cycle like:
+// GetMetadata -> descriptor table -> default instances ->
+//   vtables -> GetMetadata
+// By adding a weak function here we break the connection from the
+// individual vtables back into the descriptor table.
 PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_common_2fStock_2eproto_getter() {
   return &descriptor_table_common_2fStock_2eproto;
 }
-
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_common_2fStock_2eproto(&descriptor_table_common_2fStock_2eproto);
-
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
+static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_common_2fStock_2eproto(&descriptor_table_common_2fStock_2eproto);
 // ===================================================================
 
 class Stock::_Internal {
  public:
 };
 
-Stock::Stock(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
+Stock::Stock(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:Stock)
 }
-Stock::Stock(const Stock& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  Stock* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.code_){}
-    , decltype(_impl_.market_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
+inline PROTOBUF_NDEBUG_INLINE Stock::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from)
+      : code_(arena, from.code_),
+        market_(arena, from.market_),
+        _cached_size_{0} {}
 
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.code_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.code_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_code().empty()) {
-    _this->_impl_.code_.Set(from._internal_code(), 
-      _this->GetArenaForAllocation());
-  }
-  _impl_.market_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.market_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_market().empty()) {
-    _this->_impl_.market_.Set(from._internal_market(), 
-      _this->GetArenaForAllocation());
-  }
+Stock::Stock(
+    ::google::protobuf::Arena* arena,
+    const Stock& from)
+    : ::google::protobuf::Message(arena) {
+  Stock* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
+
   // @@protoc_insertion_point(copy_constructor:Stock)
 }
+inline PROTOBUF_NDEBUG_INLINE Stock::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : code_(arena),
+        market_(arena),
+        _cached_size_{0} {}
 
-inline void Stock::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.code_){}
-    , decltype(_impl_.market_){}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.code_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.code_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  _impl_.market_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.market_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+inline void Stock::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
 }
-
 Stock::~Stock() {
   // @@protoc_insertion_point(destructor:Stock)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-
 inline void Stock::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  ABSL_DCHECK(GetArena() == nullptr);
   _impl_.code_.Destroy();
   _impl_.market_.Destroy();
+  _impl_.~Impl_();
 }
 
-void Stock::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void Stock::Clear() {
+PROTOBUF_NOINLINE void Stock::Clear() {
 // @@protoc_insertion_point(message_clear_start:Stock)
-  uint32_t cached_has_bits = 0;
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   _impl_.code_.ClearToEmpty();
   _impl_.market_.ClearToEmpty();
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* Stock::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // string code = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 10)) {
-          auto str = _internal_mutable_code();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "Stock.code"));
-        } else
-          goto handle_unusual;
-        continue;
-      // string market = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          auto str = _internal_mutable_market();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "Stock.market"));
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
+const char* Stock::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
 }
 
-uint8_t* Stock::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<1, 2, 0, 24, 2> Stock::_table_ = {
+  {
+    0,  // no _has_bits_
+    0, // no _extensions_
+    2, 8,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967292,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    2,  // num_field_entries
+    0,  // num_aux_entries
+    offsetof(decltype(_table_), field_names),  // no aux_entries
+    &_Stock_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // string market = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(Stock, _impl_.market_)}},
+    // string code = 1;
+    {::_pbi::TcParser::FastUS1,
+     {10, 63, 0, PROTOBUF_FIELD_OFFSET(Stock, _impl_.code_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // string code = 1;
+    {PROTOBUF_FIELD_OFFSET(Stock, _impl_.code_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // string market = 2;
+    {PROTOBUF_FIELD_OFFSET(Stock, _impl_.market_), 0, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+  }},
+  // no aux_entries
+  {{
+    "\5\4\6\0\0\0\0\0"
+    "Stock"
+    "code"
+    "market"
+  }},
+};
+
+::uint8_t* Stock::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:Stock)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
 
   // string code = 1;
   if (!this->_internal_code().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_code().data(), static_cast<int>(this->_internal_code().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "Stock.code");
-    target = stream->WriteStringMaybeAliased(
-        1, this->_internal_code(), target);
+    const std::string& _s = this->_internal_code();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Stock.code");
+    target = stream->WriteStringMaybeAliased(1, _s, target);
   }
 
   // string market = 2;
   if (!this->_internal_market().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_market().data(), static_cast<int>(this->_internal_market().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "Stock.market");
-    target = stream->WriteStringMaybeAliased(
-        2, this->_internal_market(), target);
+    const std::string& _s = this->_internal_market();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "Stock.market");
+    target = stream->WriteStringMaybeAliased(2, _s, target);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:Stock)
   return target;
 }
 
-size_t Stock::ByteSizeLong() const {
+::size_t Stock::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:Stock)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // string code = 1;
   if (!this->_internal_code().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_code());
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_code());
   }
 
   // string market = 2;
   if (!this->_internal_market().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_market());
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_market());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData Stock::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    Stock::MergeImpl
+const ::google::protobuf::Message::ClassData Stock::_class_data_ = {
+    Stock::MergeImpl,
+    nullptr,  // OnDemandRegisterArenaDtor
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*Stock::GetClassData() const { return &_class_data_; }
+const ::google::protobuf::Message::ClassData* Stock::GetClassData() const {
+  return &_class_data_;
+}
 
-
-void Stock::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+void Stock::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
   auto* const _this = static_cast<Stock*>(&to_msg);
   auto& from = static_cast<const Stock&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:Stock)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_code().empty()) {
@@ -294,7 +299,7 @@ void Stock::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF
   if (!from._internal_market().empty()) {
     _this->_internal_set_market(from._internal_market());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void Stock::CopyFrom(const Stock& from) {
@@ -304,38 +309,31 @@ void Stock::CopyFrom(const Stock& from) {
   MergeFrom(from);
 }
 
-bool Stock::IsInitialized() const {
+PROTOBUF_NOINLINE bool Stock::IsInitialized() const {
   return true;
 }
 
-void Stock::InternalSwap(Stock* other) {
+::_pbi::CachedSize* Stock::AccessCachedSize() const {
+  return &_impl_._cached_size_;
+}
+void Stock::InternalSwap(Stock* PROTOBUF_RESTRICT other) {
   using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.code_, lhs_arena,
-      &other->_impl_.code_, rhs_arena
-  );
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.market_, lhs_arena,
-      &other->_impl_.market_, rhs_arena
-  );
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.code_, &other->_impl_.code_, arena);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.market_, &other->_impl_.market_, arena);
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata Stock::GetMetadata() const {
+::google::protobuf::Metadata Stock::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_common_2fStock_2eproto_getter, &descriptor_table_common_2fStock_2eproto_once,
       file_level_metadata_common_2fStock_2eproto[0]);
 }
-
 // @@protoc_insertion_point(namespace_scope)
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::Stock*
-Arena::CreateMaybeMessage< ::Stock >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::Stock >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
-
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"

@@ -4,357 +4,391 @@
 #include "Req.pb.h"
 
 #include <algorithm>
-
-#include <google/protobuf/io/coded_stream.h>
-#include <google/protobuf/extension_set.h>
-#include <google/protobuf/wire_format_lite.h>
-#include <google/protobuf/descriptor.h>
-#include <google/protobuf/generated_message_reflection.h>
-#include <google/protobuf/reflection_ops.h>
-#include <google/protobuf/wire_format.h>
+#include "google/protobuf/io/coded_stream.h"
+#include "google/protobuf/extension_set.h"
+#include "google/protobuf/wire_format_lite.h"
+#include "google/protobuf/descriptor.h"
+#include "google/protobuf/generated_message_reflection.h"
+#include "google/protobuf/reflection_ops.h"
+#include "google/protobuf/wire_format.h"
+#include "google/protobuf/generated_message_tctable_impl.h"
 // @@protoc_insertion_point(includes)
-#include <google/protobuf/port_def.inc>
 
+// Must be included last.
+#include "google/protobuf/port_def.inc"
 PROTOBUF_PRAGMA_INIT_SEG
+namespace _pb = ::google::protobuf;
+namespace _pbi = ::google::protobuf::internal;
+namespace _fl = ::google::protobuf::internal::field_layout;
 
-namespace _pb = ::PROTOBUF_NAMESPACE_ID;
-namespace _pbi = _pb::internal;
+inline constexpr PBReq::Impl_::Impl_(
+    ::_pbi::ConstantInitialized) noexcept
+      : _cached_size_{0},
+        reqid_(
+            &::google::protobuf::internal::fixed_address_empty_string,
+            ::_pbi::ConstantInitialized()),
+        payload_{nullptr},
+        reqtime_{::uint64_t{0u}},
+        reqmsgtype_{static_cast< ::PBMsgType >(0)} {}
 
-PROTOBUF_CONSTEXPR PBReq::PBReq(
-    ::_pbi::ConstantInitialized): _impl_{
-    /*decltype(_impl_.reqid_)*/{&::_pbi::fixed_address_empty_string, ::_pbi::ConstantInitialized{}}
-  , /*decltype(_impl_.payload_)*/nullptr
-  , /*decltype(_impl_.reqtime_)*/uint64_t{0u}
-  , /*decltype(_impl_.reqmsgtype_)*/0
-  , /*decltype(_impl_._cached_size_)*/{}} {}
+template <typename>
+PROTOBUF_CONSTEXPR PBReq::PBReq(::_pbi::ConstantInitialized)
+    : _impl_(::_pbi::ConstantInitialized()) {}
 struct PBReqDefaultTypeInternal {
-  PROTOBUF_CONSTEXPR PBReqDefaultTypeInternal()
-      : _instance(::_pbi::ConstantInitialized{}) {}
+  PROTOBUF_CONSTEXPR PBReqDefaultTypeInternal() : _instance(::_pbi::ConstantInitialized{}) {}
   ~PBReqDefaultTypeInternal() {}
   union {
     PBReq _instance;
   };
 };
-PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PBReqDefaultTypeInternal _PBReq_default_instance_;
-static ::_pb::Metadata file_level_metadata_Req_2eproto[1];
-static constexpr ::_pb::EnumDescriptor const** file_level_enum_descriptors_Req_2eproto = nullptr;
-static constexpr ::_pb::ServiceDescriptor const** file_level_service_descriptors_Req_2eproto = nullptr;
 
-const uint32_t TableStruct_Req_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  ~0u,  // no _has_bits_
-  PROTOBUF_FIELD_OFFSET(::PBReq, _internal_metadata_),
-  ~0u,  // no _extensions_
-  ~0u,  // no _oneof_case_
-  ~0u,  // no _weak_field_map_
-  ~0u,  // no _inlined_string_donated_
-  PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.reqmsgtype_),
-  PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.reqid_),
-  PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.reqtime_),
-  PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.payload_),
+PROTOBUF_ATTRIBUTE_NO_DESTROY PROTOBUF_CONSTINIT
+    PROTOBUF_ATTRIBUTE_INIT_PRIORITY1 PBReqDefaultTypeInternal _PBReq_default_instance_;
+static ::_pb::Metadata file_level_metadata_Req_2eproto[1];
+static constexpr const ::_pb::EnumDescriptor**
+    file_level_enum_descriptors_Req_2eproto = nullptr;
+static constexpr const ::_pb::ServiceDescriptor**
+    file_level_service_descriptors_Req_2eproto = nullptr;
+const ::uint32_t TableStruct_Req_2eproto::offsets[] PROTOBUF_SECTION_VARIABLE(
+    protodesc_cold) = {
+    PROTOBUF_FIELD_OFFSET(::PBReq, _impl_._has_bits_),
+    PROTOBUF_FIELD_OFFSET(::PBReq, _internal_metadata_),
+    ~0u,  // no _extensions_
+    ~0u,  // no _oneof_case_
+    ~0u,  // no _weak_field_map_
+    ~0u,  // no _inlined_string_donated_
+    ~0u,  // no _split_
+    ~0u,  // no sizeof(Split)
+    PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.reqmsgtype_),
+    PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.reqid_),
+    PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.reqtime_),
+    PROTOBUF_FIELD_OFFSET(::PBReq, _impl_.payload_),
+    ~0u,
+    ~0u,
+    ~0u,
+    0,
 };
-static const ::_pbi::MigrationSchema schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
-  { 0, -1, -1, sizeof(::PBReq)},
+
+static const ::_pbi::MigrationSchema
+    schemas[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+        {0, 12, -1, sizeof(::PBReq)},
 };
 
 static const ::_pb::Message* const file_default_instances[] = {
-  &::_PBReq_default_instance_._instance,
+    &::_PBReq_default_instance_._instance,
 };
-
-const char descriptor_table_protodef_Req_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) =
-  "\n\tReq.proto\032\031google/protobuf/any.proto\032\r"
-  "MsgType.proto\"n\n\005PBReq\022\036\n\nreqMsgType\030\001 \001"
-  "(\0162\n.PBMsgType\022\r\n\005reqId\030\002 \001(\t\022\017\n\007reqTime"
-  "\030\003 \001(\004\022%\n\007payload\030\004 \001(\0132\024.google.protobu"
-  "f.Anyb\006proto3"
-  ;
-static const ::_pbi::DescriptorTable* const descriptor_table_Req_2eproto_deps[2] = {
-  &::descriptor_table_MsgType_2eproto,
-  &::descriptor_table_google_2fprotobuf_2fany_2eproto,
+const char descriptor_table_protodef_Req_2eproto[] PROTOBUF_SECTION_VARIABLE(protodesc_cold) = {
+    "\n\tReq.proto\032\031google/protobuf/any.proto\032\r"
+    "MsgType.proto\"n\n\005PBReq\022\036\n\nreqMsgType\030\001 \001"
+    "(\0162\n.PBMsgType\022\r\n\005reqId\030\002 \001(\t\022\017\n\007reqTime"
+    "\030\003 \001(\004\022%\n\007payload\030\004 \001(\0132\024.google.protobu"
+    "f.Anyb\006proto3"
 };
-static ::_pbi::once_flag descriptor_table_Req_2eproto_once;
+static const ::_pbi::DescriptorTable* const descriptor_table_Req_2eproto_deps[2] =
+    {
+        &::descriptor_table_MsgType_2eproto,
+        &::descriptor_table_google_2fprotobuf_2fany_2eproto,
+};
+static ::absl::once_flag descriptor_table_Req_2eproto_once;
 const ::_pbi::DescriptorTable descriptor_table_Req_2eproto = {
-    false, false, 173, descriptor_table_protodef_Req_2eproto,
+    false,
+    false,
+    173,
+    descriptor_table_protodef_Req_2eproto,
     "Req.proto",
-    &descriptor_table_Req_2eproto_once, descriptor_table_Req_2eproto_deps, 2, 1,
-    schemas, file_default_instances, TableStruct_Req_2eproto::offsets,
-    file_level_metadata_Req_2eproto, file_level_enum_descriptors_Req_2eproto,
+    &descriptor_table_Req_2eproto_once,
+    descriptor_table_Req_2eproto_deps,
+    2,
+    1,
+    schemas,
+    file_default_instances,
+    TableStruct_Req_2eproto::offsets,
+    file_level_metadata_Req_2eproto,
+    file_level_enum_descriptors_Req_2eproto,
     file_level_service_descriptors_Req_2eproto,
 };
+
+// This function exists to be marked as weak.
+// It can significantly speed up compilation by breaking up LLVM's SCC
+// in the .pb.cc translation units. Large translation units see a
+// reduction of more than 35% of walltime for optimized builds. Without
+// the weak attribute all the messages in the file, including all the
+// vtables and everything they use become part of the same SCC through
+// a cycle like:
+// GetMetadata -> descriptor table -> default instances ->
+//   vtables -> GetMetadata
+// By adding a weak function here we break the connection from the
+// individual vtables back into the descriptor table.
 PROTOBUF_ATTRIBUTE_WEAK const ::_pbi::DescriptorTable* descriptor_table_Req_2eproto_getter() {
   return &descriptor_table_Req_2eproto;
 }
-
 // Force running AddDescriptors() at dynamic initialization time.
-PROTOBUF_ATTRIBUTE_INIT_PRIORITY2 static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_Req_2eproto(&descriptor_table_Req_2eproto);
-
+PROTOBUF_ATTRIBUTE_INIT_PRIORITY2
+static ::_pbi::AddDescriptorsRunner dynamic_init_dummy_Req_2eproto(&descriptor_table_Req_2eproto);
 // ===================================================================
 
 class PBReq::_Internal {
  public:
-  static const ::PROTOBUF_NAMESPACE_ID::Any& payload(const PBReq* msg);
+  using HasBits = decltype(std::declval<PBReq>()._impl_._has_bits_);
+  static constexpr ::int32_t kHasBitsOffset =
+    8 * PROTOBUF_FIELD_OFFSET(PBReq, _impl_._has_bits_);
+  static const ::google::protobuf::Any& payload(const PBReq* msg);
+  static void set_has_payload(HasBits* has_bits) {
+    (*has_bits)[0] |= 1u;
+  }
 };
 
-const ::PROTOBUF_NAMESPACE_ID::Any&
-PBReq::_Internal::payload(const PBReq* msg) {
+const ::google::protobuf::Any& PBReq::_Internal::payload(const PBReq* msg) {
   return *msg->_impl_.payload_;
 }
 void PBReq::clear_payload() {
-  if (GetArenaForAllocation() == nullptr && _impl_.payload_ != nullptr) {
-    delete _impl_.payload_;
-  }
-  _impl_.payload_ = nullptr;
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  if (_impl_.payload_ != nullptr) _impl_.payload_->Clear();
+  _impl_._has_bits_[0] &= ~0x00000001u;
 }
-PBReq::PBReq(::PROTOBUF_NAMESPACE_ID::Arena* arena,
-                         bool is_message_owned)
-  : ::PROTOBUF_NAMESPACE_ID::Message(arena, is_message_owned) {
-  SharedCtor(arena, is_message_owned);
+PBReq::PBReq(::google::protobuf::Arena* arena)
+    : ::google::protobuf::Message(arena) {
+  SharedCtor(arena);
   // @@protoc_insertion_point(arena_constructor:PBReq)
 }
-PBReq::PBReq(const PBReq& from)
-  : ::PROTOBUF_NAMESPACE_ID::Message() {
-  PBReq* const _this = this; (void)_this;
-  new (&_impl_) Impl_{
-      decltype(_impl_.reqid_){}
-    , decltype(_impl_.payload_){nullptr}
-    , decltype(_impl_.reqtime_){}
-    , decltype(_impl_.reqmsgtype_){}
-    , /*decltype(_impl_._cached_size_)*/{}};
+inline PROTOBUF_NDEBUG_INLINE PBReq::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility, ::google::protobuf::Arena* arena,
+    const Impl_& from)
+      : _has_bits_{from._has_bits_},
+        _cached_size_{0},
+        reqid_(arena, from.reqid_) {}
 
-  _internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
-  _impl_.reqid_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.reqid_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
-  if (!from._internal_reqid().empty()) {
-    _this->_impl_.reqid_.Set(from._internal_reqid(), 
-      _this->GetArenaForAllocation());
-  }
-  if (from._internal_has_payload()) {
-    _this->_impl_.payload_ = new ::PROTOBUF_NAMESPACE_ID::Any(*from._impl_.payload_);
-  }
-  ::memcpy(&_impl_.reqtime_, &from._impl_.reqtime_,
-    static_cast<size_t>(reinterpret_cast<char*>(&_impl_.reqmsgtype_) -
-    reinterpret_cast<char*>(&_impl_.reqtime_)) + sizeof(_impl_.reqmsgtype_));
+PBReq::PBReq(
+    ::google::protobuf::Arena* arena,
+    const PBReq& from)
+    : ::google::protobuf::Message(arena) {
+  PBReq* const _this = this;
+  (void)_this;
+  _internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(
+      from._internal_metadata_);
+  new (&_impl_) Impl_(internal_visibility(), arena, from._impl_);
+  ::uint32_t cached_has_bits = _impl_._has_bits_[0];
+  _impl_.payload_ = (cached_has_bits & 0x00000001u)
+                ? CreateMaybeMessage<::google::protobuf::Any>(arena, *from._impl_.payload_)
+                : nullptr;
+  ::memcpy(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, reqtime_),
+           reinterpret_cast<const char *>(&from._impl_) +
+               offsetof(Impl_, reqtime_),
+           offsetof(Impl_, reqmsgtype_) -
+               offsetof(Impl_, reqtime_) +
+               sizeof(Impl_::reqmsgtype_));
+
   // @@protoc_insertion_point(copy_constructor:PBReq)
 }
+inline PROTOBUF_NDEBUG_INLINE PBReq::Impl_::Impl_(
+    ::google::protobuf::internal::InternalVisibility visibility,
+    ::google::protobuf::Arena* arena)
+      : _cached_size_{0},
+        reqid_(arena) {}
 
-inline void PBReq::SharedCtor(
-    ::_pb::Arena* arena, bool is_message_owned) {
-  (void)arena;
-  (void)is_message_owned;
-  new (&_impl_) Impl_{
-      decltype(_impl_.reqid_){}
-    , decltype(_impl_.payload_){nullptr}
-    , decltype(_impl_.reqtime_){uint64_t{0u}}
-    , decltype(_impl_.reqmsgtype_){0}
-    , /*decltype(_impl_._cached_size_)*/{}
-  };
-  _impl_.reqid_.InitDefault();
-  #ifdef PROTOBUF_FORCE_COPY_DEFAULT_STRING
-    _impl_.reqid_.Set("", GetArenaForAllocation());
-  #endif // PROTOBUF_FORCE_COPY_DEFAULT_STRING
+inline void PBReq::SharedCtor(::_pb::Arena* arena) {
+  new (&_impl_) Impl_(internal_visibility(), arena);
+  ::memset(reinterpret_cast<char *>(&_impl_) +
+               offsetof(Impl_, payload_),
+           0,
+           offsetof(Impl_, reqmsgtype_) -
+               offsetof(Impl_, payload_) +
+               sizeof(Impl_::reqmsgtype_));
 }
-
 PBReq::~PBReq() {
   // @@protoc_insertion_point(destructor:PBReq)
-  if (auto *arena = _internal_metadata_.DeleteReturnArena<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>()) {
-  (void)arena;
-    return;
-  }
+  _internal_metadata_.Delete<::google::protobuf::UnknownFieldSet>();
   SharedDtor();
 }
-
 inline void PBReq::SharedDtor() {
-  GOOGLE_DCHECK(GetArenaForAllocation() == nullptr);
+  ABSL_DCHECK(GetArena() == nullptr);
   _impl_.reqid_.Destroy();
-  if (this != internal_default_instance()) delete _impl_.payload_;
+  delete _impl_.payload_;
+  _impl_.~Impl_();
 }
 
-void PBReq::SetCachedSize(int size) const {
-  _impl_._cached_size_.Set(size);
-}
-
-void PBReq::Clear() {
+PROTOBUF_NOINLINE void PBReq::Clear() {
 // @@protoc_insertion_point(message_clear_start:PBReq)
-  uint32_t cached_has_bits = 0;
+  PROTOBUF_TSAN_WRITE(&_impl_._tsan_detect_race);
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   _impl_.reqid_.ClearToEmpty();
-  if (GetArenaForAllocation() == nullptr && _impl_.payload_ != nullptr) {
-    delete _impl_.payload_;
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    ABSL_DCHECK(_impl_.payload_ != nullptr);
+    _impl_.payload_->Clear();
   }
-  _impl_.payload_ = nullptr;
-  ::memset(&_impl_.reqtime_, 0, static_cast<size_t>(
+  ::memset(&_impl_.reqtime_, 0, static_cast<::size_t>(
       reinterpret_cast<char*>(&_impl_.reqmsgtype_) -
       reinterpret_cast<char*>(&_impl_.reqtime_)) + sizeof(_impl_.reqmsgtype_));
-  _internal_metadata_.Clear<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>();
+  _impl_._has_bits_.Clear();
+  _internal_metadata_.Clear<::google::protobuf::UnknownFieldSet>();
 }
 
-const char* PBReq::_InternalParse(const char* ptr, ::_pbi::ParseContext* ctx) {
-#define CHK_(x) if (PROTOBUF_PREDICT_FALSE(!(x))) goto failure
-  while (!ctx->Done(&ptr)) {
-    uint32_t tag;
-    ptr = ::_pbi::ReadTag(ptr, &tag);
-    switch (tag >> 3) {
-      // .PBMsgType reqMsgType = 1;
-      case 1:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 8)) {
-          uint64_t val = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-          _internal_set_reqmsgtype(static_cast<::PBMsgType>(val));
-        } else
-          goto handle_unusual;
-        continue;
-      // string reqId = 2;
-      case 2:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 18)) {
-          auto str = _internal_mutable_reqid();
-          ptr = ::_pbi::InlineGreedyStringParser(str, ptr, ctx);
-          CHK_(ptr);
-          CHK_(::_pbi::VerifyUTF8(str, "PBReq.reqId"));
-        } else
-          goto handle_unusual;
-        continue;
-      // uint64 reqTime = 3;
-      case 3:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 24)) {
-          _impl_.reqtime_ = ::PROTOBUF_NAMESPACE_ID::internal::ReadVarint64(&ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      // .google.protobuf.Any payload = 4;
-      case 4:
-        if (PROTOBUF_PREDICT_TRUE(static_cast<uint8_t>(tag) == 34)) {
-          ptr = ctx->ParseMessage(_internal_mutable_payload(), ptr);
-          CHK_(ptr);
-        } else
-          goto handle_unusual;
-        continue;
-      default:
-        goto handle_unusual;
-    }  // switch
-  handle_unusual:
-    if ((tag == 0) || ((tag & 7) == 4)) {
-      CHK_(ptr);
-      ctx->SetLastTag(tag);
-      goto message_done;
-    }
-    ptr = UnknownFieldParse(
-        tag,
-        _internal_metadata_.mutable_unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(),
-        ptr, ctx);
-    CHK_(ptr != nullptr);
-  }  // while
-message_done:
+const char* PBReq::_InternalParse(
+    const char* ptr, ::_pbi::ParseContext* ctx) {
+  ptr = ::_pbi::TcParser::ParseLoop(this, ptr, ctx, &_table_.header);
   return ptr;
-failure:
-  ptr = nullptr;
-  goto message_done;
-#undef CHK_
 }
 
-uint8_t* PBReq::_InternalSerialize(
-    uint8_t* target, ::PROTOBUF_NAMESPACE_ID::io::EpsCopyOutputStream* stream) const {
+
+PROTOBUF_CONSTINIT PROTOBUF_ATTRIBUTE_INIT_PRIORITY1
+const ::_pbi::TcParseTable<2, 4, 1, 19, 2> PBReq::_table_ = {
+  {
+    PROTOBUF_FIELD_OFFSET(PBReq, _impl_._has_bits_),
+    0, // no _extensions_
+    4, 24,  // max_field_number, fast_idx_mask
+    offsetof(decltype(_table_), field_lookup_table),
+    4294967280,  // skipmap
+    offsetof(decltype(_table_), field_entries),
+    4,  // num_field_entries
+    1,  // num_aux_entries
+    offsetof(decltype(_table_), aux_entries),
+    &_PBReq_default_instance_._instance,
+    ::_pbi::TcParser::GenericFallback,  // fallback
+  }, {{
+    // .google.protobuf.Any payload = 4;
+    {::_pbi::TcParser::FastMtS1,
+     {34, 0, 0, PROTOBUF_FIELD_OFFSET(PBReq, _impl_.payload_)}},
+    // .PBMsgType reqMsgType = 1;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint32_t, offsetof(PBReq, _impl_.reqmsgtype_), 63>(),
+     {8, 63, 0, PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqmsgtype_)}},
+    // string reqId = 2;
+    {::_pbi::TcParser::FastUS1,
+     {18, 63, 0, PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqid_)}},
+    // uint64 reqTime = 3;
+    {::_pbi::TcParser::SingularVarintNoZag1<::uint64_t, offsetof(PBReq, _impl_.reqtime_), 63>(),
+     {24, 63, 0, PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqtime_)}},
+  }}, {{
+    65535, 65535
+  }}, {{
+    // .PBMsgType reqMsgType = 1;
+    {PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqmsgtype_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kOpenEnum)},
+    // string reqId = 2;
+    {PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqid_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUtf8String | ::_fl::kRepAString)},
+    // uint64 reqTime = 3;
+    {PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqtime_), -1, 0,
+    (0 | ::_fl::kFcSingular | ::_fl::kUInt64)},
+    // .google.protobuf.Any payload = 4;
+    {PROTOBUF_FIELD_OFFSET(PBReq, _impl_.payload_), _Internal::kHasBitsOffset + 0, 0,
+    (0 | ::_fl::kFcOptional | ::_fl::kMessage | ::_fl::kTvTable)},
+  }}, {{
+    {::_pbi::TcParser::GetTable<::google::protobuf::Any>()},
+  }}, {{
+    "\5\0\5\0\0\0\0\0"
+    "PBReq"
+    "reqId"
+  }},
+};
+
+::uint8_t* PBReq::_InternalSerialize(
+    ::uint8_t* target,
+    ::google::protobuf::io::EpsCopyOutputStream* stream) const {
   // @@protoc_insertion_point(serialize_to_array_start:PBReq)
-  uint32_t cached_has_bits = 0;
-  (void) cached_has_bits;
+  ::uint32_t cached_has_bits = 0;
+  (void)cached_has_bits;
 
   // .PBMsgType reqMsgType = 1;
   if (this->_internal_reqmsgtype() != 0) {
     target = stream->EnsureSpace(target);
     target = ::_pbi::WireFormatLite::WriteEnumToArray(
-      1, this->_internal_reqmsgtype(), target);
+        1, this->_internal_reqmsgtype(), target);
   }
 
   // string reqId = 2;
   if (!this->_internal_reqid().empty()) {
-    ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::VerifyUtf8String(
-      this->_internal_reqid().data(), static_cast<int>(this->_internal_reqid().length()),
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::SERIALIZE,
-      "PBReq.reqId");
-    target = stream->WriteStringMaybeAliased(
-        2, this->_internal_reqid(), target);
+    const std::string& _s = this->_internal_reqid();
+    ::google::protobuf::internal::WireFormatLite::VerifyUtf8String(
+        _s.data(), static_cast<int>(_s.length()), ::google::protobuf::internal::WireFormatLite::SERIALIZE, "PBReq.reqId");
+    target = stream->WriteStringMaybeAliased(2, _s, target);
   }
 
   // uint64 reqTime = 3;
   if (this->_internal_reqtime() != 0) {
     target = stream->EnsureSpace(target);
-    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(3, this->_internal_reqtime(), target);
+    target = ::_pbi::WireFormatLite::WriteUInt64ToArray(
+        3, this->_internal_reqtime(), target);
   }
 
+  cached_has_bits = _impl_._has_bits_[0];
   // .google.protobuf.Any payload = 4;
-  if (this->_internal_has_payload()) {
-    target = ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::
-      InternalWriteMessage(4, _Internal::payload(this),
+  if (cached_has_bits & 0x00000001u) {
+    target = ::google::protobuf::internal::WireFormatLite::InternalWriteMessage(
+        4, _Internal::payload(this),
         _Internal::payload(this).GetCachedSize(), target, stream);
   }
 
   if (PROTOBUF_PREDICT_FALSE(_internal_metadata_.have_unknown_fields())) {
-    target = ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
-        _internal_metadata_.unknown_fields<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(::PROTOBUF_NAMESPACE_ID::UnknownFieldSet::default_instance), target, stream);
+    target =
+        ::_pbi::WireFormat::InternalSerializeUnknownFieldsToArray(
+            _internal_metadata_.unknown_fields<::google::protobuf::UnknownFieldSet>(::google::protobuf::UnknownFieldSet::default_instance), target, stream);
   }
   // @@protoc_insertion_point(serialize_to_array_end:PBReq)
   return target;
 }
 
-size_t PBReq::ByteSizeLong() const {
+::size_t PBReq::ByteSizeLong() const {
 // @@protoc_insertion_point(message_byte_size_start:PBReq)
-  size_t total_size = 0;
+  ::size_t total_size = 0;
 
-  uint32_t cached_has_bits = 0;
+  ::uint32_t cached_has_bits = 0;
   // Prevent compiler warnings about cached_has_bits being unused
   (void) cached_has_bits;
 
   // string reqId = 2;
   if (!this->_internal_reqid().empty()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::StringSize(
-        this->_internal_reqid());
+    total_size += 1 + ::google::protobuf::internal::WireFormatLite::StringSize(
+                                    this->_internal_reqid());
   }
 
   // .google.protobuf.Any payload = 4;
-  if (this->_internal_has_payload()) {
-    total_size += 1 +
-      ::PROTOBUF_NAMESPACE_ID::internal::WireFormatLite::MessageSize(
-        *_impl_.payload_);
+  cached_has_bits = _impl_._has_bits_[0];
+  if (cached_has_bits & 0x00000001u) {
+    total_size +=
+        1 + ::google::protobuf::internal::WireFormatLite::MessageSize(*_impl_.payload_);
   }
 
   // uint64 reqTime = 3;
   if (this->_internal_reqtime() != 0) {
-    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(this->_internal_reqtime());
+    total_size += ::_pbi::WireFormatLite::UInt64SizePlusOne(
+        this->_internal_reqtime());
   }
 
   // .PBMsgType reqMsgType = 1;
   if (this->_internal_reqmsgtype() != 0) {
     total_size += 1 +
-      ::_pbi::WireFormatLite::EnumSize(this->_internal_reqmsgtype());
+                  ::_pbi::WireFormatLite::EnumSize(this->_internal_reqmsgtype());
   }
 
   return MaybeComputeUnknownFieldsSize(total_size, &_impl_._cached_size_);
 }
 
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData PBReq::_class_data_ = {
-    ::PROTOBUF_NAMESPACE_ID::Message::CopyWithSourceCheck,
-    PBReq::MergeImpl
+const ::google::protobuf::Message::ClassData PBReq::_class_data_ = {
+    PBReq::MergeImpl,
+    nullptr,  // OnDemandRegisterArenaDtor
 };
-const ::PROTOBUF_NAMESPACE_ID::Message::ClassData*PBReq::GetClassData() const { return &_class_data_; }
+const ::google::protobuf::Message::ClassData* PBReq::GetClassData() const {
+  return &_class_data_;
+}
 
-
-void PBReq::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF_NAMESPACE_ID::Message& from_msg) {
+void PBReq::MergeImpl(::google::protobuf::Message& to_msg, const ::google::protobuf::Message& from_msg) {
   auto* const _this = static_cast<PBReq*>(&to_msg);
   auto& from = static_cast<const PBReq&>(from_msg);
   // @@protoc_insertion_point(class_specific_merge_from_start:PBReq)
-  GOOGLE_DCHECK_NE(&from, _this);
-  uint32_t cached_has_bits = 0;
+  ABSL_DCHECK_NE(&from, _this);
+  ::uint32_t cached_has_bits = 0;
   (void) cached_has_bits;
 
   if (!from._internal_reqid().empty()) {
     _this->_internal_set_reqid(from._internal_reqid());
   }
-  if (from._internal_has_payload()) {
-    _this->_internal_mutable_payload()->::PROTOBUF_NAMESPACE_ID::Any::MergeFrom(
+  if ((from._impl_._has_bits_[0] & 0x00000001u) != 0) {
+    _this->_internal_mutable_payload()->::google::protobuf::Any::MergeFrom(
         from._internal_payload());
   }
   if (from._internal_reqtime() != 0) {
@@ -363,7 +397,7 @@ void PBReq::MergeImpl(::PROTOBUF_NAMESPACE_ID::Message& to_msg, const ::PROTOBUF
   if (from._internal_reqmsgtype() != 0) {
     _this->_internal_set_reqmsgtype(from._internal_reqmsgtype());
   }
-  _this->_internal_metadata_.MergeFrom<::PROTOBUF_NAMESPACE_ID::UnknownFieldSet>(from._internal_metadata_);
+  _this->_internal_metadata_.MergeFrom<::google::protobuf::UnknownFieldSet>(from._internal_metadata_);
 }
 
 void PBReq::CopyFrom(const PBReq& from) {
@@ -373,20 +407,21 @@ void PBReq::CopyFrom(const PBReq& from) {
   MergeFrom(from);
 }
 
-bool PBReq::IsInitialized() const {
+PROTOBUF_NOINLINE bool PBReq::IsInitialized() const {
   return true;
 }
 
-void PBReq::InternalSwap(PBReq* other) {
+::_pbi::CachedSize* PBReq::AccessCachedSize() const {
+  return &_impl_._cached_size_;
+}
+void PBReq::InternalSwap(PBReq* PROTOBUF_RESTRICT other) {
   using std::swap;
-  auto* lhs_arena = GetArenaForAllocation();
-  auto* rhs_arena = other->GetArenaForAllocation();
+  auto* arena = GetArena();
+  ABSL_DCHECK_EQ(arena, other->GetArena());
   _internal_metadata_.InternalSwap(&other->_internal_metadata_);
-  ::PROTOBUF_NAMESPACE_ID::internal::ArenaStringPtr::InternalSwap(
-      &_impl_.reqid_, lhs_arena,
-      &other->_impl_.reqid_, rhs_arena
-  );
-  ::PROTOBUF_NAMESPACE_ID::internal::memswap<
+  swap(_impl_._has_bits_[0], other->_impl_._has_bits_[0]);
+  ::_pbi::ArenaStringPtr::InternalSwap(&_impl_.reqid_, &other->_impl_.reqid_, arena);
+  ::google::protobuf::internal::memswap<
       PROTOBUF_FIELD_OFFSET(PBReq, _impl_.reqmsgtype_)
       + sizeof(PBReq::_impl_.reqmsgtype_)
       - PROTOBUF_FIELD_OFFSET(PBReq, _impl_.payload_)>(
@@ -394,19 +429,15 @@ void PBReq::InternalSwap(PBReq* other) {
           reinterpret_cast<char*>(&other->_impl_.payload_));
 }
 
-::PROTOBUF_NAMESPACE_ID::Metadata PBReq::GetMetadata() const {
+::google::protobuf::Metadata PBReq::GetMetadata() const {
   return ::_pbi::AssignDescriptors(
       &descriptor_table_Req_2eproto_getter, &descriptor_table_Req_2eproto_once,
       file_level_metadata_Req_2eproto[0]);
 }
-
 // @@protoc_insertion_point(namespace_scope)
-PROTOBUF_NAMESPACE_OPEN
-template<> PROTOBUF_NOINLINE ::PBReq*
-Arena::CreateMaybeMessage< ::PBReq >(Arena* arena) {
-  return Arena::CreateMessageInternal< ::PBReq >(arena);
-}
-PROTOBUF_NAMESPACE_CLOSE
-
+namespace google {
+namespace protobuf {
+}  // namespace protobuf
+}  // namespace google
 // @@protoc_insertion_point(global_scope)
-#include <google/protobuf/port_undef.inc>
+#include "google/protobuf/port_undef.inc"
