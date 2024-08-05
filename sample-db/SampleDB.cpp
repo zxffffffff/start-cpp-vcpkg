@@ -17,7 +17,7 @@
 
 SampleDB::SampleDB()
 {
-    std::cout << "你好 SampleDB." << std::endl;
+    std::cout << "你好 SampleDB" << std::endl;
 }
 
 int SampleDB::Test(int ret)
