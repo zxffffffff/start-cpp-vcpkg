@@ -29,7 +29,7 @@ int main(int argc, char *argv[])
     gflags::ParseCommandLineFlags(&argc, &argv, true);
     google::InitGoogleLogging(argv[0]);
 
-    std::cout << "你好 SampleMain." << std::endl;
+    std::cout << "你好 SampleMain" << std::endl;
 
     std::cout << "系统版本: " << Platform::GetOSType() << " " << Platform::GetOSVersion() << std::endl;
     std::cout << "CPU逻辑核心: " << Hardware::GetCPUs() << std::endl;
