@@ -1,7 +1,9 @@
-# 文本使用 LF 
-* text=auto eol=lf
+# 根据 core.autocrlf 进行转换（LF 或 CRLF）
+# 建议 Windows 配置 `git config --global core.autocrlf true`
+# 建议 macOS 和 Linux 配置 `git config --global core.autocrlf input`
+* text=auto
 
-# 脚本使用 LF 或 CRLF
+# 脚本依赖于系统，强制使用 LF 或 CRLF
 *.sh  text eol=lf
 *.bat text eol=crlf
 *.ps1 text eol=crlf
@@ -9,16 +11,16 @@
 ######## 特定语言，例如C++ ########
 
 # Sources
-*.c     text diff=cpp
-*.cc    text diff=cpp
-*.cxx   text diff=cpp
-*.cpp   text diff=cpp
-*.cpi   text diff=cpp
-*.c++   text diff=cpp
-*.hpp   text diff=cpp
-*.h     text diff=cpp
-*.h++   text diff=cpp
-*.hh    text diff=cpp
+*.c     text=auto diff=cpp
+*.cc    text=auto diff=cpp
+*.cxx   text=auto diff=cpp
+*.cpp   text=auto diff=cpp
+*.cpi   text=auto diff=cpp
+*.c++   text=auto diff=cpp
+*.hpp   text=auto diff=cpp
+*.h     text=auto diff=cpp
+*.h++   text=auto diff=cpp
+*.hh    text=auto diff=cpp
 
 # Compiled Object files
 *.slo   binary
