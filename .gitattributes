@@ -1,8 +1,8 @@
-# 提交时转换为LF，检出时转换为CRLF
-* text=auto
+# 文本使用 LF 
+* text=auto eol=lf
 
-# 强制使用LF或CRLF
-*.sh text eol=lf
+# 脚本使用 LF 或 CRLF
+*.sh  text eol=lf
 *.bat text eol=crlf
 *.ps1 text eol=crlf
 
