@@ -88,7 +88,7 @@
 | 2.13  |                    |                | 7 (GCC 4.7.2)   |
 | 2.12  |                    | 6 (GCC 4.4.7)  |                 |
 
-## 已知问题
+## 注意事项
 
 ### Windows 宏定义冲突
 
@@ -98,6 +98,15 @@
 
 - 使用 `-static-libgcc -static-libstdc++` 静态编译 C++
 - 不能使用 `-static` 静态编译 C，需要注意开发环境使用低版本 `glibc` 编译动态链接
+
+### Protobuf 静态链接
+
+- 注意编译 `.proto` 文件必须使用 `libprotobuf` 相同版本
+- Windows 下静态链接 `.pb.cc` 等文件需要静态编译 `libprotobuf`
+
+### vcpkg 指定编译器(降级)
+
+- 除了使用 `cmake -G` 之外，还需要在 `vcpkg/triplets/xxx.cmake` 指定编译器，否则默认使用已安装的最新版本
 
 ### vcpkg 指定版本号(降级)
 
