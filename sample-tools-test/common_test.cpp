@@ -45,10 +45,26 @@ TEST(Common, Guid)
     ASSERT_NE(guid, guid2);
 
     std::set<std::string> guids;
-    const int cnt = 1000;
+    const int cnt = 100000;
     for (int i = 0; i < cnt; ++i)
     {
         guids.insert(Common::GenGuid());
+    }
+    ASSERT_EQ(guids.size(), cnt);
+}
+
+TEST(Common, Guid2)
+{
+    std::string guid = Common::GenGuid2();
+    std::string guid2 = Common::GenGuid2();
+    ASSERT_FALSE(guid.empty());
+    ASSERT_NE(guid, guid2);
+
+    std::set<std::string> guids;
+    const int cnt = 100000;
+    for (int i = 0; i < cnt; ++i)
+    {
+        guids.insert(Common::GenGuid2());
     }
     ASSERT_EQ(guids.size(), cnt);
 }
