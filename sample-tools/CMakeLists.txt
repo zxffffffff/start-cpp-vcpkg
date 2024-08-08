@@ -36,6 +36,9 @@ find_package(unofficial-sqlite3 CONFIG REQUIRED)
 # 引入 cryptopp
 find_package(cryptopp CONFIG REQUIRED)
 
+# 引入 snappy
+find_package(Snappy CONFIG REQUIRED)
+
 # 引入 rapidjson & nlohmann-json
 find_package(RapidJSON CONFIG REQUIRED)
 find_package(nlohmann_json CONFIG REQUIRED)
@@ -73,6 +76,7 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC ZLIB::ZLIB
     PUBLIC unofficial::sqlite3::sqlite3
     PUBLIC cryptopp::cryptopp
+    PUBLIC Snappy::snappy
     PUBLIC rapidjson
     PUBLIC nlohmann_json::nlohmann_json
     PUBLIC tinyxml2::tinyxml2

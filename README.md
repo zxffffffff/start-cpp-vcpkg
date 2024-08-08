@@ -17,6 +17,7 @@
   - `zlib`: 最流行的数据压缩库。
   - `sqlite3`: 最流行的嵌入式关系数据库。
   - `cryptopp`: 密码学库，支持 base64/RSA/AES 等常用加密算法。
+  - `snappy`: Google 快速压缩/解压缩库
   - `rapidjson`: 腾讯出品，高性能 JSON 解析/生成器，灵感来自 RapidXml。
   - `nlohmann-json`: 现代的 JSON 解析/生成器，语法糖非常方便。
   - `tinyxml`: 轻量的 XML 解析库。

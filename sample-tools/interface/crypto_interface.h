@@ -18,6 +18,13 @@
 #pragma warning(disable : 4566)
 #endif
 
+class I_Compression
+{
+public:
+    virtual std::string Compress(const std::string &msg) = 0;
+    virtual std::string Uncompress(const std::string &msg) = 0;
+};
+
 class I_Base64
 {
 public:
