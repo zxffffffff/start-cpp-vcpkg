@@ -55,6 +55,35 @@ public:
         return boost::uuids::to_string(gen());
     }
 
+    /* 接近于 boost::uuids */
+    static std::string GenGuid2()
+    {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<> dis(0, 15);
+        std::uniform_int_distribution<> dis2(8, 11);
+
+        std::stringstream ss;
+        ss << std::hex << std::setfill('0');
+
+        for (int i = 0; i < 8; i++)
+            ss << std::setw(1) << dis(gen);
+        ss << "-";
+        for (int i = 0; i < 4; i++)
+            ss << std::setw(1) << dis(gen);
+        ss << "-4"; // Version 4 UUID
+        for (int i = 0; i < 3; i++)
+            ss << std::setw(1) << dis(gen);
+        ss << "-";
+        ss << std::setw(1) << dis2(gen); // The first character should be between 8 and b
+        for (int i = 0; i < 3; i++)
+            ss << std::setw(1) << dis(gen);
+        ss << "-";
+        for (int i = 0; i < 12; i++)
+            ss << std::setw(1) << dis(gen);
+        return ss.str();
+    }
+
     /* 伪随机数 */
     static int Random(int n_min = 0, int n_max = INT_MAX)
     {
