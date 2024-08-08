@@ -11,8 +11,6 @@
 #include <sstream>
 #include <cassert>
 
-#include "snappy.h"
-
 #include "cryptopp/base64.h"
 #include "cryptopp/aes.h"
 #include "cryptopp/rsa.h"
@@ -31,24 +29,6 @@
 #endif
 #pragma warning(disable : 4566)
 #endif
-
-class Compression_Impl : public I_Compression
-{
-public:
-    virtual std::string Compress(const std::string &msg) override
-    {
-        std::string result;
-        snappy::Compress(msg.c_str(), msg.size(), &result);
-        return result;
-    }
-
-    virtual std::string Uncompress(const std::string &msg) override
-    {
-        std::string result;
-        snappy::Uncompress(msg.c_str(), msg.size(), &result);
-        return result;
-    }
-};
 
 class Base64_Impl : public I_Base64
 {

@@ -57,9 +57,11 @@ file(GLOB_RECURSE include_headers
     hardware.h
     chrono.h
     interface/crypto_interface.h
+    interface/compression_interface.h
     interface/threadpool_interface.h
     interface/threadtimer_interface.h
     impl/cryptopp_impl.h
+    impl/compression_impl.h
     impl/progschj-ThreadPool.h
     impl/stl_threadpool_impl.h # use "progschj-ThreadPool.h"
     impl/stl_threadtimer_impl.h
