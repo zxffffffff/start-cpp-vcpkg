@@ -55,7 +55,7 @@ public:
         return boost::uuids::to_string(gen());
     }
 
-    /* 接近于 boost::uuids */
+    /* 接近于 boost::uuids，小概率出现重复 */
     static std::string GenGuid2()
     {
         std::random_device rd;

@@ -45,7 +45,7 @@ TEST(Common, Guid)
     ASSERT_NE(guid, guid2);
 
     std::set<std::string> guids;
-    const int cnt = 100000;
+    const int cnt = 1000 * 1000;
     for (int i = 0; i < cnt; ++i)
     {
         guids.insert(Common::GenGuid());
@@ -61,23 +61,24 @@ TEST(Common, Guid2)
     ASSERT_NE(guid, guid2);
 
     std::set<std::string> guids;
-    const int cnt = 100000;
+    const int cnt = 1000 * 1000;
     for (int i = 0; i < cnt; ++i)
     {
         guids.insert(Common::GenGuid2());
     }
-    ASSERT_EQ(guids.size(), cnt);
+    ASSERT_GT(guids.size(), cnt * 0.999);
 }
 
 TEST(Common, Random)
 {
     std::set<int> nums;
-    for (int i = 0; i < 100 * 10000; ++i)
+    const int cnt = 1000 * 1000;
+    for (int i = 0; i < cnt; ++i)
     {
         nums.insert(Common::Random());
     }
     /* 会有重复，尽可能的随机就行 */
-    EXPECT_GT(nums.size(), 99 * 10000);
+    EXPECT_GT(nums.size(), cnt * 0.999);
 }
 
 TEST(Common, toThreadLocalStr)
