@@ -15,6 +15,7 @@
     "zlib",
     "protobuf",
     "cryptopp",
+    "snappy",
     "rapidjson",
     "nlohmann-json",
     "tinyxml2",
