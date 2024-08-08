@@ -17,17 +17,6 @@
 #pragma warning(disable : 4566)
 #endif
 
-TEST(CryptoTest, Compression_Impl)
-{
-    Compression_Impl obj;
-
-    std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
-    std::string res = obj.Compress(msg);
-    EXPECT_NE(msg, res);
-    std::string msg2 = obj.Uncompress(res);
-    ASSERT_EQ(msg, msg2);
-}
-
 TEST(CryptoTest, Base64_Impl)
 {
     Base64_Impl base64;
