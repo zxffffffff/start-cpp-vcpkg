@@ -12,10 +12,7 @@
 #include <set>
 #include <sstream>
 #include <iomanip>
-#include <boost/uuid/uuid.hpp>
-#include <boost/uuid/uuid_generators.hpp>
-#include <boost/uuid/uuid_io.hpp>
-#include <boost/algorithm/string.hpp>
+#include <cassert>
 
 #ifdef _WIN32
 #include <Winsock2.h>
@@ -101,7 +98,13 @@ public:
                 if (str.empty())
                     continue;
                 std::vector<std::string> result;
-                boost::split(result, str, boost::is_any_of("-"));
+                {
+                    // boost::split(result, str, boost::is_any_of("-"));
+                    std::stringstream ss(str);
+                    std::string item;
+                    while (std::getline(ss, item, '-'))
+                        result.push_back(item);
+                }
                 if (retMac.empty())
                     retMac.resize(result.size(), 0);
                 for (int i = 0; i < retMac.size(); ++i)
