@@ -7,6 +7,10 @@
 ****************************************************************************/
 #include "gtest/gtest.h"
 
+#include "common.h"
+#include "platform.h"
+#include "hardware.h"
+
 #include "http_client.h"
 #include "impl/curl_http_client.h"
 #include "impl/stl_threadpool_impl.h"
@@ -27,6 +31,13 @@ TEST(HttpClientTest, TestBaidu)
     http.SetProxy(false);
     http2.SetProxy(false);
 
+    /* 低端设备可能单测失败 */
+    if (Hardware::GetCPUs() < 8)
+    {
+        http.SetVerbose(true);
+        http2.SetVerbose(true);
+    }
+
     auto response = http.Get("https://www.baidu.com", {}).get();
     EXPECT_EQ(response.errCode, 0) << response.errMsg;
     EXPECT_NE(response.data.find("百度"), std::string::npos);
@@ -43,6 +54,10 @@ TEST(HttpClientTest, TestBaidu)
 TEST(HttpClientTest, URLEncode)
 {
     TestHttpClient http(4);
+
+    /* 低端设备可能单测失败 */
+    if (Hardware::GetCPUs() < 8)
+        http.SetVerbose(true);
 
     std::string raw = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
 

@@ -6,7 +6,10 @@
 **
 ****************************************************************************/
 #include "gtest/gtest.h"
+
 #include "common.h"
+#include "platform.h"
+#include "hardware.h"
 
 #include "http_server.h"
 #include "impl/boost_http_parser.h"
@@ -35,8 +38,11 @@ TEST(HttpServerTest, GetPost)
     int n_port = Common::Random(10000, 49151);
 
     TestHttpClient http(4);
-    // http.SetVerbose(true);
     http.SetProxy(false);
+
+    /* 低端设备可能单测失败 */
+    if (Hardware::GetCPUs() < 8)
+        http.SetVerbose(true);
 
     auto server = std::make_shared<TestHttpServer>(str_ip, n_port);
     auto handler = [](ConnId, Error err, std::shared_ptr<HttpRequest> req, ServerResponseCbk cbk)
