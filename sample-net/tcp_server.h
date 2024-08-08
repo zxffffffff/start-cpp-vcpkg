@@ -18,6 +18,11 @@
 #pragma warning(disable : 4566)
 #endif
 
+#ifdef _WIN32
+/* 兼容 Windows */
+#undef SetPort
+#endif
+
 /* 线程异步回调，注意线程安全 */
 using HandleServerState = std::function<void(ServerState, Error)>;
 using HandleServerConnStates = std::function<void(ConnId, ConnectionState, Error)>;
