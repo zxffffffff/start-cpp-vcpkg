@@ -62,6 +62,7 @@ file(GLOB_RECURSE include_headers
     interface/threadtimer_interface.h
     impl/cryptopp_impl.h
     impl/snappy_impl.h
+    impl/zlib_impl.h
     impl/progschj-ThreadPool.h
     impl/stl_threadpool_impl.h # use "progschj-ThreadPool.h"
     impl/stl_threadtimer_impl.h
