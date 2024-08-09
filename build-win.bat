@@ -81,7 +81,7 @@ if "%config%"=="Debug" (
   xcopy /s /i /y %vcpkg_installed%\lib\*.lib %install_path%\lib
 )
 
-:: run
+:: run （也可使用 ctest）
 echo run test
 %install_path%\bin\sample-main.exe
 %install_path%\bin\sample-db-test.exe
