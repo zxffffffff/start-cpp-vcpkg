@@ -21,7 +21,7 @@
 #pragma warning(disable : 4566)
 #endif
 
-class Compression_Impl : public I_Compression
+class Snappy_Impl : public I_Compression
 {
 public:
     virtual std::string Compress(const std::string &msg) override
