@@ -24,6 +24,14 @@ using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 #pragma warning(disable : 4566)
 #endif
 
+TEST(HttpClientTest, curl_version)
+{
+    std::string ver = curl_version();
+    ASSERT_FALSE(ver.empty());
+
+    std::cout << "curl version: " << ver << std::endl;
+}
+
 TEST(HttpClientTest, TestBaidu)
 {
     TestHttpClient http(4);

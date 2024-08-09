@@ -22,16 +22,18 @@
 SamplePB::SamplePB()
 {
     std::cout << "你好 SamplePB" << std::endl;
-    std::cout << "GOOGLE_PROTOBUF_VERSION: " << google::protobuf::internal::VersionString(GOOGLE_PROTOBUF_VERSION) << std::endl;
+    std::cout << "protobuf version: " << google::protobuf::internal::VersionString(GOOGLE_PROTOBUF_VERSION) << std::endl;
 
-    PBReq req;
-    req.set_reqid("abc");
-    req.set_reqtime(123);
+    {
+        PBReq req;
+        req.set_reqid("abc");
+        req.set_reqtime(123);
 
-    PBReq req2;
-    auto raw = req.SerializeAsString();
-    req2.ParseFromString(raw);
+        PBReq req2;
+        auto raw = req.SerializeAsString();
+        req2.ParseFromString(raw);
 
-    assert(req2.reqid() == req.reqid());
-    assert(req2.reqtime() == req.reqtime());
+        assert(req2.reqid() == req.reqid());
+        assert(req2.reqtime() == req.reqtime());
+    }
 }
