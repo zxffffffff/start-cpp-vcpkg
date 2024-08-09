@@ -19,6 +19,7 @@ add_executable (${PROJECT_NAME}
     glog_test.cpp
     crypto_test.cpp
     snappy_test.cpp
+    zlib_test.cpp
     json_test.cpp
     threadpool_test.cpp
     threadtimer_test.cpp
