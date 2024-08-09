@@ -17,6 +17,17 @@
 #pragma warning(disable : 4566)
 #endif
 
+TEST(CompressionTest, Snappy_version)
+{
+    std::stringstream ss;
+    ss << SNAPPY_MAJOR << "." << SNAPPY_MINOR << "." << SNAPPY_PATCHLEVEL;
+
+    std::string ver = ss.str();
+    ASSERT_FALSE(ver.empty());
+
+    std::cout << "snappy version: " << ver << std::endl;
+}
+
 TEST(CompressionTest, Snappy_Impl)
 {
     Snappy_Impl obj;
