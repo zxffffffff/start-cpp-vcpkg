@@ -6,7 +6,7 @@
 **
 ****************************************************************************/
 #include "gtest/gtest.h"
-#include "impl/compression_impl.h"
+#include "impl/snappy_impl.h"
 #include "common.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
@@ -17,9 +17,9 @@
 #pragma warning(disable : 4566)
 #endif
 
-TEST(CompressionTest, Compression_Impl)
+TEST(CompressionTest, Snappy_Impl)
 {
-    Compression_Impl obj;
+    Snappy_Impl obj;
 
     std::string msg = "abc123!@#$%^&*()_-+=*/\\'\"?你好";
     std::string res = obj.Compress(msg);
