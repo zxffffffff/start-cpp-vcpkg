@@ -9,7 +9,7 @@ vcpkg_path=${root_path}/vcpkg
 vcpkg_exe=${vcpkg_path}/vcpkg
 echo vcpkg_path: ${vcpkg_path}
 echo vcpkg_exe: ${vcpkg_exe}
-if [ ! -x ${vcpkg_exe} ]; then
+if [[ ! -x ${vcpkg_exe} ]]; then
   vcpkg_sh=${vcpkg_path}/bootstrap-vcpkg.sh
   echo vcpkg_sh: ${vcpkg_sh}
   # 还需要安装开发环境，以 ubuntu 为例：
@@ -32,7 +32,7 @@ echo config: ${config}
 echo build_path: ${build_path}
 echo install_path: ${install_path}
 
-if [ -d ${install_path} ]; then
+if [[ -d ${install_path} ]]; then
     rm -rf ${install_path}
 fi
 
@@ -46,13 +46,13 @@ cmake --build ${build_path} --target install --config ${config}
 vcpkg_installed="${build_path}/vcpkg_installed/${VCPKG_TARGET_TRIPLET}"
 echo vcpkg_installed: ${vcpkg_installed}
 # 可选 cp -rf "${vcpkg_installed}/include" "${install_path}/include"
-if [ "${config}" == "Debug" ]; then
+if [[ "${config}" == "Debug" ]]; then
   cp -rf "${vcpkg_installed}/debug/lib" "${install_path}/lib"
 else
   cp -rf "${vcpkg_installed}/lib" "${install_path}/lib"
 fi
 
-# run
+# run（也可使用 ctest）
 echo run test
 export LD_LIBRARY_PATH=${install_path}/bin
 ${install_path}/bin/sample-main
