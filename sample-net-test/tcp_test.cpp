@@ -29,6 +29,14 @@ using TestTcpClient = TcpClient<ClientImpl>;
 
 using namespace std::chrono_literals;
 
+TEST(TcpCS, libuv_version)
+{
+    std::string ver = uv_version_string();
+    ASSERT_FALSE(ver.empty());
+
+    std::cout << "libuv version: " << ver << std::endl;
+}
+
 struct Data
 {
     std::mutex mutex; // std::lock_guard<std::mutex> guard(mutex);

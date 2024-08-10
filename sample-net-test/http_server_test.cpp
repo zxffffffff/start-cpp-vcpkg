@@ -30,14 +30,6 @@ using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 #pragma warning(disable : 4566)
 #endif
 
-TEST(HttpServerTest, libuv_version)
-{
-    std::string ver = uv_version_string();
-    ASSERT_FALSE(ver.empty());
-
-    std::cout << "libuv version: " << ver << std::endl;
-}
-
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(HttpServerTest, GetPost)
 {
