@@ -39,7 +39,7 @@ TEST(HttpClientTest, TestBaidu)
     http.SetProxy(false);
     http2.SetProxy(false);
 
-    /* 低端设备可能单测失败 */
+    /* 低端设备更容易复现问题 */
     if (Hardware::GetCPUs() < 8)
     {
         http.SetVerbose(true);
@@ -63,7 +63,7 @@ TEST(HttpClientTest, URLEncode)
 {
     TestHttpClient http(4);
 
-    /* 低端设备可能单测失败 */
+    /* 低端设备更容易复现问题 */
     if (Hardware::GetCPUs() < 8)
         http.SetVerbose(true);
 
