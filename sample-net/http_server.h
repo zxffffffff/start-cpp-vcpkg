@@ -46,6 +46,8 @@ public:
 
     virtual ~HttpServer()
     {
+        if (Super::IsRunning())
+            Super::CloseSync(); /* needed */
     }
 
     /* 线程异步回调，注意线程安全 */

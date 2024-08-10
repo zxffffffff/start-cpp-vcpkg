@@ -33,49 +33,49 @@ using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(HttpServerTest, GetPost)
 {
-    /* 随机端口，减少端口被占用概率 */
-    std::string str_ip = "127.0.0.1";
-    int n_port = Common::Random(10000, 49151);
-
-    TestHttpClient http(4);
-    http.SetProxy(false);
-
-    /* 低端设备可能单测失败 */
-    if (Hardware::GetCPUs() < 8)
-        http.SetVerbose(true);
-
-    auto server = std::make_shared<TestHttpServer>(str_ip, n_port);
-    auto handler = [](ConnId, Error err, std::shared_ptr<HttpRequest> req, ServerResponseCbk cbk)
+    for (int i = 0; i < 100; ++i)
     {
-        EXPECT_EQ(err->first, 0);
-        std::stringstream ss;
-        ss << "res";
-        ss << " method=" << req->method;
-        ss << " path=" << req->path;
-        for (auto ite = req->parameters.begin(); ite != req->parameters.end(); ++ite)
-            ss << " " << ite->first << "=" << ite->second;
-        if (req->post_body.size())
-            ss << " post_body=" << req->post_body;
-        cbk(ss.str());
-    };
-    server->SetHandleServerRequest(handler);
-    bool ok = server->ListenSync();
-    ASSERT_TRUE(ok);
+        /* 随机端口，减少端口被占用概率 */
+        std::string str_ip = "127.0.0.1";
+        int n_port = Common::Random(10000, 49151);
 
-    std::string str_http = "http://" + str_ip + ":" + std::to_string(n_port);
+        TestHttpClient http(4);
+        http.SetProxy(false);
 
-    auto response = http.Get(str_http, {}, 3).get();
-    EXPECT_EQ(response.errCode, 0) << response.errMsg;
-    EXPECT_EQ(response.data, "res method=GET path=/");
+        /* 低端设备更容易复现问题 */
+        if (Hardware::GetCPUs() < 8)
+            http.SetVerbose(true);
 
-    auto response2 = http.GetSync(str_http + "/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
-    EXPECT_EQ(response2.errCode, 0) << response.errMsg;
-    EXPECT_EQ(response2.data, "res method=GET path=/s cl=3 wd=zxffffffff");
+        TestHttpServer server(str_ip, n_port);
+        auto handler = [](ConnId, Error err, std::shared_ptr<HttpRequest> req, ServerResponseCbk cbk)
+        {
+            EXPECT_EQ(err->first, 0);
+            std::stringstream ss;
+            ss << "res";
+            ss << " method=" << req->method;
+            ss << " path=" << req->path;
+            for (auto ite = req->parameters.begin(); ite != req->parameters.end(); ++ite)
+                ss << " " << ite->first << "=" << ite->second;
+            if (req->post_body.size())
+                ss << " post_body=" << req->post_body;
+            cbk(ss.str());
+        };
+        server.SetHandleServerRequest(handler);
+        bool ok = server.ListenSync();
+        ASSERT_TRUE(ok);
 
-    auto response3 = http.PostSync(str_http + "/test/xxx", {{"test", "1"}}, "test2=2", 3);
-    EXPECT_EQ(response3.errCode, 0) << response.errMsg;
-    EXPECT_EQ(response3.data, "res method=POST path=/test/xxx test=1 post_body=test2=2");
+        std::string str_http = "http://" + str_ip + ":" + std::to_string(n_port);
 
-    // using namespace std::chrono_literals;
-    // std::this_thread::sleep_for(30s);
+        auto response = http.Get(str_http, {}, 3).get();
+        EXPECT_EQ(response.errCode, 0) << response.errMsg;
+        EXPECT_EQ(response.data, "res method=GET path=/");
+
+        auto response2 = http.GetSync(str_http + "/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
+        EXPECT_EQ(response2.errCode, 0) << response.errMsg;
+        EXPECT_EQ(response2.data, "res method=GET path=/s cl=3 wd=zxffffffff");
+
+        auto response3 = http.PostSync(str_http + "/test/xxx", {{"test", "1"}}, "test2=2", 3);
+        EXPECT_EQ(response3.errCode, 0) << response.errMsg;
+        EXPECT_EQ(response3.data, "res method=POST path=/test/xxx test=1 post_body=test2=2");
+    }
 }
