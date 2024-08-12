@@ -10,6 +10,7 @@
 #include "common.h"
 #include "platform.h"
 #include "hardware.h"
+#include "log.h"
 
 #include "http_client.h"
 #include "impl/curl_http_client.h"
@@ -34,6 +35,8 @@ TEST(HttpClientTest, curl_version)
 
 TEST(HttpClientTest, TestBaidu)
 {
+    Log::InitCrashReport();
+
     TestHttpClient http(4);
     TestHttpClient http2(4);
     http.SetProxy(false);
@@ -61,6 +64,8 @@ TEST(HttpClientTest, TestBaidu)
 
 TEST(HttpClientTest, URLEncode)
 {
+    Log::InitCrashReport();
+
     TestHttpClient http(4);
 
     /* 低端设备更容易复现问题 */

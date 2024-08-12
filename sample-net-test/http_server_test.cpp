@@ -10,6 +10,7 @@
 #include "common.h"
 #include "platform.h"
 #include "hardware.h"
+#include "log.h"
 
 #include "http_server.h"
 #include "impl/boost_http_parser.h"
@@ -33,6 +34,8 @@ using TestHttpClient = HttpClient<HttpClientImpl, ThreadPoolImpl>;
 /* 警告：Google Test 仅在 *nix 上线程安全，Windows 或其他平台不支持多线程断言 */
 TEST(HttpServerTest, GetPost)
 {
+    Log::InitCrashReport();
+
     for (int i = 0; i < 100; ++i)
     {
         /* 随机端口，减少端口被占用概率 */
