@@ -8,10 +8,13 @@
 #pragma once
 #include "cpp_version.h"
 #include <memory>
-#include <filesystem>
 #include <fmt/format.h>
 #include <gflags/gflags.h>
 #include <glog/logging.h>
+
+#if CPP_VERSION >= 2017
+#include <filesystem>
+#endif
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -61,10 +64,7 @@ public:
         std::string logPath = FLAGS_log_dir;
         if (logPath.empty())
             logPath = "./log";
-#if CPP_VERSION < 2017
-        if (!std::__fs::filesystem::exists(logPath))
-            std::__fs::filesystem::create_directory(logPath);
-#else
+#if CPP_VERSION >= 2017
         if (!std::filesystem::exists(logPath))
             std::filesystem::create_directory(logPath);
 #endif
