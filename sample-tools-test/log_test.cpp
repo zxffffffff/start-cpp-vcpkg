@@ -22,7 +22,7 @@ TEST(log, args)
     std::vector<char *> argvEx;
     // for (int i = 0; i < argc; ++i)
     //     argvEx.push_back(argv[i]);
-    argvEx.push_back("app");
+    argvEx.push_back((char *)"app");
 
     std::string config_logDir = testing::TempDir();
     {
