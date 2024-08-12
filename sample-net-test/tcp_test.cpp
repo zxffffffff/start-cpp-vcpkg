@@ -10,6 +10,7 @@
 #include "common.h"
 #include "platform.h"
 #include "hardware.h"
+#include "log.h"
 
 #include "tcp_server.h"
 #include "tcp_client.h"
@@ -47,8 +48,9 @@ struct Data
 TEST(TcpCS, pingpong)
 {
     /* 低端设备无法准确计时 */
-    if (Hardware::GetCPUs() < 8)
-        return;
+    // if (Hardware::GetCPUs() < 8)
+    //     return;
+    Log::InitCrashReport();
 
     int sleep_ms = 1000 / Hardware::GetCPUs();
     sleep_ms = std::min(std::max(100, sleep_ms), 1000);
@@ -131,8 +133,9 @@ TEST(TcpCS, pingpong)
 TEST(TcpCS, monkeytest)
 {
     /* 低端设备无法准确计时 */
-    if (Hardware::GetCPUs() < 8)
-        return;
+    // if (Hardware::GetCPUs() < 8)
+    //     return;
+    Log::InitCrashReport();
 
     int sleep_ms = 1000 / Hardware::GetCPUs();
     sleep_ms = std::min(std::max(100, sleep_ms), 1000);
@@ -248,8 +251,9 @@ TEST(TcpCS, monkeytest)
 TEST(TcpCS, monkeytest2)
 {
     /* 低端设备无法准确计时 */
-    if (Hardware::GetCPUs() < 8)
-        return;
+    // if (Hardware::GetCPUs() < 8)
+    //     return;
+    Log::InitCrashReport();
 
     int sleep_ms = 1000 / Hardware::GetCPUs();
     sleep_ms = std::min(std::max(100, sleep_ms), 1000);

@@ -22,7 +22,7 @@
 #endif
 
 /* TODO 最好再封装一层glog参数 */
-DEFINE_int32(logCleaner, 15, "自动删除旧日志");
+// DEFINE_int32(logCleaner, 15, "自动删除旧日志");
 
 #define LOG_HEAD (__func__)
 
@@ -88,9 +88,9 @@ public:
         /* 自动删除旧日志
          * 然后每次执行flush时glog都会检查是否有过期的日志。
          */
-        int logCleaner = FLAGS_logCleaner;
-        if (logCleaner > 0)
-            google::EnableLogCleaner(logCleaner); // days
+        // int logCleaner = FLAGS_logCleaner;
+        // if (logCleaner > 0)
+        //     google::EnableLogCleaner(logCleaner); // days
 
         /* 消息同时输出 stderr
          * Set whether log messages go to stderr in addition to logfiles.
