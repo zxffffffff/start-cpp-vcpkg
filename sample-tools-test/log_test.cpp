@@ -49,12 +49,12 @@ TEST(log, args)
         argvEx.push_back((char *)minloglevel.data());
     }
 
-    std::string config_logCleaner = "7";
-    if (!config_logCleaner.empty())
-    {
-        static std::string logCleaner = "--logCleaner=" + config_logCleaner;
-        argvEx.push_back((char *)logCleaner.data());
-    }
+    // std::string config_logCleaner = "7";
+    // if (!config_logCleaner.empty())
+    // {
+    //     static std::string logCleaner = "--logCleaner=" + config_logCleaner;
+    //     argvEx.push_back((char *)logCleaner.data());
+    // }
 
     std::string config_logToConsole = "1";
     if (config_logToConsole == "1")
