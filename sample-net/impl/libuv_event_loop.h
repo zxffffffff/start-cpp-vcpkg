@@ -9,7 +9,6 @@
 #include "../interface/tcp_interface.h"
 #include <uv.h>
 #include <mutex>
-#include <future>
 #include <list>
 #include <cassert>
 
@@ -33,13 +32,12 @@ class EventLoop
 private:
     struct ThreadData
     {
-        std::thread::id id;
+        std::atomic_bool is_running{false};
+        std::thread::id this_thread_id;
 
         uv_loop_t loop{0};
-        std::promise<bool> promise_loop;
-        std::promise<bool> promise_close;
-
         uv_async_t async{0};
+
         std::mutex async_mutex;
         std::list<std::function<void()>> async_cbk;
     };
@@ -52,43 +50,53 @@ public:
     /* 阻塞：等待线程运行 */
     void start()
     {
-        // LOG(WARNING) << __func__;
-
         if (is_start)
-            return assert(false); /* 必须按顺序调用 */
+        {
+            /* 必须按顺序调用 */
+            assert(false);
+            return;
+        }
         is_start = true;
 
         if (thread_id)
-            return assert(false);
+        {
+            assert(false);
+            return;
+        }
 
-        thread_data->promise_loop = std::promise<bool>();
-        auto future = thread_data->promise_loop.get_future();
         uv_thread_create(&thread_id, run, thread_data.get());
-        future.get();
+        while (!thread_data->is_running)
+        {
+            // wait for init
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
     }
 
     /* 阻塞：等待线程结束 */
     void stop()
     {
-        // LOG(WARNING) << __func__;
-
         if (!is_start)
-            return assert(false); /* 必须按顺序调用 */
+        {
+            /* 必须按顺序调用 */
+            assert(false);
+            return;
+        }
         is_start = false;
 
         if (!thread_id)
-            return assert(false);
+        {
+            assert(false);
+            return;
+        }
 
-        thread_data->promise_close = std::promise<bool>();
-        auto future = thread_data->promise_close.get_future();
         moveToThread([this]
                      { uv_stop(&thread_data->loop); });
-        /* 存在线程同步问题 */
-        /* win单例对象析构时线程可能被杀，使用future判断 */
-        auto status = future.wait_for(std::chrono::milliseconds(100));
-        if (status != std::future_status::ready)
-            uv_thread_join(&thread_id);
-        thread_id = 0;
+        while (thread_data->is_running)
+        {
+            // wait for close
+            std::this_thread::sleep_for(std::chrono::milliseconds(1));
+        }
+        thread_id = 0; // uv_thread_join(&thread_id);
     }
 
     uv_loop_t *loop()
@@ -98,7 +106,7 @@ public:
 
     bool thisIsLoop()
     {
-        return std::this_thread::get_id() == thread_data->id;
+        return std::this_thread::get_id() == thread_data->this_thread_id;
     }
 
     void moveToThread(std::function<void()> f)
@@ -113,13 +121,10 @@ public:
 private:
     static void run(void *arg)
     {
-        // LOG(WARNING) << __func__;
-
         ThreadData *thread_data = (ThreadData *)arg;
-        thread_data->id = std::this_thread::get_id();
+        thread_data->this_thread_id = std::this_thread::get_id();
 
         uv_loop_init(&thread_data->loop);
-        thread_data->promise_loop.set_value(true);
 
         thread_data->async.data = thread_data;
         auto onInit = [](uv_async_t *handle)
@@ -138,13 +143,10 @@ private:
         };
         uv_async_init(&thread_data->loop, &thread_data->async, onInit);
 
-        // LOG(WARNING) << __func__ << " running!";
-        uv_run(&thread_data->loop, UV_RUN_DEFAULT); /* running */
+        thread_data->is_running = true;
+        uv_run(&thread_data->loop, UV_RUN_DEFAULT);
+        thread_data->is_running = false;
 
-        // LOG(WARNING) << __func__ << " closing";
         uv_loop_close(&thread_data->loop);
-        // LOG(WARNING) << __func__ << " closed!";
-
-        thread_data->promise_close.set_value(true);
     }
 };
