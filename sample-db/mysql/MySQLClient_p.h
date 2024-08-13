@@ -17,16 +17,15 @@
 #include <mutex>
 #include <iostream>
 #include <sstream>
-#include <chrono>
 #include <mysqlx/xdevapi.h>
-#include "Chrono.h"
+#include "chrono.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
 #if (_MSC_VER >= 1700)
 #pragma execution_character_set("utf-8")
 #endif
-#pragma warning(disable:4566)
+#pragma warning(disable : 4566)
 #endif
 
 using namespace ::mysqlx;
@@ -54,10 +53,10 @@ private:
     Client client;
 
 public:
-    MySQLClientPrivate(const char* host, int port, const char* user, const char* pwd)
-        :client(SessionOption::HOST, host, SessionOption::PORT, port,
-            SessionOption::USER, user, SessionOption::PWD, pwd,
-            ClientOption::POOLING, true, ClientOption::POOL_MAX_SIZE, 10)
+    MySQLClientPrivate(const char *host, int port, const char *user, const char *pwd)
+        : client(SessionOption::HOST, host, SessionOption::PORT, port,
+                 SessionOption::USER, user, SessionOption::PWD, pwd,
+                 ClientOption::POOLING, true, ClientOption::POOL_MAX_SIZE, 10)
     {
         CheckVersion();
     }
@@ -85,7 +84,7 @@ public:
         return true;
     }
 
-    bool RunSQL(const std::string& sql, std::vector<std::vector<std::string>>& ret)
+    bool RunSQL(const std::string &sql, std::vector<std::vector<std::string>> &ret)
     {
         LOG(INFO) << "[RunSQL sql] " << sql;
         try
@@ -97,9 +96,11 @@ public:
             auto rows = res.fetchAll();
 
             ret.clear();
-            for (auto row : rows) {
+            for (auto row : rows)
+            {
                 std::vector<std::string> fields;
-                for (size_t i = 0; i < row.colCount(); ++i) {
+                for (size_t i = 0; i < row.colCount(); ++i)
+                {
                     auto field = row.get(i);
                     auto type = field.getType();
                     std::string s_val;
@@ -137,7 +138,7 @@ public:
             LOG(INFO) << "[RunSQL res] use_time=" << use_time << "ms size=" << ret.size();
             return true;
         }
-        catch (const std::exception& e)
+        catch (const std::exception &e)
         {
             LOG(ERROR) << "[RunSQL error] " << e.what();
             return false;
