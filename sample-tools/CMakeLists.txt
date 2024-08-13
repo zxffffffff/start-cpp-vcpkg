@@ -57,6 +57,7 @@ file(GLOB_RECURSE include_headers
     hardware.h
     chrono.h
     log.h
+    benchmark.h
     interface/crypto_interface.h
     interface/compression_interface.h
     interface/threadpool_interface.h
