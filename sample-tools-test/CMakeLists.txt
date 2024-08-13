@@ -17,6 +17,7 @@ find_package(GTest CONFIG REQUIRED)
 
 add_executable (${PROJECT_NAME}
     log_test.cpp
+    benchmark_test.cpp
     crypto_test.cpp
     snappy_test.cpp
     zlib_test.cpp
