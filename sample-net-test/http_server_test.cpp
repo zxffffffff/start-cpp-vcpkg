@@ -64,21 +64,24 @@ TEST(HttpServerTest, GetPost)
             cbk(ss.str());
         };
         server.SetHandleServerRequest(handler);
-        bool ok = server.ListenSync();
+        bool ok = server.ListenSync(10);
         ASSERT_TRUE(ok);
 
         std::string str_http = "http://" + str_ip + ":" + std::to_string(n_port);
 
-        auto response = http.Get(str_http, {}, 3).get();
+        auto response = http.Get(str_http, {}).get();
         EXPECT_EQ(response.errCode, 0) << response.errMsg;
         EXPECT_EQ(response.data, "res method=GET path=/");
 
-        auto response2 = http.GetSync(str_http + "/s", {{"wd", "zxffffffff"}, {"cl", "3"}}, 3);
+        auto response2 = http.GetSync(str_http + "/s", {{"wd", "zxffffffff"}, {"cl", "3"}});
         EXPECT_EQ(response2.errCode, 0) << response.errMsg;
         EXPECT_EQ(response2.data, "res method=GET path=/s cl=3 wd=zxffffffff");
 
-        auto response3 = http.PostSync(str_http + "/test/xxx", {{"test", "1"}}, "test2=2", 3);
+        auto response3 = http.PostSync(str_http + "/test/xxx", {{"test", "1"}}, "test2=2");
         EXPECT_EQ(response3.errCode, 0) << response.errMsg;
         EXPECT_EQ(response3.data, "res method=POST path=/test/xxx test=1 post_body=test2=2");
+
+        ok = server.CloseSync(10);
+        ASSERT_TRUE(ok);
     }
 }

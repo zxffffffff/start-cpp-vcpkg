@@ -73,7 +73,7 @@ TEST(TcpCS, pingpong)
     };
     server->SetHandleConnRead(serverRead);
     ASSERT_EQ(server->GetState(), ServerState::Closed);
-    server->ListenSync();
+    server->ListenSync(10);
     ASSERT_EQ(server->GetState(), ServerState::Listening);
 
     // client
@@ -119,7 +119,7 @@ TEST(TcpCS, pingpong)
         client->Close();
     }
     EXPECT_EQ(server->GetState(), ServerState::Listening);
-    server->CloseSync();
+    server->CloseSync(10);
     EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < cnt; ++i)
     {
@@ -157,7 +157,7 @@ TEST(TcpCS, monkeytest)
         server->Write(connId, buffer);
     };
     server->SetHandleConnRead(serverRead);
-    server->ListenSync();
+    server->ListenSync(10);
 
     // client
     constexpr int client_cnt = 10;
@@ -237,7 +237,7 @@ TEST(TcpCS, monkeytest)
         auto client = clients[i];
         client->Close();
     }
-    server->CloseSync();
+    server->CloseSync(10);
     EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
@@ -272,7 +272,7 @@ TEST(TcpCS, monkeytest2)
         server_recv->strs.push_back(std::string(buffer->data(), buffer->size()));
     };
     server->SetHandleConnRead(serverRead);
-    server->ListenSync();
+    server->ListenSync(10);
 
     // client
     constexpr int client_cnt = 10;
@@ -303,9 +303,9 @@ TEST(TcpCS, monkeytest2)
     auto ServerListenSwitch = [=]
     {
         if (server->IsRunning())
-            server->CloseSync();
+            server->CloseSync(10);
         else
-            server->ListenSync();
+            server->ListenSync(10);
         for (int i = 0; i < client_cnt; ++i)
         {
             auto client = clients[i];
@@ -357,7 +357,7 @@ TEST(TcpCS, monkeytest2)
         auto client = clients[i];
         client->Close();
     }
-    server->CloseSync();
+    server->CloseSync(10);
     EXPECT_EQ(server->GetState(), ServerState::Closed);
     for (int i = 0; i < client_cnt; ++i)
     {
