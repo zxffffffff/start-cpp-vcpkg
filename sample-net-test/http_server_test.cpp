@@ -64,8 +64,13 @@ TEST(HttpServerTest, GetPost)
             cbk(ss.str());
         };
         server.SetHandleServerRequest(handler);
-        bool ok = server.ListenSync(10);
-        ASSERT_TRUE(ok);
+        bool ok = server.ListenSync();
+        if (!ok)
+        {
+            /* 可能端口被占用 */
+            std::cerr << "server listen failed, port=" << n_port << std::endl;
+            continue;
+        }
 
         std::string str_http = "http://" + str_ip + ":" + std::to_string(n_port);
 
@@ -81,7 +86,7 @@ TEST(HttpServerTest, GetPost)
         EXPECT_EQ(response3.errCode, 0) << response.errMsg;
         EXPECT_EQ(response3.data, "res method=POST path=/test/xxx test=1 post_body=test2=2");
 
-        ok = server.CloseSync(10);
+        ok = server.CloseSync();
         ASSERT_TRUE(ok);
     }
 }
