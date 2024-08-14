@@ -24,7 +24,11 @@
  * 性能测试
  * 使用 nlohmann::json 进行序列化和反序列化（主要是字符串）
  *
- * 以 10ms 作为基准 100 分，100ms 作为极差 0 分，粗略计算当前设备性能得分
+ * 粗略计算当前设备性能得分
+ *   - 10ms   优秀  100分
+ *   - 25ms   一般   60分
+ *   - 100ms  极差    0分
+ *
  * MacBook M1(4P+4E) 8GB, Clang 15.0.0 arm64-apple-darwin23.5.0
  *   - Release      use_ms: 6.01438  score: 122.081
  *   - MultiThread  use_ms: 12.5569  score: 90.1117
@@ -47,13 +51,15 @@ public:
 
     /* @param  use_ms 单次运行用时
      * @return score  计算得分
+     *
+     * [score]
      *  |#
      *  |#
      *  | #
      *  |  #
      *  |    #
      *  |       #
-     * -+-----------#-----------
+     * -+-----------#--------[use_ms]
      *  |                 #
      */
     static double Score(double use_ms)
