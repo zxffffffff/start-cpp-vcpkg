@@ -30,9 +30,17 @@ inline Error MakeStatusError(int state, int uv_status)
 class EventLoop
 {
 private:
+    enum class Status
+    {
+        Stoped,
+        Starting,
+        Running,
+        Stopping,
+    };
+
     struct ThreadData
     {
-        std::atomic_bool is_running{false};
+        std::atomic<Status> state{Status::Stoped};
         std::thread::id this_thread_id;
 
         uv_loop_t loop{0};
@@ -43,29 +51,22 @@ private:
     };
     std::unique_ptr<ThreadData> thread_data = std::make_unique<ThreadData>();
 
-    std::atomic_bool is_start{false};
     uv_thread_t thread_id = 0;
 
 public:
     /* 阻塞：等待线程运行 */
     void start()
     {
-        if (is_start)
+        if (thread_data->state != Status::Stoped)
         {
             /* 必须按顺序调用 */
             assert(false);
             return;
         }
-        is_start = true;
-
-        if (thread_id)
-        {
-            assert(false);
-            return;
-        }
+        thread_data->state = Status::Starting;
 
         uv_thread_create(&thread_id, run, thread_data.get());
-        while (!thread_data->is_running)
+        while (thread_data->state != Status::Running)
         {
             // wait for init
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
@@ -75,28 +76,22 @@ public:
     /* 阻塞：等待线程结束 */
     void stop()
     {
-        if (!is_start)
+        if (thread_data->state != Status::Running)
         {
             /* 必须按顺序调用 */
-            assert(false);
-            return;
-        }
-        is_start = false;
-
-        if (!thread_id)
-        {
             assert(false);
             return;
         }
 
         moveToThread([this]
                      { uv_stop(&thread_data->loop); });
-        while (thread_data->is_running)
+        while (thread_data->state != Status::Stopping)
         {
             // wait for close
             std::this_thread::sleep_for(std::chrono::milliseconds(1));
         }
         thread_id = 0; // uv_thread_join(&thread_id);
+        thread_data->state = Status::Stoped;
     }
 
     uv_loop_t *loop()
@@ -143,10 +138,10 @@ private:
         };
         uv_async_init(&thread_data->loop, &thread_data->async, onInit);
 
-        thread_data->is_running = true;
+        thread_data->state = Status::Running;
         uv_run(&thread_data->loop, UV_RUN_DEFAULT);
-        thread_data->is_running = false;
 
         uv_loop_close(&thread_data->loop);
+        thread_data->state = Status::Stopping;
     }
 };
