@@ -10,14 +10,14 @@
 
 ## 一个 C++ 跨平台脚手架项目，使用 vcpkg + cmake 搭建
 
-- sample-tools (crypto, threadpool)
+- sample-tools
   - `gflags`: Google 命令行标志库。
   - `glog`: Google 日志库。
   - `boost`: 标准库，可以按需单独安装某个库。
   - `zlib`: 最流行的数据压缩库。
+  - `snappy`: Google 快速压缩库。
   - `sqlite3`: 最流行的嵌入式关系数据库。
   - `cryptopp`: 密码学库，支持 base64/RSA/AES 等常用加密算法。
-  - `snappy`: Google 快速压缩/解压缩库
   - `rapidjson`: 腾讯出品，高性能 JSON 解析/生成器，灵感来自 RapidXml。
   - `nlohmann-json`: 现代的 JSON 解析/生成器，语法糖非常方便。
   - `tinyxml`: 轻量的 XML 解析库。
@@ -28,7 +28,7 @@
   - `hiredis`: 连接 Redis 数据库。
 - sample-pb
   - `protobuf`: Google 数据序列化库。
-- sample-net (tcp, http)
+- sample-net
   - `libcurl`: 最流行的多协议文件传输库，支持 HTTP 请求。
   - `libuv`: node.js 跨平台异步I/O，支持 TCP/UDP sockets。
 - sample-test
@@ -38,9 +38,9 @@
 
 - 运行 `build-xxx` 在线安装第三方库，需要能够访问外网 (github)
 - 网络异常导致的错误，可以尝试重新运行脚本(下载较多，可能需要反复重试)
-- 跨平台项目建议使用静态库 (Linux默认静态编译，动态链接系统库)
-- 跨平台项目建议使用 UTF-8，这样仅需设置 Windows 编译环境 (Windows 默认使用 GBK 编码需要设置，Win7 特殊处理)
-- 跨平台项目建议使用 `git config --global core.autocrlf input` 提交时转换为LF
+- 跨平台项目建议使用 静态库 (Linux默认静态编译，动态链接系统库)
+- 跨平台项目建议使用 UTF-8 编码格式，这样仅需设置 Windows 编译环境 (Windows 中文系统默认使用 GBK 编码)
+- 跨平台项目建议使用 `.gitattributes` 确保提交时转换为 `LF`
 
 ### 已验证
 
@@ -53,8 +53,8 @@
 | C++ compiler  | Minimum OS version |
 | ------------- | ------------------ |
 | MSVC v140     | Windows 7          |
-| Xcode 12      | macOS 10.15        |
-| Clang 10      | Ubuntu 18.04       |
+| Clang 12      | macOS 10.15        |
+| GCC 7.3       | Ubuntu 18.04       |
 
 ### Windows MSVC 参考
 
@@ -108,14 +108,15 @@
 ### vcpkg 指定编译器(降级)
 
 - 除了使用 `cmake -G` 之外，还需要在 `vcpkg/triplets/xxx.cmake` 指定编译器，否则默认使用已安装的最新版本
+- 手动修改 triplets 配置，例如设置 MSVC 版本 `set(VCPKG_PLATFORM_TOOLSET v140)`
 
 ### vcpkg 指定版本号(降级)
 
-- 必须使用 `submodule` 引入 vcpkg，否则找不到 `.git` 文件
+- 必须使用 `git clone` 或 `submodule` 引入 vcpkg，`subtree` 会报错找不到 `.git` 文件
 - 查看历史版本：`git blame -l versions/l-/libuv.json`
 - 自动添加baseline：`.\vcpkg\vcpkg.exe x-update-baseline --add-initial-baseline`
 
-```json
+```js
 // libuv 1.41 是最后一个支持 win7 的版本
 "overrides": [
   {
@@ -186,7 +187,7 @@
 - 在Manifest模式下，可以在命令行传递 `vcpkg install --triplet=<triplet>`
 - 使用 CMake，您可以设置 `set(VCPKG_TARGET_TRIPLET <triplet>)`
 - 查看三元组 `vcpkg help triplet`
-- 可以手动修改 triplets 配置，例如设置 MSVC 版本 `set(VCPKG_PLATFORM_TOOLSET v140)`
+- 可以手动修改 triplets 配置
 
 ```
 Built-in Triplets:
