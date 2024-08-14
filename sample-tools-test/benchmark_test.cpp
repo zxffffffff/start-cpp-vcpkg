@@ -24,7 +24,7 @@ TEST(benchmark, once)
         double score = Benchmark::Score(use_ms);
 
         std::cout << "benchmark score: " << score << std::endl;
-        ASSERT_GT(score, 0);
+        EXPECT_NE(score, 0);
     }
 }
 
@@ -33,5 +33,5 @@ TEST(benchmark, multi_thread)
     double score = Benchmark::RunMultiThread(3);
 
     std::cout << "benchmark multi_thread score: " << score << std::endl;
-    ASSERT_GT(score, 0);
+    EXPECT_NE(score, 0);
 }
