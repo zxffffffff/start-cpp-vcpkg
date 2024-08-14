@@ -47,6 +47,14 @@ public:
 
     /* @param  use_ms 单次运行用时
      * @return score  计算得分
+     *  |#
+     *  |#
+     *  | #
+     *  |  #
+     *  |    #
+     *  |       #
+     * -+-----------#-----------
+     *  |                 #
      */
     static double Score(double use_ms)
     {
@@ -125,6 +133,7 @@ public:
             *score = Score(avg_ms);
         };
 
+        /* 不准确，可能没有并行 */
         const int thread_cnt = Hardware::GetCPUs();
         std::vector<double> vec_scores(thread_cnt);
         std::vector<std::thread> vec_thread;
