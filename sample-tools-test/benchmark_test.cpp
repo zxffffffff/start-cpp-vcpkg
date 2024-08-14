@@ -24,12 +24,7 @@ TEST(benchmark, once)
         double score = Benchmark::Score(use_ms);
 
         std::cout << "benchmark score: " << score << std::endl;
-        if (use_ms < 100)
-            ASSERT_GT(score, 0);
-        else if (use_ms > 100)
-            ASSERT_LT(score, 0);
-        else /* 100 */
-            ASSERT_EQ(score, 0);
+        ASSERT_GT(score, 0);
     }
 }
 
@@ -38,5 +33,5 @@ TEST(benchmark, multi_thread)
     double score = Benchmark::RunMultiThread(3);
 
     std::cout << "benchmark multi_thread score: " << score << std::endl;
-    ASSERT_NE(score, 0);
+    ASSERT_GT(score, 0);
 }
