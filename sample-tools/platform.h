@@ -105,7 +105,9 @@ public:
         ULONG major = *(ULONG *)(sharedUserData + 0x26c);
         ULONG minor = *(ULONG *)(sharedUserData + 0x270);
         ULONG build = *(ULONG *)(sharedUserData + 0x260);
-        // Windows-10 = 10.0.19041
+        // Windows 10 = 10.0.19041
+        // Windows 11 = 10.0.22000
+        // GitHub windows-latest = 10.0.20348
         return fmt::format("{}.{}.{}", major, minor, build);
 #elif __APPLE__
         char osproductversion[64]{0};
@@ -114,12 +116,14 @@ public:
         char osversion[64]{0};
         size_t osversion_size = 64;
         sysctlbyname("kern.osversion", osversion, &osversion_size, nullptr, 0);
-        // macOS = 14.2.1(23C71)
+        // macOS Sonoma 14.5 = 14.5(23F79)
+        // GitHub macos-latest = 14.6.1(23G93)
         return fmt::format("{}({})", osproductversion, osversion);
 #elif __linux__
         struct utsname uts;
         uname(&uts);
         // CentOS-7 = 3.10.0-1160.102.1.el7.x86_64
+        // GitHub ubuntu-latest = 6.5.0-1025-azure
         return uts.release;
 #endif
     }
