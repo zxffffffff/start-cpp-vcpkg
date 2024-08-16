@@ -46,11 +46,24 @@ TEST(utf8, cn)
     EXPECT_EQ(local, local_2);
 }
 
-TEST(os, test)
+TEST(os, type)
 {
     std::string type = Platform::GetOSType();
-    std::string ver = Platform::GetOSVersion();
+    std::cout << "os-type: " << type << std::endl;
 
-    EXPECT_TRUE(type.size());
+#ifdef _WIN32
+    EXPECT_EQ(type, "Windows");
+#elif __APPLE__
+    EXPECT_EQ(type, "macOS");
+#elif __linux__
+    EXPECT_EQ(type, "Linux");
+#endif
+}
+
+TEST(os, version)
+{
+    std::string ver = Platform::GetOSVersion();
+    std::cout << "os-version: " << ver << std::endl;
+
     EXPECT_TRUE(ver.size());
 }
