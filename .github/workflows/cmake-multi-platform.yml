@@ -41,13 +41,13 @@ jobs:
       with:
         submodules: recursive
 
-    - name: Cache vcpkg packages
-      uses: actions/cache@v4
-      with:
-        path: |
-          vcpkg/downloads
-        key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.cpp_compiler }}-${{ hashFiles('**/vcpkg/versions/baseline.json') }}
-        save-always: true
+    # - name: Cache vcpkg packages
+    #   uses: actions/cache@v4
+    #   with:
+    #     path: |
+    #       vcpkg/downloads
+    #     key: ${{ runner.os }}-${{ runner.arch }}-${{ matrix.cpp_compiler }}-${{ hashFiles('**/vcpkg/versions/baseline.json') }}
+    #     save-always: true
     
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
