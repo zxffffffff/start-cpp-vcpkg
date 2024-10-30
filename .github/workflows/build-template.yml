@@ -19,12 +19,12 @@ on:
         type: string
         default: Release
   push:
-    branches: [ "master" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "master" ]
+    branches: [ "main", "master" ]
 
 jobs:
-  build:
+  cmake-and-ctest:
     runs-on: ${{ inputs.os }}
 
     steps:
