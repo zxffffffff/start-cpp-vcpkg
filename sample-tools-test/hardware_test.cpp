@@ -33,6 +33,7 @@ TEST(macAddr, test)
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     std::string mac3 = Hardware::GetMacAddr();
 
+    std::cout << "mac: " << mac << std::endl;
     EXPECT_TRUE(mac.size());
     EXPECT_EQ(mac, mac2);
     EXPECT_EQ(mac, mac3);
