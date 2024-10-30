@@ -71,7 +71,7 @@ file(GLOB_RECURSE include_headers
 )
 
 add_library(${PROJECT_NAME} STATIC
-    sample/sample_tools.cpp
+    sample/sample_tools.cpp # needed
     ${include_headers}
 )
 
