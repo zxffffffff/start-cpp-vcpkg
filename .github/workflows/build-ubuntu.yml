@@ -1,0 +1,11 @@
+name: Build on Linux
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    uses: ./.github/workflows/build-template.yml
+    with:
+      os: ubuntu-latest
+      c_compiler: gcc
+      cpp_compiler: g++

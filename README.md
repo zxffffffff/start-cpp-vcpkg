@@ -1,6 +1,8 @@
 # start-cpp-vcpkg
 
-![workflow](https://github.com/zxffffffff/start-cpp-vcpkg/actions/workflows/cmake-multi-platform.yml/badge.svg?event=push)
+![workflow](https://github.com/zxffffffff/start-cpp-vcpkg/actions/workflows/build-windows.yml/badge.svg?event=push)
+![workflow](https://github.com/zxffffffff/start-cpp-vcpkg/actions/workflows/build-macos.yml/badge.svg?event=push)
+![workflow](https://github.com/zxffffffff/start-cpp-vcpkg/actions/workflows/build-ubuntu.yml/badge.svg?event=push)
 
 从模板创建仓库: [start-cpp-vcpkg-template](https://github.com/zxffffffff/start-cpp-vcpkg-template)
 
