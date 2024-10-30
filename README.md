@@ -2,7 +2,7 @@
 
 ![workflow](https://github.com/zxffffffff/start-cpp-vcpkg/actions/workflows/cmake-multi-platform.yml/badge.svg?event=push)
 
-从模板创建仓库: <https://github.com/zxffffffff/start-cpp-vcpkg-template>
+从模板创建仓库: [start-cpp-vcpkg-template](https://github.com/zxffffffff/start-cpp-vcpkg-template)
 
 ## 温馨提示
 
