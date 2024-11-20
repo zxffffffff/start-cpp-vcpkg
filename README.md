@@ -60,6 +60,16 @@
 | Clang 12      | macOS 10.15        |
 | GCC 7.3       | Ubuntu 18.04       |
 
+### CMake CXX_STANDARD 版本参考
+
+| Added in version  | C++ Standard    |
+| ----------------- | --------------- |
+| 3.1               | C++ 98, 11, 14  |
+| 3.8               | C++ 17          |
+| 3.12              | C++ 20          |
+| 3.20              | C++ 23          |
+| 3.25              | C++ 26          |
+
 ### Windows MSVC 参考
 
 | CMake version         | MSVC version    |
