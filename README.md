@@ -118,7 +118,7 @@
 
 - 必须使用 `git clone` 或 `submodule` 引入 vcpkg，`subtree` 会报错找不到 `.git` 文件
 - 查看历史版本：`git blame -l versions/l-/libuv.json`
-- 自动添加baseline：`.\vcpkg\vcpkg.exe x-update-baseline --add-initial-baseline`
+- 自动添加baseline：`vcpkg x-update-baseline --add-initial-baseline`
 
 ```js
 // libuv 1.41 是最后一个支持 win7 的版本
