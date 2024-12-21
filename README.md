@@ -105,9 +105,19 @@
 
 ## 注意事项
 
+### Windows 7 版本兼容
+
+- `VS 2022 17.9` 以后无法使用 `vcpkg` 编译旧版本 `boost`：<https://github.com/microsoft/vcpkg/issues/38980>
+- `Electron 21.4.4` 依赖项 -> `node-gyp 10.0.1` -> `Python 3.11` 以后无法编译 `C++ Addons`：<https://github.com/nodejs/node-gyp/issues/2869>
+
 ### Windows 宏定义冲突
 
 - `min` `max` 等冲突报错可以 `#undef` 解决
+
+### macOS 三方库错误
+
+- `mysql-connector-cpp` 和 `protobuf` 同时引用bug，注意避免: <https://github.com/microsoft/vcpkg/issues/27873>
+- `mysql-connector-cpp` 构建错误bug，注意避免: <https://github.com/microsoft/vcpkg/issues/32878>
 
 ### Linux 打包
 
