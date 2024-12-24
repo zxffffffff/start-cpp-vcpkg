@@ -50,39 +50,55 @@ public:
         return std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()).count();
     }
 
-    /* 随机guid (00000000-0000-0000-0000-000000000000) */
-    static std::string GenGuid()
+    /* boost UUID v4 (xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx)
+     * 由32个十六进制字符组成，共有 2^128 ≈ 10^38 个，远远超过了宇宙中的粒子数量
+     * 冲突概率可以忽略不计，参考生日悖论（Birthday Paradox）
+     */
+    static std::string GenUuid()
     {
         boost::uuids::random_generator gen;
         return boost::uuids::to_string(gen());
     }
 
-    /* 接近于 boost::uuids，小概率出现重复 */
-    static std::string GenGuid2()
+    /* 仅使用 STL 实现的 UUID v4
+     * 伪随机数生成器质量不高，会导致一定概率出现冲突（0.1% 以内）
+     */
+    static std::string GenUuid2()
     {
-        std::random_device rd;
-        std::mt19937 gen(rd());
-        std::uniform_int_distribution<> dis(0, 15);
-        std::uniform_int_distribution<> dis2(8, 11);
+        // 使用 std::mt19937_64 随机数生成器
+        std::random_device rd;                                      // 用于生成种子
+        std::mt19937_64 gen(rd());                                  // 使用 64 位的随机数生成器
+        std::uniform_int_distribution<uint64_t> dis(0, UINT64_MAX); // 生成 64 位范围的随机数
 
+        // 生成两个 64 位的随机数，组成 128 位
+        uint64_t part1 = dis(gen); // 生成第一个 64 位的随机数
+        uint64_t part2 = dis(gen); // 生成第二个 64 位的随机数
+
+        // 将两个部分合并成一个 128 位的随机数
+        uint64_t time_low = part1;
+        uint64_t time_mid = part2 & 0xFFFF;                    // 保证中间的 16 位是随机的
+        uint64_t time_hi_and_version = (part2 >> 16) & 0x0FFF; // 高 12 位用于版本信息，设置为 `4`
+        time_hi_and_version |= 0x4000;                         // 设置版本号为 `4`
+
+        // 变体字段的高 2 位应为 `10`
+        uint64_t clock_seq = dis(gen) & 0x3FFF; // 生成 14 位随机数
+        clock_seq |= 0x8000;                    // 设置变体为 `10`，即高 2 位为 `10`
+
+        uint64_t node = dis(gen); // 节点部分（48 位）
+
+        // 格式化 UUID v4 输出
         std::stringstream ss;
-        ss << std::hex << std::setfill('0');
+        ss << std::hex << std::setfill('0')
+           << std::setw(8) << (time_low)
+           << "-"
+           << std::setw(4) << (time_mid)
+           << "-"
+           << std::setw(4) << (time_hi_and_version)
+           << "-"
+           << std::setw(4) << (clock_seq)
+           << "-"
+           << std::setw(12) << (node);
 
-        for (int i = 0; i < 8; i++)
-            ss << std::setw(1) << dis(gen);
-        ss << "-";
-        for (int i = 0; i < 4; i++)
-            ss << std::setw(1) << dis(gen);
-        ss << "-4"; // Version 4 UUID
-        for (int i = 0; i < 3; i++)
-            ss << std::setw(1) << dis(gen);
-        ss << "-";
-        ss << std::setw(1) << dis2(gen); // The first character should be between 8 and b
-        for (int i = 0; i < 3; i++)
-            ss << std::setw(1) << dis(gen);
-        ss << "-";
-        for (int i = 0; i < 12; i++)
-            ss << std::setw(1) << dis(gen);
         return ss.str();
     }
 

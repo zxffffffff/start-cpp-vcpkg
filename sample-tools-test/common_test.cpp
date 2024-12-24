@@ -10,6 +10,7 @@
 #include "cpp_def.h"
 #include <thread>
 #include <sstream>
+#include <unordered_set>
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -38,45 +39,51 @@ TEST(Common, Time)
     ASSERT_LT(s, s2);
 }
 
-TEST(Common, Guid)
+TEST(Common, GenUuid)
 {
-    std::string guid = Common::GenGuid();
-    std::string guid2 = Common::GenGuid();
-    std::cout << VAR_NAME(guid) << ": " << guid << std::endl;
-    std::cout << VAR_NAME(guid2) << ": " << guid2 << std::endl;
-    ASSERT_FALSE(guid.empty());
-    ASSERT_NE(guid, guid2);
+    std::string uuid = Common::GenUuid();
+    std::string uuid2 = Common::GenUuid();
+    std::cout << VAR_NAME(uuid) << ": " << uuid << std::endl;
+    std::cout << VAR_NAME(uuid2) << ": " << uuid2 << std::endl;
+    ASSERT_FALSE(uuid.empty());
+    ASSERT_NE(uuid, uuid2);
 
-    std::set<std::string> guids;
+    std::unordered_set<std::string> uuids;
     const int cnt = 1000 * 1000;
     for (int i = 0; i < cnt; ++i)
     {
-        guids.insert(Common::GenGuid());
+        std::string uuid3 = Common::GenUuid();
+        if (i == 0)
+            std::cout << VAR_NAME(uuid3) << ": " << uuid3 << std::endl;
+        uuids.insert(uuid3);
     }
-    ASSERT_EQ(guids.size(), cnt);
+    ASSERT_EQ(uuids.size(), cnt);
 }
 
-TEST(Common, Guid2)
+TEST(Common, GenUuid2)
 {
-    std::string guid = Common::GenGuid2();
-    std::string guid2 = Common::GenGuid2();
-    std::cout << VAR_NAME(guid) << ": " << guid << std::endl;
-    std::cout << VAR_NAME(guid2) << ": " << guid2 << std::endl;
-    ASSERT_FALSE(guid.empty());
-    ASSERT_NE(guid, guid2);
+    std::string uuid = Common::GenUuid2();
+    std::string uuid2 = Common::GenUuid2();
+    std::cout << VAR_NAME(uuid) << ": " << uuid << std::endl;
+    std::cout << VAR_NAME(uuid2) << ": " << uuid2 << std::endl;
+    ASSERT_FALSE(uuid.empty());
+    ASSERT_NE(uuid, uuid2);
 
-    std::set<std::string> guids;
+    std::unordered_set<std::string> uuids;
     const int cnt = 1000 * 1000;
     for (int i = 0; i < cnt; ++i)
     {
-        guids.insert(Common::GenGuid2());
+        std::string uuid3 = Common::GenUuid2();
+        if (i == 0)
+            std::cout << VAR_NAME(uuid3) << ": " << uuid3 << std::endl;
+        uuids.insert(uuid3);
     }
-    ASSERT_GT(guids.size(), cnt * 0.999);
+    EXPECT_GT(uuids.size(), cnt * 0.999);
 }
 
 TEST(Common, Random)
 {
-    std::set<int> nums;
+    std::unordered_set<int> nums;
     const int cnt = 1000 * 1000;
     for (int i = 0; i < cnt; ++i)
     {
