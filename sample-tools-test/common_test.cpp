@@ -7,6 +7,7 @@
 ****************************************************************************/
 #include <gtest/gtest.h>
 #include "common.h"
+#include "cpp_def.h"
 #include <thread>
 #include <sstream>
 
@@ -41,6 +42,8 @@ TEST(Common, Guid)
 {
     std::string guid = Common::GenGuid();
     std::string guid2 = Common::GenGuid();
+    std::cout << VAR_NAME(guid) << ": " << guid << std::endl;
+    std::cout << VAR_NAME(guid2) << ": " << guid2 << std::endl;
     ASSERT_FALSE(guid.empty());
     ASSERT_NE(guid, guid2);
 
@@ -57,6 +60,8 @@ TEST(Common, Guid2)
 {
     std::string guid = Common::GenGuid2();
     std::string guid2 = Common::GenGuid2();
+    std::cout << VAR_NAME(guid) << ": " << guid << std::endl;
+    std::cout << VAR_NAME(guid2) << ": " << guid2 << std::endl;
     ASSERT_FALSE(guid.empty());
     ASSERT_NE(guid, guid2);
 
