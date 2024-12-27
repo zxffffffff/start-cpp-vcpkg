@@ -152,18 +152,18 @@
 "builtin-baseline": "b051745c68faa6f65c493371d564c4eb8af34dad"
 ```
 
-# Vcpkg
+## Vcpkg
 
 - 安装 `vcpkg` 工具 (参考本工程 `.gitmodules`)
 - 手动引入建议使用 `git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
 - 初始化、拉取更新可以使用 `git submodule update --init --recursive`
 
-## 参考
+### 参考
 
 - <https://github.com/microsoft/vcpkg>
 - <https://github.com/microsoft/vcpkg/blob/master/README_zh_CN.md>
 
-## 查询 & 添加 & 查看
+### 查询 & 添加 & 查看
 
 ```Bash
 .\vcpkg\vcpkg.exe search xxx
@@ -171,13 +171,13 @@
 .\vcpkg\packages\xxx\CONTROL
 ```
 
-## Windows
+### Windows
 
 - Windows 7 或更新的版本
 - Visual Studio 2015 Update 3 或更新的版本 (包含英文语言包)
 - 运行 `bootstrap-vcpkg.bat` 脚本
 
-## Unix
+### Unix
 
 - g++ >= 6
 - macOS:
@@ -204,7 +204,7 @@
 
 - 运行 `bootstrap-vcpkg.sh` 脚本
 
-## Triplet 可选编译配置集
+### Triplet 可选编译配置集
 
 - <https://learn.microsoft.com/en-us/vcpkg/users/triplets>
 - 在经典模式下，您可以使用三元组名称限定包引用，例如 `zlib:x64-windows-static-md`
@@ -231,70 +231,14 @@ Community Triplets:
   wasm32-emscripten
   x64-xbox-scarlett-static
   ppc64le-linux
-  arm64-ios-simulator-release
-  x64-xbox-xboxone
-  arm-linux-release
-  arm64-osx-release
-  x86-mingw-static
-  arm64-ios
-  x86-linux
-  arm64-ios-release
-  x64-xbox-xboxone-static
-  x64-mingw-dynamic
-  x64-uwp-static-md
-  x64-windows-release
-  loongarch32-linux
-  x86-freebsd
-  armv6-android
-  x64-osx-release
-  x64-linux-dynamic
-  riscv64-linux
-  loongarch32-linux-release
-  x86-windows-static
-  mips64-linux
-  arm64ec-windows
-  arm-android
-  arm64-mingw-dynamic
-  arm64-uwp-static-md
-  arm64-windows-static
-  arm-linux
-  arm-windows
-  loongarch64-linux-release
-  x86-mingw-dynamic
-  x86-uwp-static-md
-  arm-uwp-static-md
-  s390x-linux
-  x64-openbsd
-  arm-mingw-dynamic
-  x64-ios
-  x64-xbox-scarlett
-  loongarch64-linux
-  x64-mingw-static
-  arm-ios
-  x64-osx-dynamic
-  x64-linux-release
-  x86-android
-  x86-uwp
-  arm64-linux
-  x64-windows-static-release
-  x64-freebsd
-  arm64-linux-release
-  riscv64-linux-release
-  arm64-windows-static-md
-  arm64-mingw-static
-  x86-windows-static-md
-  arm64-ios-simulator
-  arm-mingw-static
-  riscv32-linux-release
-  arm64-osx-dynamic
-  x64-windows-static-md-release
-  riscv32-linux
-  x86-ios
-  x64-windows-static-md
-  arm64-windows-static-release
-  arm-windows-static
-  s390x-linux-release
+  ...
   ppc64le-linux-release
   x86-windows-v120
   arm-uwp
 ```
+
+## License
+
+选择合适的开源协议，例如 `MIT License`
+
+![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/docs/choose-a-license.png)
