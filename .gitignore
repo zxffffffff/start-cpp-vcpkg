@@ -42,5 +42,6 @@ out/*
 .vscode
 enc_temp_folder
 .DS_Store
+vcpkg
 .idea
 .venv

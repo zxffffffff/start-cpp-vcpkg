@@ -44,7 +44,17 @@ if(DEFINED ENV{VCPKG_ROOT})
     # 使用 VCPKG_ROOT 环境变量
     set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 else()
-    # 使用 submodule
+    # 从 github 下载到根目录
+    if(NOT EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg")
+        message(STATUS "Cloning vcpkg into ${CMAKE_CURRENT_SOURCE_DIR}")
+        execute_process(
+            COMMAND git clone https://github.com/microsoft/vcpkg.git "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg"
+            RESULT_VARIABLE GIT_CLONE_RESULT
+        )
+        if(NOT GIT_CLONE_RESULT EQUAL "0")
+            message(FATAL_ERROR "Failed to clone vcpkg repository.")
+        endif()
+    endif()
     set(CMAKE_TOOLCHAIN_FILE "${CMAKE_CURRENT_SOURCE_DIR}/vcpkg/scripts/buildsystems/vcpkg.cmake" CACHE STRING "Vcpkg toolchain file")
 endif()
 message(STATUS "[start-cpp-vcpkg] CMAKE_TOOLCHAIN_FILE : ${CMAKE_TOOLCHAIN_FILE}")

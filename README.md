@@ -154,9 +154,9 @@
 
 ## Vcpkg
 
-- 安装 `vcpkg` 工具 (参考本工程 `.gitmodules`)
-- 手动引入建议使用 `git submodule add -f https://github.com/microsoft/vcpkg.git vcpkg`
-- 初始化、拉取更新可以使用 `git submodule update --init --recursive`
+- 安装 `vcpkg` 参考本工程 `CMakeLists.txt`
+- 手动安装建议使用 `git clone https://github.com/microsoft/vcpkg.git`
+- 推荐使用环境变量 VCPKG_ROOT、VCPKG_DOWNLOADS 避免重复下载编译
 
 ### 参考
 
