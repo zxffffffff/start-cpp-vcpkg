@@ -37,7 +37,7 @@ else()
 endif()
 
 # 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
-message(STATUS "[] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
+message(STATUS "[start-cpp-vcpkg] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
 if(DEFINED ENV{VCPKG_ROOT})

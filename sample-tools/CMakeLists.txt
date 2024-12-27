@@ -89,12 +89,12 @@ target_link_libraries(${PROJECT_NAME}
     PUBLIC fmt::fmt-header-only
 )
 
-if (APPLE)
-# hardware 依赖系统库
-target_link_libraries(${PROJECT_NAME}
-    PUBLIC "-framework CoreFoundation"
-    PUBLIC "-framework IOKit"
-)
+if(APPLE)
+    # hardware 依赖系统库
+    target_link_libraries(${PROJECT_NAME}
+        PUBLIC "-framework CoreFoundation"
+        PUBLIC "-framework IOKit"
+    )
 endif()
 
 target_include_directories(${PROJECT_NAME}

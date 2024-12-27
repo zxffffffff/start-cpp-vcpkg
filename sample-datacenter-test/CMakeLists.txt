@@ -6,7 +6,7 @@
 ## 
 #############################################################################
 
-project ("sample-datacenter-test")
+project("sample-datacenter-test")
 message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
@@ -15,7 +15,7 @@ message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 enable_testing()
 find_package(GTest CONFIG REQUIRED)
 
-add_executable (${PROJECT_NAME}
+add_executable(${PROJECT_NAME}
     SampleDataCenterTest.cpp
 )
 

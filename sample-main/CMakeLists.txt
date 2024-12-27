@@ -6,7 +6,7 @@
 ## 
 #############################################################################
 
-project ("sample-main")
+project("sample-main")
 message("[${PROJECT_NAME}] -------- start")
 
 message(STATUS "[${PROJECT_NAME}] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
