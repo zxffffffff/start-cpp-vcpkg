@@ -241,4 +241,4 @@ Community Triplets:
 
 选择合适的开源协议，例如 `MIT License`
 
-![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/master/docs/choose-a-license.png)
+![image](https://github.com/zxffffffff/start-cpp-vcpkg/blob/main/docs/choose-a-license.png)
