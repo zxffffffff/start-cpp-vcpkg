@@ -32,10 +32,8 @@ jobs:
       uses: actions/cache@v4
       with:
         path: |
-          vcpkg/downloads
-          vcpkg/buildtrees
-          vcpkg/packages
-        key: ${{ runner.os }}-${{ runner.arch }}-${{ inputs.cpp_compiler }}-${{ hashFiles('**/vcpkg/versions/baseline.json') }}
+          vcpkg
+        key: vcpkg-${{ runner.os }}-${{ runner.arch }}-${{ inputs.cpp_compiler }}-${{ github.workflow }}
     
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.

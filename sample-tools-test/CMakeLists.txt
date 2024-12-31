@@ -28,6 +28,7 @@ add_executable(${PROJECT_NAME}
     common_test.cpp
     platform_test.cpp
     hardware_test.cpp
+    c_def_test.cpp
 )
 
 target_link_libraries(${PROJECT_NAME}

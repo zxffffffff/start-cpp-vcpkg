@@ -31,6 +31,9 @@
 *.out
 *.app
 
+# 生成版本文件
+/version.h
+
 # start-cpp-vcpkg
 vcpkg_installed
 build/*
