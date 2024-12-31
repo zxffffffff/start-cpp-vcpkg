@@ -25,6 +25,9 @@ TEST(c_def, MALLOC_ARRAY)
     int32_t arr[size];
     int32_t *malloc_arr = (int32_t *)MALLOC_ARRAY_1D(size, sizeof(int32_t));
 
+    ASSERT_EQ(sizeof(arr), sizeof(int32_t) * size);
+    ASSERT_EQ(sizeof(malloc_arr), sizeof(void *));
+
     for (int i = 0; i < size; ++i)
     {
         arr[i] = (i + 1);
@@ -54,6 +57,9 @@ TEST(c_def, MALLOC_ARRAY_2D)
 
     int32_t arr[rows][cols];
     int32_t **malloc_arr = (int32_t **)MALLOC_ARRAY_2D(rows, cols, sizeof(int32_t));
+
+    ASSERT_EQ(sizeof(arr), sizeof(int32_t) * rows * cols);
+    ASSERT_EQ(sizeof(malloc_arr), sizeof(void *));
 
     for (int i = 0; i < rows; ++i)
     {

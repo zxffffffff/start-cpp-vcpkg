@@ -20,8 +20,8 @@
 #endif
 
 /* 创建一维数组（指针）
- * 注意 sizeof(arr) 是指针大小 8bytes(x64) 而不是数组总大小
- * 注意使用 memcpy(&arr[0]) 不是 memcpy(arr)
+ * 注意 sizeof(arr) == sizeof(void *) 而不是数组总大小
+ * 注意使用 memcpy(&arr[0]) 而不是 memcpy(arr)
  */
 static inline void *MALLOC_ARRAY_1D(int size, size_t item_size)
 {
@@ -39,8 +39,8 @@ static inline void FREE_ARRAY_1D(void *arr)
 }
 
 /* 创建二维数组（指针）
- * 注意 sizeof(arr) 是指针大小 8bytes(x64) 而不是数组总大小
- * 注意使用 memcpy(&arr[0][0]) 不是 memcpy(arr)
+ * 注意 sizeof(arr) == sizeof(void *) 而不是数组总大小
+ * 注意使用 memcpy(&arr[0][0]) 而不是 memcpy(arr)
  */
 static inline void *MALLOC_ARRAY_2D(int rows, int cols, size_t item_size)
 {
