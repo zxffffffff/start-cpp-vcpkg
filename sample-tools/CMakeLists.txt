@@ -53,6 +53,7 @@ find_package(fmt CONFIG REQUIRED)
 file(GLOB_RECURSE include_headers
     cpp_version.h
     cpp_def.h
+    c_def.h
     common.h
     platform.h
     hardware.h
