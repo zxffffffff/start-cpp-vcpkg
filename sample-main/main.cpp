@@ -10,6 +10,7 @@
 #include "SampleDynamicLib.h"
 #include "platform.h"
 #include "hardware.h"
+#include "../version.h"
 
 #if defined(_MSC_VER) && (_MSC_VER >= 1500 && _MSC_VER < 1900)
 /* msvc兼容utf-8: https://support.microsoft.com/en-us/kb/980263 */
@@ -30,6 +31,10 @@ int main(int argc, char *argv[])
     google::InitGoogleLogging(argv[0]);
 
     std::cout << "你好 SampleMain" << std::endl;
+
+    std::cout << "PROJECT_VERSION: " << PROJECT_VERSION << std::endl;
+    std::cout << "BUILD_DATE: " << BUILD_DATE << std::endl;
+    std::cout << "GIT_COMMIT: " << GIT_COMMIT << std::endl;
 
     std::cout << "系统版本: " << Platform::GetOSType() << " " << Platform::GetOSVersion() << std::endl;
     std::cout << "CPU逻辑核心: " << Hardware::GetCPUs() << std::endl;

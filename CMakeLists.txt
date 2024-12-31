@@ -66,6 +66,21 @@ message(STATUS "[start-cpp-vcpkg] CMAKE_BUILD_TYPE: ${CMAKE_BUILD_TYPE}")
 message(STATUS "[start-cpp-vcpkg] CMAKE_CURRENT_SOURCE_DIR : ${CMAKE_CURRENT_SOURCE_DIR}")
 message(STATUS "[start-cpp-vcpkg] PROJECT_SOURCE_DIR : ${PROJECT_SOURCE_DIR}")
 
+# 生成版本头文件 (项目版本、构建日期、Git记录)
+set(PROJECT_VERSION "0.2.1")
+execute_process(COMMAND date "+%Y-%m-%d %H:%M:%S" OUTPUT_VARIABLE BUILD_DATE OUTPUT_STRIP_TRAILING_WHITESPACE)
+execute_process(COMMAND git describe --tags --always OUTPUT_VARIABLE GIT_COMMIT OUTPUT_STRIP_TRAILING_WHITESPACE)
+
+message(STATUS "[start-cpp-vcpkg] PROJECT_VERSION: ${PROJECT_VERSION}")
+message(STATUS "[start-cpp-vcpkg] BUILD_DATE: ${BUILD_DATE}")
+message(STATUS "[start-cpp-vcpkg] GIT_COMMIT: ${GIT_COMMIT}")
+
+file(WRITE version.h "#ifndef VERSION_H\n#define VERSION_H\n\n")
+file(APPEND version.h "const char* PROJECT_VERSION = \"${PROJECT_VERSION}\";\n")
+file(APPEND version.h "const char* BUILD_DATE = \"${BUILD_DATE}\";\n")
+file(APPEND version.h "const char* GIT_COMMIT = \"${GIT_COMMIT}\";\n")
+file(APPEND version.h "\n#endif /* VERSION_H */\n")
+
 # src
 include_directories(${PROJECT_SOURCE_DIR}/sample-tools)
 include_directories(${PROJECT_SOURCE_DIR}/sample-pb)
