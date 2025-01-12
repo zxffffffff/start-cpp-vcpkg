@@ -37,6 +37,17 @@ else()
 endif()
 
 # 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
+if(NOT DEFINED VCPKG_TARGET_TRIPLET)
+    if(WIN32)
+        set(VCPKG_TARGET_TRIPLET "x64-windows-static-md")
+    elseif(APPLE)
+        set(VCPKG_TARGET_TRIPLET "arm64-osx")
+    elseif(UNIX)
+        set(VCPKG_TARGET_TRIPLET "x64-linux")
+    else()
+        message(FATAL_ERROR "Unsupported platform. Please define VCPKG_TARGET_TRIPLET manually.")
+    endif()
+endif()
 message(STATUS "[start-cpp-vcpkg] VCPKG_TARGET_TRIPLET : ${VCPKG_TARGET_TRIPLET}")
 
 # 使用 vcpkg 工具链，需要在 project 之前设置
