@@ -39,7 +39,7 @@ endif()
 # 可选 vcpkg 编译配置集: https://learn.microsoft.com/en-us/vcpkg/users/triplets
 if(NOT DEFINED VCPKG_TARGET_TRIPLET)
     if(WIN32)
-        set(VCPKG_TARGET_TRIPLET "x64-windows-static-md")
+        set(VCPKG_TARGET_TRIPLET "x64-windows")
     elseif(APPLE)
         set(VCPKG_TARGET_TRIPLET "arm64-osx")
     elseif(UNIX)
