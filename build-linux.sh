@@ -52,13 +52,12 @@ else
   cp -rf "${vcpkg_installed}/lib" "${install_path}/lib"
 fi
 
-# ctest
-cd ${install_path}
-echo ctest
-ctest
+# run（也可使用 ctest）
+echo run test
 # export LD_LIBRARY_PATH=${install_path}/bin
 # ${install_path}/bin/sample-main
 # ${install_path}/bin/sample-db-test
 # ${install_path}/bin/sample-datacenter-test
 # ${install_path}/bin/sample-tools-test
 # ${install_path}/bin/sample-net-test
+ctest
