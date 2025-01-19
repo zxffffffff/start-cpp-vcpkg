@@ -54,9 +54,10 @@ fi
 
 # run（也可使用 ctest）
 echo run test
-export LD_LIBRARY_PATH=${install_path}/bin
-${install_path}/bin/sample-main
-${install_path}/bin/sample-db-test
-${install_path}/bin/sample-datacenter-test
-${install_path}/bin/sample-tools-test
-${install_path}/bin/sample-net-test
+# export LD_LIBRARY_PATH=${install_path}/bin
+# ${install_path}/bin/sample-main
+# ${install_path}/bin/sample-db-test
+# ${install_path}/bin/sample-datacenter-test
+# ${install_path}/bin/sample-tools-test
+# ${install_path}/bin/sample-net-test
+ctest
