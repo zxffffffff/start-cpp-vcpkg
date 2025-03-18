@@ -108,7 +108,7 @@
 ### Windows 7 版本兼容
 
 - `VS 2022 17.9` 以后无法使用 `vcpkg` 编译旧版本 `boost`：<https://github.com/microsoft/vcpkg/issues/38980>
-- `Electron 21.4.4` 依赖项 -> `node-gyp 10.0.1` -> `Python 3.11` 以后无法编译 `C++ Addons`：<https://github.com/nodejs/node-gyp/issues/2869>
+- `Electron 22.x` 依赖项 -> `node-gyp 10.x` -> `Python 3.11` 以后无法编译 `C++ Addons`：<https://github.com/nodejs/node-gyp/issues/2869>
 
 ### Windows 宏定义冲突
 
